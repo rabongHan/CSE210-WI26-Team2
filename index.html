@@ -1,18 +1,57 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CSE 210 Team 2</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CSE210 - Team2</title>
+  <link rel="icon" href="/favicon.ico?v=2" /> 
+  <link rel="stylesheet" href="/assets/style.css" />
 </head>
-
 <body>
-  <h1>CSE 210 Team 2</h1>
+  <header class="top">
+    <div>
+      <h1>CSE 210</h1>
+      <h2 class="content_list">Winter 2026</h2>
+    </div>
+    <div class="card small">
+      <h2>Team Member(s)</h2>
+      <ul>
+        <li>Jaewon Han</li>
+        <li>Jaewoong Yun</li>
+        <li>Ryan Livengood</li>
+        <li>Marlyn Arque Rupa</li>
+        <li>Eric Binnendyk</li>
+        <li>Yuchen Song</li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="grid">
+    <section class="card">
+      <h2>Links</h2>
+      <ul>
+        <li><a href="https://www.figma.com/design/gFiCWbfBehschNbvlsIQAm/Iteration-1?node-id=281-5&t=K71k11956ZRQQGoI-1">UI Mockup (Figma)</a> <span class="content_list">(subdomain)</span></li>
+        <li><a href="/favicon.ico">Favicon</a> <span class="content_list"></span></li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>TBD</h2>
+      <p class="content_list">TBD</p>
+    </section>
+
+    <section class="card">
+      <h2>TBD</h2>
+      <p class="content_list">TBD</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Hosted on DigitalOcean • <span id="live"></span></p>
+  </footer>
+
   <script>
-    document.write(`Live @ ${new Date()}`);
+    document.getElementById("live").textContent = `Live @ ${new Date().toString()}`;
   </script>
-
 </body>
-
 </html>
