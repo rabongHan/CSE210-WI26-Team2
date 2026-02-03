@@ -23,7 +23,7 @@ jobs:
 
       - name: Deploy via rsync
         run: |
-          rsync -az --delete \
+          rsync -az --delete --delay-updates\
             --exclude ".git/" \
             --exclude ".github/" \
             --exclude "node_modules/" \
@@ -42,7 +42,7 @@ jobs:
             nvm use 20
 
             npm ci
-            npm run build
+            NEXT_DISABLE_TURBOPACK=1 npm run build
 
             pm2 describe cse210 >/dev/null 2>&1 && pm2 reload cse210 || pm2 start npm --name cse210 -- start
             pm2 save
