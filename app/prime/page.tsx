@@ -11,11 +11,6 @@ export default function Page() {
   return (
     <main style={{ fontFamily: "system-ui", padding: 24 }}>
       <div className="welcome">Welcome to the prime testing minigame!</div>
-      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <Target />
-        <h1 style={{ margin: 0 }}>✅ Next.js Client Page Render</h1>
-      </div>
-      <p>Time: {now}</p>
     </main>
   );
 }
