@@ -11,6 +11,7 @@ export default function Page() {
   return (
     <main style={{ fontFamily: "system-ui", padding: 24 }}>
       <div className="welcome">Welcome to the prime testing minigame!</div>
+      <button>Start</button>
     </main>
   );
 }
