@@ -13,9 +13,9 @@ export default function Page() {
     <main style={{ fontFamily: "system-ui", padding: 24 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
         <Target />
-        <h1 style={{ margin: 0 }}>✅ Menu</h1>
+        <h1 style={{ margin: 0 }}>✅ Bubble Game</h1>
           <NavButton href={'/bubble/menu'}>
-              Bubble
+              Back
           </NavButton>
       </div>
       <p>Time: {now}</p>
