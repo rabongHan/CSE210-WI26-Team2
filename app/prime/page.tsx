@@ -9,7 +9,7 @@ export default function Page() {
   useEffect(() => setNow(new Date().toISOString()), []);
 
   function StartGame() {
-    console.log("This is supposed to cause text to show but I don't know how to hide the text in the first place");
+    document.getElementById("gameContent").style.display = "block";
   }
 
     // to do: export all this to another module
@@ -50,42 +50,43 @@ export default function Page() {
     var displayCorrectPrime = function(n) {
       console.log("Yes, it's prime");
       feedbackMessage = "Yes, it's prime";
+      document.getElementById("feedback").textContent = feedbackMessage;
       console.log(n);
     }
     var displayIncorrectPrime = function(n) {
       console.log("No, it's composite")
       feedbackMessage = "No, it's composite";
+      document.getElementById("feedback").textContent = feedbackMessage;
       console.log(n)
     }
     var displayCorrectComposite = function(n) {
       console.log("Yes, it's composite")
       feedbackMessage = "Yes, it's composite";
+      document.getElementById("feedback").textContent = feedbackMessage;
       console.log(n)
     }
     var displayIncorrectComposite = function(n) {
       console.log("No, it's prime")
       feedbackMessage = "No, it's prime";
+      document.getElementById("feedback").textContent = feedbackMessage;
       console.log(n)
     }
     var nextNumber = function() {
       currNum += 1;
       document.getElementById("num").textContent = currNum;
-      // clear feedback message once we've added that to the page itself
-      // ...
     }
     // ...
-
 
   return (
     <main style={{ fontFamily: "system-ui", padding: 24 }}>
       <div className="welcome">Welcome to the prime testing minigame!</div>
       <button onClick={StartGame}>Start</button>
-      <div>
-        <p>Welcome to the prime testing game!</p>
+      <div id="gameContent" style={{ display: "none" }}>
         <p>Is <span id="num">{currNum}</span> prime?</p>
         <button onClick={clickYes}>Yes</button>
         <button onClick={clickNo}>No</button>
         <p>{feedbackMessage}</p>
+        <p id="feedback">Feedback will appear here.</p>
       </div>
     </main>
   );
