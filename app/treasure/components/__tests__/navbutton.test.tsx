@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { NavButton } from '../../components/treasure-buttons';
-
+import '@testing-library/jest-dom';
 
 describe('NavButton Component', () => {
     // test1: Does button show correct text
