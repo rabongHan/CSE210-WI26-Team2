@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.primary-box {
+    @apply rounded-xl shadow-lg p-3 my-2 bg-white/20 backdrop-blur;
+}
