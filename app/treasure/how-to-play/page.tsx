@@ -7,14 +7,34 @@ export default function TreasureHowToPlay() {
     return (
         <main className="min-h-screen p-6 bg-cover bg-center bg-fixed bg-[url('@/app/treasure/assets/background1.png')]">
             <div className="">
-                <h2 className="text-2xl font-bold mt-4">How To Play</h2>     
-                <ol className="ml-5 list-decimal">
-                    <li className="ml-4">Find all applicable Divisibility rules for a number</li>
-                    <li className="ml-4">If you get any wrong, you lose a life.</li>
-                    <li className="ml-4">You will get a total of 3 lives.</li>
-                    <li className="ml-4">You can get partial points for getting some correct answers.</li>
-                    <li className="ml-4">Score 350 points to open the chest!</li>
-                </ol>
+                <div className="text-center py-5">
+                    <h1 className="text-3xl font-extrabold">
+                        <a href="/treasure" className="hover:text-black/80">Treasure Game</a>
+                    </h1>
+                    <p className="text-xl text-lg-black-600">How To Play</p>
+                </div>
+                <div className="list-decimal pl-6 space-y-3 max-w-xl mx-auto text-slate-800">
+                    <div className="primary-box flex items-start gap-3 px-4 py-3">
+                        <span className="text-2xl font-extrabold leading-none">1.</span>
+                        <span className="text-base font-semibold">Find all applicable divisibility rules for a number.</span>
+                    </div>
+                    <div className="primary-box flex items-start gap-3 px-4 py-3">
+                        <span className="text-2xl font-extrabold leading-none">2.</span>
+                        <span className="text-base font-semibold">If you get any wrong, you lose a life.</span>
+                    </div>
+                    <div className="primary-box flex items-start gap-3 px-4 py-3">
+                        <span className="text-2xl font-extrabold leading-none">3.</span>
+                        <span className="text-base font-semibold">You will get a total of 3 lives.</span>
+                    </div>
+                    <div className="primary-box flex items-start gap-3 px-4 py-3">
+                        <span className="text-2xl font-extrabold leading-none">4.</span>
+                        <span className="text-base font-semibold">You can get partial points for getting some correct answers.</span>
+                    </div>
+                    <div className="primary-box flex items-start gap-3 px-4 py-3">
+                        <span className="text-2xl font-extrabold leading-none">5.</span>
+                        <span className="text-base font-semibold">Score 350 points to open the chest!</span>
+                    </div>
+                </div>
             </div>
 
             <div className="mt-6 text-center">
