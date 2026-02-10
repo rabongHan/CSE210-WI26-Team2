@@ -23,16 +23,21 @@ type BubbleGameState = {
 };
 
 // Initial values come from game-logic functions
-export const INITIAL_FACTOR = generateFactor();
+// Thinking of deleting these because they freeze the initial factor
+// at whatever it was when the page loaded, meaning a user will always
+// start with the same factor.
+// export const INITIAL_FACTOR = generateFactor();
+// export const INITIAL_BUBBLES = generateBubbles();
+
 export const INITIAL_LIVES = STARTING_LIVES;
-export const INITIAL_BUBBLES = generateBubbles();
 
 // Context
 const BubbleGameContext = createContext<BubbleGameState | null>(null);
 
 export function BubbleGameProvider({ children }: { children: ReactNode }) {
-  const [factor, setFactor] = useState(INITIAL_FACTOR);
-  const [bubbles, setBubbles] = useState(INITIAL_BUBBLES);
+  // Lazy initialization to get random factor every time module loads
+  const [factor, setFactor] = useState(() => generateFactor());
+  const [bubbles, setBubbles] = useState(() => generateBubbles()) ;
   const [lives, setLives] = useState(INITIAL_LIVES);
   const [status, setStatus] = useState<GameStatus>("playing");
 

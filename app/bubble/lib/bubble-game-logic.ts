@@ -9,7 +9,19 @@
  * TODO: Replace with random generation logic.
  */
 export function generateFactor(): number {
-  return 8; // hard-coded 
+  // Range of numbers the user can be tested on
+  const numberRange = [10, 50]
+  const [min, max] = numberRange
+  let num: number
+  // Math.random() returns a floating point number between 0 and 1
+  // We multiply this by the range (max - min) to get a number
+  // within range (0, range), then add by the min to get the
+  // number within (min, max). Math.floor() because we need an int
+  do {
+    num = Math.floor((Math.random() * (max - min + 1)) + min)
+  } while (isPrime(num))
+
+  return num; // hard-coded
 }
 
 /**
@@ -47,6 +59,21 @@ export function hasCorrectAnswersLeft(
   factor: number
 ): boolean {
   return bubbles.some((b) => isCorrectAnswer(b, factor));
+}
+
+/*
+  Check if number is prime.
+ */
+export function isPrime(n: number){
+  if (n <= 2) return false
+  if (n % 2 === 0) return false
+  // Quick prime check. Only check up to sqrt of n b/c any
+  // greater factor 'a' has corresponding factor 'b' < sqrt(n)
+  // where a * b == n
+  for (let i = 3; i <= Math.sqrt(n); i += 2) {
+    if (n % i === 0) return false
+  }
+  return true
 }
 
 /**
