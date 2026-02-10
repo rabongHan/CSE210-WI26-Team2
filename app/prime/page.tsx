@@ -2,6 +2,7 @@
 
 import { Target } from "lucide-react";
 import { useEffect, useState } from "react";
+import { generateBalancedNumbers } from "./lib/numberGenerator.ts";
 
 export default function Page() {
   const [now, setNow] = useState("");
@@ -12,8 +13,11 @@ export default function Page() {
     document.getElementById("gameContent").style.display = "block";
   }
 
+  var numList = generateBalancedNumbers(100, 300, 20, {});
+
     // to do: export all this to another module
-    var currNum = 101;
+    var currNumInd = 0; // the index into the num list
+    var currNum = numList.numbers[currNumInd];
     var feedbackMessage = "";
     var isPrime = function(num) {
       if (num < 2) {
@@ -72,7 +76,10 @@ export default function Page() {
       console.log(n)
     }
     var nextNumber = function() {
-      currNum += 1;
+      if (currNumInd < 19) {
+        currNumInd += 1;
+      }
+      currNum = numList.numbers[currNumInd];
       document.getElementById("num").textContent = currNum;
     }
     // ...
