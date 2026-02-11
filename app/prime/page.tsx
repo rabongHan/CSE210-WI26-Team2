@@ -2,81 +2,103 @@
 
 import { Target } from "lucide-react";
 import { useEffect, useState } from "react";
-import { generateBalancedNumbers } from "./lib/numberGenerator.ts";
+import { generateBalancedNumbers, isPrime } from "./lib/numberGenerator.ts";
 
 export default function Page() {
   const [now, setNow] = useState("");
 
   useEffect(() => setNow(new Date().toISOString()), []);
 
-  function StartGame() {
-    document.getElementById("gameContent").style.display = "block";
+    // to do: export all this to another module
+  var maxGuesses = 25;
+  var numList;
+  var currNumInd;
+  var currNum;
+  var userHealth;
+  var bossHealth;
+
+  function startGame() {
+    numList = generateBalancedNumbers(100, 300, maxGuesses, {});
+    currNumInd = 0; // the index into the num list
+    currNum = numList.numbers[currNumInd];
+    document.getElementById("num").textContent = currNum;
+    userHealth = 5;
+    document.getElementById("userHealth").textContent = userHealth;
+    bossHealth = 20;
+    document.getElementById("bossHealth").textContent = bossHealth;
+    showGameContent();
+    hidePlayerWin();
+    hideGameOver();
+    console.log(userHealth);
   }
 
-  var numList = generateBalancedNumbers(100, 300, 20, {});
-
-    // to do: export all this to another module
-    var currNumInd = 0; // the index into the num list
-    var currNum = numList.numbers[currNumInd];
-    var feedbackMessage = "";
-    var isPrime = function(num) {
-      if (num < 2) {
-        return false;
-      }
-      if (num % 2 === 0) {
-        return false;
-      }
-      for (var i = 3; i**2 <= num; i += 2) {
-        if (num % i === 0) {
-          return false;
-        }
-      }
-      return true;
-    }
     var clickYes = function() {
+      console.log(userHealth);
       if (isPrime(currNum)) {
-        displayCorrectPrime(currNum);
+        giveFeedback(currNum, true, true);
       }
       else {
-        displayIncorrectPrime(currNum);
+        giveFeedback(currNum, false, false);
       }
-      nextNumber();
     }
     var clickNo = function() {
       if (isPrime(currNum)) {
-        displayIncorrectComposite(currNum);
+        giveFeedback(currNum, true, false);
       }
       else {
-        displayCorrectComposite(currNum);
+        giveFeedback(currNum, false, true);
+      }
+    }
+    var giveFeedback = function(n, nIsPrime, correct) {
+      var message = "";
+      message += (correct ? "Yes" : "No");
+      message += ", it's ";
+      message += (nIsPrime ? "prime" : "composite");
+      document.getElementById("feedback").textContent = message;
+      if (correct) {
+        bossHealth -= 1;
+        document.getElementById("bossHealth").textContent = bossHealth;
+      }
+      else {
+        userHealth -= 1;
+        document.getElementById("userHealth").textContent = userHealth;
+      }
+      if (bossHealth === 0) {
+        playerWin();
+      }
+      if (userHealth === 0) {
+        gameOver();
       }
       nextNumber();
     }
-    var displayCorrectPrime = function(n) {
-      console.log("Yes, it's prime");
-      feedbackMessage = "Yes, it's prime";
-      document.getElementById("feedback").textContent = feedbackMessage;
-      console.log(n);
+    var showGameContent = function() {
+      document.getElementById("gameContent").style.display = "block";
     }
-    var displayIncorrectPrime = function(n) {
-      console.log("No, it's composite")
-      feedbackMessage = "No, it's composite";
-      document.getElementById("feedback").textContent = feedbackMessage;
-      console.log(n)
+    var hideGameContent = function() {
+      document.getElementById("gameContent").style.display = "none";
     }
-    var displayCorrectComposite = function(n) {
-      console.log("Yes, it's composite")
-      feedbackMessage = "Yes, it's composite";
-      document.getElementById("feedback").textContent = feedbackMessage;
-      console.log(n)
+    var playerWin = function() {
+      showPlayerWin();
+      hideGameContent();
     }
-    var displayIncorrectComposite = function(n) {
-      console.log("No, it's prime")
-      feedbackMessage = "No, it's prime";
-      document.getElementById("feedback").textContent = feedbackMessage;
-      console.log(n)
+    var gameOver = function() {
+      showGameOver();
+      hideGameContent();
+    }
+    var showPlayerWin = function() {
+      document.getElementById("winMsg").style.display = "block";
+    }
+    var showGameOver = function() {
+      document.getElementById("loseMsg").style.display = "block";
+    }
+    var hidePlayerWin = function() {
+      document.getElementById("winMsg").style.display = "none";
+    }
+    var hideGameOver = function() {
+      document.getElementById("loseMsg").style.display = "none";
     }
     var nextNumber = function() {
-      if (currNumInd < 19) {
+      if (currNumInd < maxGuesses - 1) {
         currNumInd += 1;
       }
       currNum = numList.numbers[currNumInd];
@@ -87,13 +109,20 @@ export default function Page() {
   return (
     <main style={{ fontFamily: "system-ui", padding: 24 }}>
       <div className="welcome">Welcome to the prime testing minigame!</div>
-      <button onClick={StartGame}>Start</button>
+      <button onClick={startGame}>Start</button>
       <div id="gameContent" style={{ display: "none" }}>
         <p>Is <span id="num">{currNum}</span> prime?</p>
         <button onClick={clickYes}>Yes</button>
         <button onClick={clickNo}>No</button>
-        <p>{feedbackMessage}</p>
         <p id="feedback">Feedback will appear here.</p>
+        <p>User health: <span id="userHealth">{userHealth}</span></p>
+        <p>Boss health: <span id="bossHealth">{bossHealth}</span></p>
+      </div>
+      <div id="winMsg" style={{ display: "none" }}>
+        <p>You win!</p>
+      </div>
+      <div id="loseMsg" style={{ display: "none" }}>
+        <p>Game over!</p>
       </div>
     </main>
   );
