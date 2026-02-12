@@ -34,50 +34,67 @@ export const INITIAL_LIVES = STARTING_LIVES;
 // Context
 const BubbleGameContext = createContext<BubbleGameState | null>(null);
 
+function generateNewGame() {
+  const factor = generateFactor()
+  return{
+    factor,
+    bubbles: generateBubbles(factor),
+    lives: STARTING_LIVES,
+    status: "playing" as GameStatus
+  };
+}
 export function BubbleGameProvider({ children }: { children: ReactNode }) {
   // Lazy initialization to get random factor every time module loads
-  const [factor, setFactor] = useState(() => generateFactor());
-  const [bubbles, setBubbles] = useState(() => generateBubbles()) ;
-  const [lives, setLives] = useState(INITIAL_LIVES);
-  const [status, setStatus] = useState<GameStatus>("playing");
+  // const [factor, setFactor] = useState(() => generateFactor());
+  // const [bubbles, setBubbles] = useState(() => generateBubbles(factor)) ;
+  // const [lives, setLives] = useState(INITIAL_LIVES);
+  // const [status, setStatus] = useState<GameStatus>("playing");
+  const[game, setGame] = useState(() => generateNewGame());
 
   function handleBubbleClick(num: number) {
-    if (status !== "playing") return;
+    setGame((prev) => {
+      if (game.status !== "playing") return;
 
-    if (isCorrectAnswer(num, factor)) {
-      // Correct — remove the bubble
-      const remaining = bubbles.filter((b) => b !== num);
-      setBubbles(remaining);
+      if (isCorrectAnswer(num, game.factor)) {
+        // Correct — remove the bubble
+        const remaining = game.bubbles.filter((b) => b !== num);
+        // Update factor for next step
+        const nextFactor = getNextFactor(prev.factor, num);
 
-      // Update factor for next step
-      const nextFactor = getNextFactor(factor, num);
-      setFactor(nextFactor);
-
-      // Check if all correct answers have been popped
-      if (!hasCorrectAnswersLeft(remaining, nextFactor)) {
-        setStatus("won");
+        // Check if all correct answers have been popped
+        const won = !hasCorrectAnswersLeft(remaining, nextFactor)
+        return {
+          ...prev,
+          factor: nextFactor,
+          bubbles: remaining,
+          status: won? "won" : prev.status
+        };
       }
-    } else {
+
       // Wrong — lose a life
-      const newLives = lives - 1;
-      setLives(newLives);
+      const newLives = prev.lives - 1;
 
-      if (newLives <= 0) {
-        setStatus("lost");
-      }
-    }
+      return {
+        ...prev,
+        lives: newLives,
+        status: newLives <= 0 ? "lost" : prev.status
+      };
+    });
   }
 
   function resetGame() {
-    setBubbles(generateBubbles());
-    setLives(STARTING_LIVES);
-    setStatus("playing");
-    setFactor(generateFactor());
+    setGame(generateNewGame);
   }
 
   return (
     <BubbleGameContext.Provider
-      value={{ factor, bubbles, lives, status, handleBubbleClick, resetGame }}
+      value={{
+        factor: game.factor,
+        bubbles: game.bubbles,
+        lives: game.lives,
+        status: game.status,
+        handleBubbleClick,
+        resetGame }}
     >
       {children}
     </BubbleGameContext.Provider>

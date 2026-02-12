@@ -1,4 +1,4 @@
-
+const NUM_BUBBLES : number = 8;
 // BUBBLE GAME LOGIC 
 //
 // Currently hard-coded for a single round with factor 8.
@@ -29,8 +29,22 @@ export function generateFactor(): number {
  * Should include some correct answers (factors/multiples) and some wrong ones.
  * TODO: Replace with dynamic generation based on the factor.
  */
-export function generateBubbles(): number[] {
-  return [20, 2, 14, 4, 9, 10, 12]; // hard-coded 
+export function generateBubbles(n: number): number[] {
+  let factors: number[] = [];
+    for (let i = 2; i <= Math.sqrt(n); i += 1) {
+      if (n % i === 0) {
+        factors.push(i)
+        factors.push(n / i)
+      }
+  }
+  while (factors && factors.length < NUM_BUBBLES){
+    let rand_num: number;
+    rand_num = Math.floor((Math.random() * n) + 2)
+    if (!factors.includes(rand_num)){
+      factors.push(rand_num)
+    }
+  }
+  return factors; // hard-coded
 }
 
 /**
