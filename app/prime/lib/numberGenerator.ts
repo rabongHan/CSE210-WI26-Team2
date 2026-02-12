@@ -32,7 +32,6 @@ function clampInt(x: number): number {
 
 /** Simple primality test using trial division up to sqrt(n) */
 export function isPrime(n: number): boolean {
-  n = Math.abs(n);
   if (n <= 1) return false;
   if (n === 2) return true;
   if (n % 2 === 0) return false;
