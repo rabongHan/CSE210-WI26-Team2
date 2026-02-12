@@ -6,8 +6,6 @@ import {
   BubbleGameProvider,
   useBubbleGame,
   INITIAL_LIVES,
-  INITIAL_BUBBLES,
-  INITIAL_FACTOR,
 } from "./bubble-context";
 import { isCorrectAnswer } from "./bubble-game-logic";
 

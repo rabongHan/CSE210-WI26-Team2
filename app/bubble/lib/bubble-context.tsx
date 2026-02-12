@@ -53,11 +53,11 @@ export function BubbleGameProvider({ children }: { children: ReactNode }) {
 
   function handleBubbleClick(num: number) {
     setGame((prev) => {
-      if (game.status !== "playing") return;
+      if (prev.status !== "playing") return prev;
 
-      if (isCorrectAnswer(num, game.factor)) {
+      if (isCorrectAnswer(num, prev.factor)) {
         // Correct — remove the bubble
-        const remaining = game.bubbles.filter((b) => b !== num);
+        const remaining = prev.bubbles.filter((b) => b !== num);
         // Update factor for next step
         const nextFactor = getNextFactor(prev.factor, num);
 
