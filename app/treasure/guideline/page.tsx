@@ -2,22 +2,18 @@
 
 import { NavButton } from "@/app/treasure/components/treasure-buttons";
 import "@/app/treasure/treasure.css";
+import { TreasureHeader } from "../components/treasure-header";
 
 export default function TreasureGuidelinesPage() {
 
   return (
     <main className="bg-[url('app/treasure/assets/background1.png')] bg-cover bg-center min-h-screen">
-        <div className="mx-auto px-40 pb-16">
+        <div className="mx-auto p-6">
             {/* Header */}
-            <div className="text-center py-5">
-                <h1 className="text-5xl font-extrabold">
-                    <a href="/treasure" className="hover:text-black/80">Treasure Game</a>
-                </h1>
-                <p className="text-black-600">Guidelines - Study these rules</p>
-            </div>
-            
+            <TreasureHeader subtitle="Guidelines - Study these rules"/> 
+                
             {/* Rule display */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4 py-3">
                 <div className="primary-box min-h-[100px]">
                     <div className="flex gap-2 items-start">
                         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-2xl font-bold">
