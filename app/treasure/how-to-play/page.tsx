@@ -2,17 +2,13 @@
 // import { useEffect, useState } from "react";
 import { NavButton } from "@/app/treasure/components/treasure-buttons";
 import "@/app/treasure/treasure.css";
+import { TreasureHeader } from "../components/treasure-header"
 
 export default function TreasureHowToPlay() {
     return (
         <main className="min-h-screen p-6 bg-cover bg-center bg-fixed bg-[url('@/app/treasure/assets/background1.png')]">
             <div className="">
-                <div className="text-center py-5">
-                    <h1 className="text-3xl font-extrabold">
-                        <a href="/treasure" className="hover:text-black/80">Treasure Game</a>
-                    </h1>
-                    <p className="text-xl text-lg-black-600">How To Play</p>
-                </div>
+                <TreasureHeader subtitle = "How To Play"/>
                 <div className="list-decimal pl-6 space-y-3 max-w-xl mx-auto text-slate-800">
                     <div className="primary-box flex items-start gap-3 px-4 py-3">
                         <span className="text-2xl font-extrabold leading-none">1.</span>
