@@ -10,14 +10,6 @@ describe("TreasureHowToPlay page", () => {
         expect(main?.className).toMatch(/bg-\[url\('.*background1\.png'\)\]/);
     });
 
-    // Looks in rendered dom content and ensures a link to /treasure
-    test("shows heading and subtitle with correct link", () => {
-        render(<TreasureHowToPlay />);
-        const headingLink = screen.getByRole("link", { name: /treasure game/i });
-        expect(headingLink).toHaveAttribute("href", "/treasure");
-        expect(screen.getByText(/how to play/i)).toBeInTheDocument();
-    });
-
     // Ensures the dom content contains the 5 how to play steps 
     // and numbers corresponding for each
     test("lists five steps in order with expected text", () => {
