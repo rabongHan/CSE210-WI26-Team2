@@ -4,6 +4,7 @@ import { Target } from "lucide-react";
 import { useEffect, useState } from "react";
 import { generateBalancedNumbers, isPrime } from "./lib/numberGenerator";
 import next from "next";
+import { primeMnemonic, compositeMnemonic, factorizationMessage } from "./lib/factorCheck";
 
 var maxGuesses = 25;
 var numList;
@@ -79,14 +80,15 @@ var playerFails = function(currNum, nIsPrime) {
 }
 
 var giveFeedback = function(n, nIsPrime, correct) {
-  var message = "";
-  message += (correct ? "Yes" : "No");
-  message += ", it's ";
-  message += (nIsPrime ? "prime" : "composite");
-  document.getElementById("feedback").textContent = message;
-  if (!correct) {
-    // to do: write a message saying what the number is divisible by
-    var divisibilityMessage = "";
+  document.getElementById("correct").textContent = correct ? "Correct!" : "Incorrect!";
+  document.getElementById("feedback").style.display = "block";
+  document.getElementById("feedback").textContent = factorizationMessage(n);
+  if (!correct) { // only display the mnemonic if the user is wrong
+    document.getElementById("divisibilityFeedback").style.display = "block";
+    document.getElementById("divisibilityFeedback").textContent = nIsPrime ? primeMnemonic(n) : compositeMnemonic(n);
+  }
+  else {
+    document.getElementById("divisibilityFeedback").style.display = "none";
   }
 }
 
@@ -170,7 +172,9 @@ export default function Page() {
         <p>Is <span id="num">{currNum}</span> prime?</p>
         <button onClick={clickYes}>Yes</button>
         <button onClick={clickNo}>No</button>
-        <p id="feedback">Feedback will appear here.</p>
+        <p id="correct"></p>
+        <p id="feedback" style={{ display: "none" }}>Feedback will appear here.</p>
+        <p id="divisibilityFeedback" style={{ display: "none" }}>Divisibility feedback will appear here.</p>
         <p>Time left: <span id="timer">10</span> sec</p>
         <p>User health: <span id="userHealth">{userHealth}</span></p>
         <p>Boss health: <span id="bossHealth">{bossHealth}</span></p>
