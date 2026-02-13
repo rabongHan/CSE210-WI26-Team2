@@ -22,7 +22,7 @@ function GameScreen() {
     <main
       style={{
         fontFamily: "'Comic Sans MS', 'Baloo 2', cursive, system-ui",
-        backgroundColor: "#1B2838",
+        backgroundImage: "url('/Underwater_background.png')",
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
