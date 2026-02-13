@@ -81,6 +81,7 @@ var playerFails = function(currNum, nIsPrime) {
 
 var giveFeedback = function(n, nIsPrime, correct) {
   document.getElementById("correct").textContent = correct ? "Correct!" : "Incorrect!";
+  document.getElementById("correct").style.color = correct ? "green" : "red";
   document.getElementById("feedback").style.display = "block";
   document.getElementById("feedback").textContent = factorizationMessage(n);
   if (!correct) { // only display the mnemonic if the user is wrong
@@ -270,17 +271,37 @@ export default function Page() {
             No
           </button>
         </div>
-        <p id="correct"></p>
-        <p id="feedback" style={{ display: "none" }}>Feedback will appear here.</p>
-        <p id="divisibilityFeedback" style={{ display: "none" }}>Divisibility feedback will appear here.</p>
-        <p>Time left: <span id="timer">10</span> sec</p>
-        <p>User health: <span id="userHealth">{userHealth}</span></p>
-        <p>Boss health: <span id="bossHealth">{bossHealth}</span></p>
+        <div style={{ textAlign: "center", marginTop: "2vh", fontSize: "clamp(16px, 1.5vw, 24px)" }}>
+          <p id="correct" style={{ color: "green" }}></p>
+          <p id="feedback" style={{ display: "none" }}>Feedback will appear here.</p>
+          <p id="divisibilityFeedback" style={{ display: "none" }}>Divisibility feedback will appear here.</p>
+          <p>Time left: <span id="timer">10</span> sec</p>
+          <p>User health: <span id="userHealth">{userHealth}</span></p>
+          <p>Boss health: <span id="bossHealth">{bossHealth}</span></p>
+        </div>
       </div>
-      <div id="winMsg" style={{ display: "none" }}>
+      <div id="winMsg" style={{ maxWidth: "40%",
+          margin: "20% auto 0",
+          padding: "2vh 3vw",
+          backgroundColor: "rgba(128, 128, 128, 0.3)",
+          border: "5px solid black",
+          borderRadius: "12px",
+          display: "none",
+          textAlign: "center",
+          fontSize: "clamp(30%, 3vw, 50px)",
+          color: "green" }}>
         <p>You win!</p>
       </div>
-      <div id="loseMsg" style={{ display: "none" }}>
+      <div id="loseMsg" style={{ maxWidth: "40%",
+          margin: "20% auto 0",
+          padding: "2vh 3vw",
+          backgroundColor: "rgba(128, 128, 128, 0.3)",
+          border: "5px solid black",
+          borderRadius: "12px",
+          display: "none",
+          textAlign: "center",
+          fontSize: "clamp(30%, 3vw, 50px)",
+          color: "red" }}>
         <p>Game over!</p>
       </div>
     </main>
