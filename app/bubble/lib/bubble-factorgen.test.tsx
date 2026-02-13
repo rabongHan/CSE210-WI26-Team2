@@ -1,4 +1,4 @@
-import {generateBubbles, generateFactor} from "@/app/bubble/lib/bubble-game-logic";
+import {generateBubbles, generateComposite} from "@/app/bubble/lib/bubble-game-logic";
 
 const NUM_BUBBLES = 8;
 
@@ -63,24 +63,24 @@ describe("generateBubbles", () => {
   });
 });
 
-describe("generateFactor", () => {
-    test("Factor is an integer", () => {
-    const factor = generateFactor();
+describe("generateComposite", () => {
+    test("Composite is an integer", () => {
+    const composite = generateComposite();
 
-    expect(typeof factor).toBe('number');
+    expect(typeof composite).toBe('number');
   });
     test("Factor is inbetween 10 and 50", () => {
-    const factor = generateFactor();
+    const composite = generateComposite();
 
     // TODO: remove magic numbers, assign range according to level
-    expect(factor).toBeGreaterThanOrEqual(10);
-    expect(factor).toBeLessThanOrEqual(50);
+    expect(composite).toBeGreaterThanOrEqual(10);
+    expect(composite).toBeLessThanOrEqual(50);
   });
     test("Factor is not prime", () => {
-    const factor = generateFactor();
+    const composite = generateComposite();
     const factors: number[] = [];
-    for (let i: number = 2; i < Math.sqrt(factor); i++){
-        if (factor % i === 0) {
+    for (let i: number = 2; i < Math.sqrt(composite); i++){
+        if (composite % i === 0) {
             factors.push(i);
         }
     }

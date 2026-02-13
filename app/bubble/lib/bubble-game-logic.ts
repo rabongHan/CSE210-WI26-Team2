@@ -8,7 +8,7 @@ const NUM_BUBBLES : number = 8;
  * Generate the target factor for a round.
  * TODO: Replace with random generation logic.
  */
-export function generateFactor(): number {
+export function generateComposite(): number {
   // Range of numbers the user can be tested on
   const numberRange = [10, 50]
   const [min, max] = numberRange
@@ -29,7 +29,7 @@ export function generateFactor(): number {
  * Should include some correct answers (factors/multiples) and some wrong ones.
  * TODO: Replace with dynamic generation based on the factor.
  */
-export function generateBubbles(n: number): number[] {
+function generateFactors(n:number): Set<number> {
   // use set to have unique bubbles
   const bubbles = new Set<number>();
   // calculate sqrt once
@@ -41,6 +41,12 @@ export function generateBubbles(n: number): number[] {
       bubbles.add(n / i)
     }
   }
+  return bubbles
+}
+
+export function generateBubbles(n: number): number[] {
+  // First generate correct factors
+  const bubbles = generateFactors(n);
 
   // n/2 is smallest possible factor
   const wrongBound = Math.floor(n / 2)

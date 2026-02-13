@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, ReactNode } from "react";
 import {
-  generateFactor,
+  generateComposite,
   generateBubbles,
   isCorrectAnswer,
   getNextFactor,
@@ -35,7 +35,7 @@ export const INITIAL_LIVES = STARTING_LIVES;
 const BubbleGameContext = createContext<BubbleGameState | null>(null);
 
 function generateNewGame() {
-  const factor = generateFactor()
+  const factor = generateComposite()
   return{
     factor,
     bubbles: generateBubbles(factor),
