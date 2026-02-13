@@ -30,21 +30,27 @@ export function generateFactor(): number {
  * TODO: Replace with dynamic generation based on the factor.
  */
 export function generateBubbles(n: number): number[] {
-  let factors: number[] = [];
-    for (let i = 2; i <= Math.sqrt(n); i += 1) {
-      if (n % i === 0) {
-        factors.push(i)
-        factors.push(n / i)
-      }
-  }
-  while (factors && factors.length < NUM_BUBBLES){
-    let rand_num: number;
-    rand_num = Math.floor((Math.random() * n) + 2)
-    if (!factors.includes(rand_num)){
-      factors.push(rand_num)
+  // use set to have unique bubbles
+  const bubbles = new Set<number>();
+  // calculate sqrt once
+  let upperBound: number = Math.floor(Math.sqrt(n))
+  // add every factor and it's corresponding factor as a bubble.
+  for (let i = 2; i <= upperBound; i += 1) {
+    if (n % i === 0) {
+      bubbles.add(i)
+      bubbles.add(n / i)
     }
   }
-  return factors; // hard-coded
+
+  // n/2 is smallest possible factor
+  const wrongBound = Math.floor(n / 2)
+  // add random wrong answers
+  while (bubbles.size < NUM_BUBBLES && bubbles.size < wrongBound - 1) {
+    const rand = Math.floor(Math.random() * wrongBound) + 2;
+    bubbles.add(rand);
+  }
+  // sort array from lowest to highest so factors are not always first
+  return Array.from(bubbles).sort((a,b) => a - b); // hard-coded
 }
 
 /**
