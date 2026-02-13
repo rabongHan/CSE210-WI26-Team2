@@ -28,11 +28,9 @@ function startGame() {
   showGameContent();
   hidePlayerWin();
   hideGameOver();
-  console.log(userHealth);
 }
 
 var clickYes = function() {
-  console.log(userHealth);
   var nIsPrime = isPrime(currNum);
   var correct = nIsPrime;
   if (correct) {
