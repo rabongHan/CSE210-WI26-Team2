@@ -3,6 +3,7 @@
 import { Target } from "lucide-react";
 import { useEffect, useState } from "react";
 import { generateBalancedNumbers, isPrime } from "./lib/numberGenerator";
+import next from "next";
 
 var maxGuesses = 25;
 var numList;
@@ -10,6 +11,8 @@ var currNumInd;
 var currNum;
 var userHealth;
 var bossHealth;
+var timerInterval;
+var timeLeft;
 
 function startGame() {
   numList = generateBalancedNumbers(100, 300, maxGuesses, {});
@@ -20,6 +23,7 @@ function startGame() {
   document.getElementById("userHealth").textContent = userHealth;
   bossHealth = 20;
   document.getElementById("bossHealth").textContent = bossHealth;
+  startTimer();
   showGameContent();
   hidePlayerWin();
   hideGameOver();
@@ -28,46 +32,64 @@ function startGame() {
 
 var clickYes = function() {
   console.log(userHealth);
-  if (isPrime(currNum)) {
-    giveFeedback(currNum, true, true);
+  var nIsPrime = isPrime(currNum);
+  var correct = nIsPrime;
+  if (correct) {
+    playerPasses(currNum, nIsPrime);
   }
   else {
-    giveFeedback(currNum, false, false);
+    playerFails(currNum, nIsPrime);
   }
 }
 var clickNo = function() {
-  if (isPrime(currNum)) {
-    giveFeedback(currNum, true, false);
+  var nIsPrime = isPrime(currNum);
+  var correct = !nIsPrime;
+  if (correct) {
+    playerPasses(currNum, nIsPrime);
   }
   else {
-    giveFeedback(currNum, false, true);
+    playerFails(currNum, nIsPrime);
   }
 }
+
+// Functions for when the player guesses correctly or incorrectly.
+// These include the code for moving to the next number or ending the game.
+var playerPasses = function(currNum, nIsPrime) {
+  bossHealth -= 1;
+  document.getElementById("bossHealth").textContent = bossHealth;
+  if (bossHealth === 0) {
+    playerWin();
+  }
+  else {
+    giveFeedback(currNum, nIsPrime, true);
+    nextNumber();
+  }
+}
+
+var playerFails = function(currNum, nIsPrime) {
+  userHealth -= 1;
+  document.getElementById("userHealth").textContent = userHealth;
+  if (userHealth === 0) {
+    gameOver();
+  }
+  else {
+    giveFeedback(currNum, nIsPrime, false);
+    nextNumber();
+  }
+}
+
 var giveFeedback = function(n, nIsPrime, correct) {
   var message = "";
   message += (correct ? "Yes" : "No");
   message += ", it's ";
   message += (nIsPrime ? "prime" : "composite");
   document.getElementById("feedback").textContent = message;
-  if (correct) {
-    bossHealth -= 1;
-    document.getElementById("bossHealth").textContent = bossHealth;
+  if (!correct) {
+    // to do: write a message saying what the number is divisible by
+    var divisibilityMessage = "";
   }
-  else {
-    userHealth -= 1;
-    document.getElementById("userHealth").textContent = userHealth;
-  }
-  // to do: write a message saying what the number is divisible by
-  var divisibilityMessage = "";
-  console.log(numList.testCount);
-  if (bossHealth === 0) {
-    playerWin();
-  }
-  if (userHealth === 0) {
-    gameOver();
-  }
-  nextNumber();
 }
+
 var showGameContent = function() {
   document.getElementById("gameContent").style.display = "block";
 }
@@ -100,6 +122,38 @@ var nextNumber = function() {
   }
   currNum = numList.numbers[currNumInd];
   document.getElementById("num").textContent = currNum;
+  startTimer();
+}
+
+var startTimer = function() {
+  // initialize and start a 10-second countdown; when it hits 0 advance the number
+  if (typeof timerInterval !== 'undefined') clearInterval(timerInterval);
+  timeLeft = 10;
+  const el = document.getElementById('timer');
+  if (el) el.textContent = String(timeLeft);
+  timerInterval = setInterval(() => {
+    timeLeft -= 1;
+    const t = document.getElementById('timer');
+    if (t) t.textContent = String(timeLeft);
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      // time's up, which means the user lost this round
+      resetTimer();
+      playerFails(currNum, isPrime(currNum));
+    }
+  }, 1000);
+}
+
+var resetTimer = function() {
+  timeLeft = 10;
+  const el = document.getElementById('timer');
+  if (el) el.textContent = String(timeLeft);
+}
+
+var stopTimer = function() {
+  if (typeof timerInterval !== 'undefined') {
+    clearInterval(timerInterval);
+  }
 }
 // ...
 
@@ -117,6 +171,7 @@ export default function Page() {
         <button onClick={clickYes}>Yes</button>
         <button onClick={clickNo}>No</button>
         <p id="feedback">Feedback will appear here.</p>
+        <p>Time left: <span id="timer">10</span> sec</p>
         <p>User health: <span id="userHealth">{userHealth}</span></p>
         <p>Boss health: <span id="bossHealth">{bossHealth}</span></p>
       </div>
