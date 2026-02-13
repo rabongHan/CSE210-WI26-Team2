@@ -24,6 +24,8 @@ function startGame() {
   document.getElementById("userHealth").textContent = userHealth;
   bossHealth = 20;
   document.getElementById("bossHealth").textContent = bossHealth;
+  document.getElementById("welcomeBox").style.display = "none";
+  document.getElementById("startButtonWrap").style.display = "none";
   startTimer();
   showGameContent();
   hidePlayerWin();
@@ -163,13 +165,111 @@ export default function Page() {
   useEffect(() => setNow(new Date().toISOString()), []);
 
   return (
-    <main style={{ fontFamily: "system-ui", padding: 24 }}>
-      <div className="welcome">Welcome to the prime testing minigame!</div>
-      <button onClick={startGame}>Start</button>
+    <main
+      className="min-h-screen"
+      style={{
+        fontFamily: "system-ui",
+        minHeight: "120vh",
+        paddingTop: 1,
+        backgroundImage: "url('/prime-background.png')",
+        backgroundSize: "100% auto",
+        backgroundPosition: "top center",
+        backgroundRepeat: "no-repeat"
+      }}
+    >
+      <div
+        id="welcomeBox"
+        className="welcome"
+        style={{
+          maxWidth: "40%",
+          margin: "20% auto 0",
+          padding: "2vh 3vw",
+          backgroundColor: "rgba(128, 128, 128, 0.3)",
+          border: "5px solid black",
+          borderRadius: "12px",
+          textAlign: "center",
+          fontSize: "clamp(30%, 3vw, 50px)",
+          fontWeight: "bold",
+          fontFamily: "'Trebuchet MS', 'Verdana', 'Geneva', sans-serif"
+        }}
+      >
+        Welcome to the prime testing minigame!
+      </div>
+      <div
+        id="startButtonWrap"
+        style={{ display: "flex", justifyContent: "center", marginTop: "2vh" }}
+      >
+        <button
+          onClick={startGame}
+          style={{
+            backgroundColor: "#f7c948",
+            color: "#111",
+            border: "3px solid #111",
+            borderRadius: "999px",
+            padding: "2% 4%",
+            fontSize: "clamp(20%, 2vw, 35px)",
+            fontWeight: 700,
+            fontFamily: "'Trebuchet MS', 'Verdana', 'Geneva', sans-serif",
+            boxShadow: "0 6px 0 #111",
+            cursor: "pointer"
+          }}
+        >
+          Start
+        </button>
+      </div>
       <div id="gameContent" style={{ display: "none" }}>
-        <p>Is <span id="num">{currNum}</span> prime?</p>
-        <button onClick={clickYes}>Yes</button>
-        <button onClick={clickNo}>No</button>
+        <div
+          style={{
+            maxWidth: "40%",
+            margin: "12vh auto 0",
+            padding: "2vh 3vw",
+            backgroundColor: "rgba(128, 128, 128, 0.3)",
+            border: "5px solid black",
+            borderRadius: "12px",
+            textAlign: "center",
+            fontSize: "clamp(22px, 3vw, 36px)",
+            fontWeight: "bold",
+            fontFamily: "'Trebuchet MS', 'Verdana', 'Geneva', sans-serif"
+          }}
+        >
+          Is <span id="num">{currNum}</span> prime?
+        </div>
+        <div style={{ display: "flex", justifyContent: "center", gap: "2vw", marginTop: "2vh" }}>
+          <button
+            onClick={clickYes}
+            style={{
+              backgroundColor: "#7dd3fc",
+              color: "#0f172a",
+              border: "3px solid #0f172a",
+              borderRadius: "999px",
+              padding: "2% 4%",
+              fontSize: "clamp(18px, 2vw, 28px)",
+              fontWeight: 700,
+              fontFamily: "'Trebuchet MS', 'Verdana', 'Geneva', sans-serif",
+              boxShadow: "0 6px 0 #0f172a",
+              cursor: "pointer"
+            }}
+          >
+            Yes
+          </button>
+          <button
+            onClick={clickNo}
+            style={{
+              backgroundColor: "#fda4af",
+              color: "#0f172a",
+              border: "3px solid #0f172a",
+              borderRadius: "999px",
+              padding: "2% 4%",
+              fontSize: "clamp(18px, 2vw, 28px)",
+              fontWeight: 700,
+              fontFamily: "'Trebuchet MS', 'Verdana', 'Geneva', sans-serif",
+              boxShadow: "0 6px 0 #0f172a",
+              cursor: "pointer"
+            }}
+          >
+            No
+          </button>
+        </div>
         <p id="correct"></p>
         <p id="feedback" style={{ display: "none" }}>Feedback will appear here.</p>
         <p id="divisibilityFeedback" style={{ display: "none" }}>Divisibility feedback will appear here.</p>
