@@ -79,6 +79,7 @@ var playerFails = function(currNum, nIsPrime) {
   else {
     giveFeedback(currNum, nIsPrime, false);
     stopTimer();
+    disableAnswerButtons();
     showContinueButton();
   }
 }
@@ -185,8 +186,23 @@ var hideContinueButton = function() {
   if (btn) btn.style.display = "none";
 }
 
+var disableAnswerButtons = function() {
+  const yesBtn = document.getElementById("yesButton");
+  const noBtn = document.getElementById("noButton");
+  if (yesBtn) yesBtn.disabled = true;
+  if (noBtn) noBtn.disabled = true;
+}
+
+var enableAnswerButtons = function() {
+  const yesBtn = document.getElementById("yesButton");
+  const noBtn = document.getElementById("noButton");
+  if (yesBtn) yesBtn.disabled = false;
+  if (noBtn) noBtn.disabled = false;
+}
+
 var continueGame = function() {
   hideContinueButton();
+  enableAnswerButtons();
   nextNumber();
 }
 // ...
@@ -268,6 +284,7 @@ export default function Page() {
         </div>
         <div style={{ display: "flex", justifyContent: "center", gap: "2vw", marginTop: "2vh" }}>
           <button
+            id="yesButton"
             onClick={clickYes}
             style={{
               backgroundColor: "#7dd3fc",
@@ -285,6 +302,7 @@ export default function Page() {
             Yes
           </button>
           <button
+            id="noButton"
             onClick={clickNo}
             style={{
               backgroundColor: "#fda4af",
