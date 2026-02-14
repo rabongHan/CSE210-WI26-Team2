@@ -18,12 +18,14 @@ describe('LivesHealthCheck', () => {
     if (isPrime(shown)) {
       // if the number is prime, clicking "No" should decrement health
       await user.click(screen.getByText('No'));
-      const userHealth = await screen.findByText('4'); // health should go from 5 to 4
+      const userHealth = await screen.findByText(/^4\/5$/); // health should go from 5 to 4
+      await user.click(screen.getByText('Continue'));
       expect(userHealth).toBeInTheDocument();
     } else {
       // if the number is composite, clicking "Yes" should decrement health
       await user.click(screen.getByText('Yes'));
-      const userHealth = await screen.findByText('4'); // health should go from 5 to 4
+      const userHealth = await screen.findByText(/^4\/5$/); // health should go from 5 to 4
+      await user.click(screen.getByText('Continue'));
       expect(userHealth).toBeInTheDocument();
     }
   });
@@ -41,12 +43,12 @@ describe('LivesHealthCheck', () => {
     if (isPrime(shown)) {
       // if the number is prime, clicking "Yes" should decrement boss health
       await user.click(screen.getByText('Yes'));
-      const bossHealth = await screen.findByText('19'); // health should go from 20 to 19
+      const bossHealth = await screen.findByText(/^19\/20$/); // health should go from 20 to 19
       expect(bossHealth).toBeInTheDocument();
     } else {
       // if the number is composite, clicking "No" should decrement boss health
       await user.click(screen.getByText('No'));
-      const bossHealth = await screen.findByText('19'); // health should go from 20 to 19
+      const bossHealth = await screen.findByText(/^19\/20$/); // health should go from 20 to 19
       expect(bossHealth).toBeInTheDocument();
     }
   });
@@ -68,6 +70,8 @@ describe('LivesHealthCheck', () => {
         } else {
             await user.click(screen.getByText('Yes'));
         }
+        // Click Continue after each incorrect guess
+        await user.click(screen.getByText('Continue'));
     }
     const gameOverMessage = await screen.findByText('Game over!');
   });

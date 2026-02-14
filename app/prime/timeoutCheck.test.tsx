@@ -14,12 +14,18 @@ describe('TimeoutCheck', () => {
     await user.click(screen.getByText('Start'));
     // Get the number
     const initialNum = document.getElementById('num').textContent;
-    const initialHealth = parseInt(document.getElementById('userHealth').textContent);
+    const initialHealthText = document.getElementById('userHealthText').textContent;
+    const initialHealth = parseInt(initialHealthText.split('/')[0]); // Extract first number from "5/5"
     // wait for 11 seconds
     await new Promise((r) => setTimeout(r, 11000));
-    const newNum = document.getElementById('num').textContent;
-    const newHealth = parseInt(document.getElementById('userHealth').textContent);
-    expect(newNum).not.toBe(initialNum);
+    const newHealthText = document.getElementById('userHealthText').textContent;
+    const newHealth = parseInt(newHealthText.split('/')[0]); // Extract first number from "4/5"
     expect(newHealth === initialHealth - 1).toBeTruthy();
+    
+    // Click Continue to advance to next number
+    await user.click(screen.getByText('Continue'));
+    
+    const newNum = document.getElementById('num').textContent;
+    expect(newNum).not.toBe(initialNum);
   });
 });

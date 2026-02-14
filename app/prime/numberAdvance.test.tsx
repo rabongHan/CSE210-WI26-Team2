@@ -20,6 +20,12 @@ describe('NumberAdvancement', () => {
     const yesBtn = screen.getByText('Yes');
     await user.click(yesBtn);
 
+    // If the answer was incorrect, click Continue
+    const continueBtn = document.getElementById('continueButton');
+    if (continueBtn && continueBtn.style.display === 'block') {
+      await user.click(continueBtn);
+    }
+
     await waitFor(() => {
       expect(document.getElementById('num').textContent).not.toBe(initial);
     });
@@ -40,6 +46,12 @@ describe('NumberAdvancement', () => {
 
     const noBtn = screen.getByText('No');
     await user.click(noBtn);
+
+    // If the answer was incorrect, click Continue
+    const continueBtn = document.getElementById('continueButton');
+    if (continueBtn && continueBtn.style.display === 'block') {
+      await user.click(continueBtn);
+    }
 
     await waitFor(() => {
       expect(document.getElementById('num').textContent).not.toBe(initial);

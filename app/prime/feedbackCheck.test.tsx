@@ -19,6 +19,7 @@ describe('FeedbackCheck', () => {
     }
     else {
       feedback = await screen.findByText("Incorrect!");
+      await user.click(screen.getByText('Continue'));
     }
     expect(feedback).toBeInTheDocument();
 
@@ -28,6 +29,7 @@ describe('FeedbackCheck', () => {
     await user.click(screen.getByText('No'));
     if (isPrime(num2)) {
       feedback = await screen.findByText("Incorrect!");
+      await user.click(screen.getByText('Continue'));
     }
     else {
       feedback = await screen.findByText("Correct!");
@@ -48,7 +50,8 @@ describe('FeedbackCheck', () => {
       feedback = await screen.getByText(num + " is prime");
     }
     else {
-      feedback = await screen.getByText(num + " = "); // beginning of a factorization message
+      feedback = await screen.findByText(new RegExp(num + " = ")); // beginning of a factorization message
+      await user.click(screen.getByText('Continue'));
     }
     expect(feedback).toBeInTheDocument();
   });
