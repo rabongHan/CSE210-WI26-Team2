@@ -188,15 +188,15 @@ var hideContinueButton = function() {
 }
 
 var disableAnswerButtons = function() {
-  const yesBtn = document.getElementById("yesButton");
-  const noBtn = document.getElementById("noButton");
+  const yesBtn = document.getElementById("yesButton") as HTMLButtonElement;
+  const noBtn = document.getElementById("noButton") as HTMLButtonElement;
   if (yesBtn) yesBtn.disabled = true;
   if (noBtn) noBtn.disabled = true;
 }
 
 var enableAnswerButtons = function() {
-  const yesBtn = document.getElementById("yesButton");
-  const noBtn = document.getElementById("noButton");
+  const yesBtn = document.getElementById("yesButton") as HTMLButtonElement;
+  const noBtn = document.getElementById("noButton") as HTMLButtonElement;
   if (yesBtn) yesBtn.disabled = false;
   if (noBtn) noBtn.disabled = false;
 }
