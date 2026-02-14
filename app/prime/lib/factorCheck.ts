@@ -17,7 +17,7 @@ export function primeMnemonic(n: number) : string {
         if (isPrime(i))
             primesLessThanSqrt.push(i);
     }
-    return n + " is not divisible by " + primesLessThanSqrt.reduce((a, b) => a.toString() + ", " + b.toString());
+    return n + " is not divisible by " + primesLessThanSqrt.reduce((a, b) => a + ", " + b, "");
 }
 
 export function compositeMnemonic(n: number) : string {
@@ -26,15 +26,15 @@ export function compositeMnemonic(n: number) : string {
         case 2:
             return n + " ends in " + n % 10 + "!";
         case 3:
-            return n + "'s digits sum to " + n.toString().split("").reduce((a, b) => parseInt(a) + parseInt(b)) + "!";
+            return n + "'s digits sum to " + n.toString().split("").reduce((a, b) => a + parseInt(b), 0) + "!";
         case 5:
             return n + " ends in 0 or 5!";
         case 7:
             return Math.floor(n / 10) + " - 2*" + (n % 10) + " = " + (Math.floor(n / 10) - 2*(n % 10)) + "!";
         case 11:
             var digits = n.toString().split("");
-            var oddSum = digits.filter((_, i) => i % 2 === 0).reduce((a, b) => parseInt(a) + parseInt(b), 0);
-            var evenSum = digits.filter((_, i) => i % 2 === 1).reduce((a, b) => parseInt(a) + parseInt(b), 0);
+            var oddSum = digits.filter((_, i) => i % 2 === 0).reduce((a, b) => a + parseInt(b), 0);
+            var evenSum = digits.filter((_, i) => i % 2 === 1).reduce((a, b) => a + parseInt(b), 0);
             return Math.abs(oddSum - evenSum) + ", the sum of odd digits minus the sum of even digits, is a multiple of 11!";
         default:
             // just move onto the next test
@@ -66,7 +66,7 @@ var factorize = function(n) {
 
 var factorizationString = function(n) {
     var factors = factorize(n);
-    var factorStr = factors.reduce((a, b) => a.toString() + "*" + b.toString());
+    var factorStr = factors.reduce((a, b) => a + "*" + b, "");
     return factorStr;
 }
 
