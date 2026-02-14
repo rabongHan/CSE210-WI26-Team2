@@ -1,18 +1,16 @@
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Prime Factory",
-  description: "CSE 210 Project Group 2",
-};
-export default function RootLayout({children,}: Readonly<{
-  children: React.ReactNode
-}>)
-{
-  return (
-    <html>
-      <body>
-          {children}
-      </body>
-    </html>
-  )
-}
+export const metadata = {
+    title: "World of Atlantis",
+  };
+  
+  export default function RootLayout({
+    children,
+  }: {
+    children: React.ReactNode;
+  }) {
+    return (
+      <html lang="en">
+        <body style={{ margin: 0, padding: 0 }}>{children}</body>
+      </html>
+    );
+  }
+  
