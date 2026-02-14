@@ -76,10 +76,11 @@ describe("generateComposite", () => {
     expect(composite).toBeGreaterThanOrEqual(10);
     expect(composite).toBeLessThanOrEqual(50);
   });
-    test("Factor is not prime", () => {
+    test.only("Factor is not prime", () => {
     const composite = generateComposite();
     const factors: number[] = [];
-    for (let i: number = 2; i < Math.sqrt(composite); i++){
+    console.log(composite);
+    for (let i: number = 2; i <= Math.sqrt(composite); i++){
         if (composite % i === 0) {
             factors.push(i);
         }
