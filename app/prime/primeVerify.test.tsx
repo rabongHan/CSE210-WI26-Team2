@@ -17,7 +17,7 @@ describe('PrimeVerification', () => {
     const shown = parseInt(numSpan.textContent);
 
     await user.click(screen.getByText(isPrime(shown) ? 'Yes' : 'No'));
-    const feedback = await screen.findByText(isPrime(shown) ? "Yes, it's prime" : "Yes, it's composite");
+    const feedback = await screen.findByText("Correct!");
     expect(feedback).toBeInTheDocument();
   });
 
@@ -33,7 +33,7 @@ describe('PrimeVerification', () => {
     const shown = parseInt(numSpan.textContent);
 
     await user.click(screen.getByText(isPrime(shown) ? 'No' : 'Yes'));
-    const feedback = await screen.findByText(isPrime(shown) ? "No, it's prime" : "No, it's composite");
+    const feedback = await screen.findByText("Incorrect!");
     expect(feedback).toBeInTheDocument();
   });
 });

@@ -42,13 +42,14 @@ describe('FeedbackCheck', () => {
     // Start the game and click "Yes"
     await user.click(screen.getByText('Start'));
     const num = parseInt(document.getElementById('num').textContent);
-    await user.click(screen.getByText('Yes'));
+    await user.click(screen.getByText('Yes')); // it doesn't matter which button to click
     let feedback;
     if (isPrime(num)) {
       feedback = await screen.getByText(num + " is prime");
     }
     else {
-      feedback = await screen.getByText(num + " = "); // beginning of a factorization message
+      // This has to be a partial match, because `${num} =` doesn't match everything in the text field.
+      feedback = await screen.findByText((content) => content.includes(`${num} =`)); // beginning of a factorization message
     }
     expect(feedback).toBeInTheDocument();
   });
