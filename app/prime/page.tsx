@@ -62,6 +62,7 @@ var playerPasses = function(currNum, nIsPrime) {
   bossHealth -= 1;
   updateHealthBar("bossHealthBar", "bossHealthText", bossHealth, maxBossHealth);
   if (bossHealth === 0) {
+    stopTimer();
     playerWin();
   }
   else {
