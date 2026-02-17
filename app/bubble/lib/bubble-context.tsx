@@ -6,7 +6,6 @@ import {
   generateBubbles,
   isCorrectAnswer,
   getNextFactor,
-  hasCorrectAnswersLeft,
   STARTING_LIVES,
 } from "./bubble-game-logic";
 
@@ -56,18 +55,21 @@ export function BubbleGameProvider({ children }: { children: ReactNode }) {
       if (prev.status !== "playing") return prev;
 
       if (isCorrectAnswer(num, prev.factor)) {
-        // Correct — remove the bubble
-        const remaining = prev.bubbles.filter((b) => b !== num);
-        // Update factor for next step
+        // Correct — divide the factor
         const nextFactor = getNextFactor(prev.factor, num);
 
-        // Check if all correct answers have been popped
-        const won = !hasCorrectAnswersLeft(remaining, nextFactor)
+        // Player wins when factor is fully reduced to 1
+        if (nextFactor <= 1) {
+          return { ...prev, factor: nextFactor, bubbles: [], status: "won" };
+        }
+
+        // Generate fresh bubbles for the new factor so the player
+        // always has valid options (no more stuck states)
+        const newBubbles = generateBubbles(nextFactor);
         return {
           ...prev,
           factor: nextFactor,
-          bubbles: remaining,
-          status: won? "won" : prev.status
+          bubbles: newBubbles,
         };
       }
 

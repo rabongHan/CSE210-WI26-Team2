@@ -17,9 +17,12 @@ export function generateComposite(): number {
   // We multiply this by the range (max - min) to get a number
   // within range (0, range), then add by the min to get the
   // number within (min, max). Math.floor() because we need an int
+  // Skip primes (no factors) and prime squares like 25=5², 49=7²
+  // (their only factor pair is (√n, √n) — same number twice, so the
+  //  player gets stuck after clicking it once)
   do {
     num = Math.floor((Math.random() * (max - min + 1)) + min)
-  } while (isPrime(num))
+  } while (isPrime(num) || !hasDistinctFactorPair(num))
 
   return num; // hard-coded
 }
@@ -32,9 +35,19 @@ export function generateComposite(): number {
 function generateFactors(n:number): Set<number> {
   // use set to have unique bubbles
   const bubbles = new Set<number>();
-  // calculate sqrt once
+
+  // Always include the prime factors so the game is solvable.
+  // E.g. 24 = 2 × 2 × 2 × 3  →  primes {2, 3} are guaranteed to be in bubbles.
+  let temp = n;
+  for (let p = 2; p <= temp; p++) {
+    while (temp % p === 0) {
+      bubbles.add(p);
+      temp = Math.floor(temp / p);
+    }
+  }
+
+  // Also add composite factor pairs for variety (e.g. 4, 6, 8, 12 for n=24)
   let upperBound: number = Math.floor(Math.sqrt(n))
-  // add every factor and it's corresponding factor as a bubble.
   for (let i = 2; i <= upperBound; i += 1) {
     if (n % i === 0) {
       bubbles.add(i)
@@ -48,15 +61,21 @@ export function generateBubbles(n: number): number[] {
   // First generate correct factors
   const bubbles = generateFactors(n);
 
-  // n/2 is smallest possible factor
-  const wrongBound = Math.floor(n / 2)
-  // add random wrong answers
-  while (bubbles.size < NUM_BUBBLES && bubbles.size < wrongBound - 1) {
-    const rand = Math.floor(Math.random() * wrongBound) + 2;
-    bubbles.add(rand);
+  // Use a wide enough range so even small numbers (like 5) get plenty of wrong answers.
+  // Range: [2, max(n*2, 20)] — guarantees at least 18 possible values to pick from.
+  const wrongMax = Math.max(n * 2, 20);
+  // add random wrong answers (numbers that are NOT factors of n)
+  let attempts = 0;
+  while (bubbles.size < NUM_BUBBLES && attempts < 200) {
+    const rand = Math.floor(Math.random() * (wrongMax - 2 + 1)) + 2;
+    // only add if it's NOT a correct factor (so it's a wrong answer)
+    if (n % rand !== 0) {
+      bubbles.add(rand);
+    }
+    attempts++;
   }
   // sort array from lowest to highest so factors are not always first
-  return Array.from(bubbles).sort((a,b) => a - b); // hard-coded
+  return Array.from(bubbles).sort((a,b) => a - b);
 }
 
 /**
@@ -85,6 +104,19 @@ export function hasCorrectAnswersLeft(
   factor: number
 ): boolean {
   return bubbles.some((b) => isCorrectAnswer(b, factor));
+}
+
+/*
+  Returns true if n has at least one factor pair (a, b) where a ≠ b
+  and a * b = n (with 1 < a < b < n).
+  E.g. 12 → true (2×6, 3×4), 25 → false (only 5×5), 49 → false (only 7×7).
+*/
+export function hasDistinctFactorPair(n: number): boolean {
+  // strict < so we skip i = √n (where i and n/i are the same)
+  for (let i = 2; i < Math.sqrt(n); i++) {
+    if (n % i === 0) return true;
+  }
+  return false;
 }
 
 /*
