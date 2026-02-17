@@ -374,6 +374,19 @@ export default function Page() {
           fontSize: "clamp(30%, 3vw, 50px)",
           color: "green" }}>
         <p>You win!</p>
+        <button onClick={startGame} style={{
+          backgroundColor: "#f7c948",
+          color: "#111",
+          border: "3px solid #111",
+          borderRadius: "999px",
+          textAlign: "center",
+          padding: "2% 4%",
+          fontSize: "clamp(20%, 2vw, 35px)",
+          fontWeight: 700,
+          fontFamily: "'Trebuchet MS', 'Verdana', 'Geneva', sans-serif",
+          boxShadow: "0 6px 0 #111",
+          cursor: "pointer"
+        }}>Play again</button>
       </div>
       <div id="loseMsg" style={{ maxWidth: "40%",
           margin: "20% auto 0",
@@ -386,6 +399,19 @@ export default function Page() {
           fontSize: "clamp(30%, 3vw, 50px)",
           color: "red" }}>
         <p>Game over!</p>
+        <button onClick={startGame} style={{
+          backgroundColor: "#f7c948",
+          color: "#111",
+          border: "3px solid #111",
+          borderRadius: "999px",
+          textAlign: "center",
+          padding: "2% 4%",
+          fontSize: "clamp(20%, 2vw, 35px)",
+          fontWeight: 700,
+          fontFamily: "'Trebuchet MS', 'Verdana', 'Geneva', sans-serif",
+          boxShadow: "0 6px 0 #111",
+          cursor: "pointer"
+        }}>Play again</button>
       </div>
       <div
         id="homeButtonWrap"
