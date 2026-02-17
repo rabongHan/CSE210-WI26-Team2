@@ -387,6 +387,24 @@ export default function Page() {
           color: "red" }}>
         <p>Game over!</p>
       </div>
+      <div
+        id="homeButtonWrap"
+        style={{ display: "flex", justifyContent: "center", marginTop: "2vh" }}
+      >
+        <button onClick={() => window.location.href = "/"} style={{
+          backgroundColor: "#f7c948",
+          color: "#111",
+          border: "3px solid #111",
+          borderRadius: "999px",
+          textAlign: "center",
+          padding: "2% 4%",
+          fontSize: "clamp(20%, 2vw, 35px)",
+          fontWeight: 700,
+          fontFamily: "'Trebuchet MS', 'Verdana', 'Geneva', sans-serif",
+          boxShadow: "0 6px 0 #111",
+          cursor: "pointer"
+        }}>Home</button>
+      </div>
     </main>
   );
 }
