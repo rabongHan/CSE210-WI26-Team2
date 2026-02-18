@@ -74,8 +74,13 @@ export function generateBubbles(n: number): number[] {
     }
     attempts++;
   }
-  // sort array from lowest to highest so factors are not always first
-  return Array.from(bubbles).sort((a,b) => a - b);
+  // Fisher-Yates shuffle
+  const arr = Array.from(bubbles);
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+  return arr;
 }
 
 /**

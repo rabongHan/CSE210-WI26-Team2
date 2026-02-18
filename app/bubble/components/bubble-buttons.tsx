@@ -8,8 +8,8 @@ type PrimaryButtonProps = {
 
 // Button for navigating to other pages E.g. start, back
 export function NavButton({ href, children }: PrimaryButtonProps) {
-  return (
-    <Link href={href}>
+    return (
+      <Link href={href}>
       <button
         style={{
           backgroundColor: "#FFB6C1",
@@ -26,6 +26,6 @@ export function NavButton({ href, children }: PrimaryButtonProps) {
       >
         {children}
       </button>
-    </Link>
-  );
+      </Link>
+    );
 }
