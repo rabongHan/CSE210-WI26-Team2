@@ -17,7 +17,7 @@ export function primeMnemonic(n: number) : string {
         if (isPrime(i))
             primesLessThanSqrt.push(i);
     }
-    return n + " is not divisible by " + primesLessThanSqrt.reduce((a, b) => a + ", " + b, "");
+    return n + " is not divisible by " + primesLessThanSqrt.reduce((a, b) => a + ", " + b);
 }
 
 export function compositeMnemonic(n: number) : string {
@@ -66,7 +66,7 @@ var factorize = function(n) {
 
 var factorizationString = function(n) {
     var factors = factorize(n);
-    var factorStr = factors.reduce((a, b) => a + "*" + b, "");
+    var factorStr = factors.reduce((a, b) => a + "*" + b);
     return factorStr;
 }
 
