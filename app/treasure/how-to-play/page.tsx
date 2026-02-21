@@ -16,18 +16,22 @@ export default function TreasureHowToPlay() {
                     </div>
                     <div className="primary-box flex items-start gap-3 px-4 py-3">
                         <span className="text-2xl font-extrabold leading-none">2.</span>
-                        <span className="text-base font-semibold">If you get any wrong, you lose a life.</span>
+                        <span className="text-base font-semibold">Select every rule box that applies; if none apply, submit with no boxes selected.</span>
                     </div>
                     <div className="primary-box flex items-start gap-3 px-4 py-3">
                         <span className="text-2xl font-extrabold leading-none">3.</span>
-                        <span className="text-base font-semibold">You will get a total of 3 lives.</span>
+                        <span className="text-base font-semibold">If you get any wrong, you lose a life.</span>
                     </div>
                     <div className="primary-box flex items-start gap-3 px-4 py-3">
                         <span className="text-2xl font-extrabold leading-none">4.</span>
-                        <span className="text-base font-semibold">You can get partial points for getting some correct answers.</span>
+                        <span className="text-base font-semibold">You will get a total of 3 lives.</span>
                     </div>
                     <div className="primary-box flex items-start gap-3 px-4 py-3">
                         <span className="text-2xl font-extrabold leading-none">5.</span>
+                        <span className="text-base font-semibold">You can get partial points for getting some correct answers.</span>
+                    </div>
+                    <div className="primary-box flex items-start gap-3 px-4 py-3">
+                        <span className="text-2xl font-extrabold leading-none">6.</span>
                         <span className="text-base font-semibold">Score 350 points to open the chest!</span>
                     </div>
                 </div>
