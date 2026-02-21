@@ -2,9 +2,7 @@
 
 import { Target } from "lucide-react";
 import { useEffect, useState } from "react";
-import { generateBalancedNumbers, isPrime } from "./lib/numberGenerator";
 import next from "next";
-import { primeMnemonic, compositeMnemonic, factorizationMessage } from "./lib/factorCheck";
 import { startGame, clickYes, clickNo, continueGame } from "./lib/gameLogic";
 import { currNum, userHealth, bossHealth, maxUserHealth, maxBossHealth } from "./lib/gameLogic";
 
