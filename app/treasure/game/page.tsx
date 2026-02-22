@@ -1,11 +1,16 @@
 "use client";
 
-import { NavButton } from "@/app/treasure/components/treasure-buttons";
+
 import "@/app/treasure/treasure.css";
-import { TreasureHeader } from "../components/treasure-header";
-import { Hearts } from "../components/treasure-hearts";
-import { GameBadges } from "../components/treasure-badges";
+
+import { NavButton } from "@/app/treasure/components/treasure-buttons";
+import { TreasureHeader } from "@/app/treasure//components/treasure-header";
+import { Hearts } from "@/app/treasure/components/treasure-hearts";
+import { GameBadges } from "@/app/treasure/components/treasure-badges";
+
+import { toggleRuleOptionsSelection } from "@/app/treasure/lib/treasure-game-logic";
 import { TreasureGameAPI, GameState, SubmitResult, RuleId } from "@/app/treasure/lib/types";
+
 import { useState } from "react";
 
 const initialMockState: GameState = {
@@ -32,6 +37,13 @@ const ruleInfo = {
 export default function TreasureGamePage() {
     const [gameState, setGameState] = useState<GameState>(initialMockState);
     
+    const handleSelectRule = (rule: RuleId) => {
+        setGameState(prev => ({
+            ...prev, // copies all previous state props (...var syntax is used to avoid overwriting other state properties)
+            selectedRules: toggleRuleOptionsSelection(prev.selectedRules, rule) // only update selectedRules
+        }));
+    };
+
     return (
         <main className={"bg-[url('app/treasure/assets/background1.png')] bg-cover bg-center min-h-screen"}>
             <div className="mx-auto p-6">
@@ -56,7 +68,13 @@ export default function TreasureGamePage() {
                 <div className="container mx-auto max-w-4xl">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-2 gap-y-4 py-3 place-items-center">
                         {gameState.ruleOptions.map(rule => (
-                            <div key={rule} className="primary-box w-full min-h-[120px] text-center flex flex-col justify-center">
+                            <div 
+                                key={rule} 
+                                className={`primary-box w-full min-h-[130px] text-center flex flex-col justify-center border-4 
+                                    ${gameState.selectedRules.includes(rule) ? '' : 'border-transparent'}`}
+                                onClick={() => handleSelectRule(rule)}
+                                style={{ cursor: 'pointer' }}
+                            >
                                 <h3 className="font-bold">{ruleInfo[rule]?.title}</h3>
                                 <p className="mt-1">{ruleInfo[rule]?.desc}</p>
                             </div>
