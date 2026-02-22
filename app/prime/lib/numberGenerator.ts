@@ -123,20 +123,37 @@ function initTestCount(tests: Test[]): Record<string, number> {
   return obj;
 }
 
-/** Return all tests whose count is currently minimal */
+function initTestFreq(tests: Test[]): Record<string, number> {
+  const obj: Record<string, number> = {};
+  for (const t of tests) {
+    if (t === "prime") {
+      obj[testKey(t)] = 0.5; // target frequency for primes (adjust as needed)
+    }
+    else {
+      obj[testKey(t)] = 0.5 / (tests.length - 1); // distribute remaining frequency among composite tests
+    }
+  }
+  return obj;
+}
+
+/** Return all tests whose count (relative to the desired frequency) is currently minimal */
+// Recently modified to work with non-uniform distribution over tests
+// so that we can prefer certain tests (like "prime") when they are underrepresented, even if they are not strictly minimal
 function getMinCountTests(
   tests: Test[],
-  testCount: Record<string, number>
+  testCount: Record<string, number>,
+  testFreq: Record<string, number>
 ): Test[] {
   let best = Infinity;
   const out: Test[] = [];
   for (const t of tests) {
-    const c = testCount[testKey(t)] ?? 0;
-    if (c < best) {
-      best = c;
+    // instead of minimizing over test counts, we minimize over testCount[testKey(t)]/testFreq[testKey(t)]
+    const ratio = testCount[testKey(t)] / (testFreq[testKey(t)] ?? 1);
+    if (ratio < best - 0.000001) {
+      best = ratio;
       out.length = 0;
       out.push(t);
-    } else if (c === best) {
+    } else if (Math.abs(ratio - best) < 0.000001) { // we assume the two floating points represent the same (rational) number
       out.push(t);
     }
   }
@@ -191,6 +208,7 @@ export function generateBalancedNumbers(
 
   const used = new Set<number>(); // track used numbers
   const testCount = initTestCount(tests); // track counts for each test
+  const testFreq = initTestFreq(tests); // the desired probability distribution over tests that we want to match
 
   // Precompute primes
   const wantsPrime = tests.includes("prime");
@@ -315,7 +333,7 @@ export function generateBalancedNumbers(
 
   for (let step = 0; step < k; step++) {
     // Pick the least-used test
-    const minTests = getMinCountTests(tests, testCount);
+    const minTests = getMinCountTests(tests, testCount, testFreq);
     // Randomly pick one of the least-used tests as the target
     let target = pickRandom(rng, minTests);
 
