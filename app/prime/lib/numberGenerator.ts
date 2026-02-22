@@ -358,5 +358,8 @@ export function generateBalancedNumbers(
     updateCountsWithNumber(chosen);
   }
 
+  // sort the numbers from smallest to largest so that difficulty increases as the game progresses
+  numbers.sort((a, b) => a - b);
+
   return { numbers, testCount };
 }
