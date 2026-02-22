@@ -241,6 +241,12 @@ export function generateBalancedNumbers(
     // Exhaustive scan for small candidate sets
     if (totalCandidates <= exhaustiveThreshold) {
       const all = enumerateCandidatesForTest(target);
+      // Randomize the order so that we don't always pick the same "best" candidate in ties
+      for (let i = all.length - 1; i > 0; i--) {
+        const j = pickRandomInt(rng, 0, i);
+        [all[i], all[j]] = [all[j], all[i]];
+      }
+
       for (const n of all) {
         if (n < 2 || used.has(n)) continue;
         if (preferOdd && n % 2 === 0) continue; // Skip even numbers if we prefer odd
@@ -266,6 +272,9 @@ export function generateBalancedNumbers(
             if (bestPenalty === 0) break;
           }
         }
+      }
+      if (target === "prime") {
+        console.log("Prime ", best, " was picked");
       }
       return best;
     }
