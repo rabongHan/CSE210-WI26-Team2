@@ -273,9 +273,6 @@ export function generateBalancedNumbers(
           }
         }
       }
-      if (target === "prime") {
-        console.log("Prime ", best, " was picked");
-      }
       return best;
     }
 
