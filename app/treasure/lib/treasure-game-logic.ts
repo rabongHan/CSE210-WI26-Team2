@@ -80,3 +80,14 @@ export function generateRuleOptions(
     // return array of all unique answers
     return [...options];
 }
+
+// Returns updated selectedRules array
+export function toggleRuleOptionsSelection(selectedRules: RuleId[], rule: RuleId): RuleId[] {
+    const set = new Set(selectedRules); // Create a Set from the current array
+    if (set.has(rule)) {
+        set.delete(rule); // Remove if already selected
+    } else {
+        set.add(rule);    // Add if not selected
+    }
+    return Array.from(set); // Convert back to array to update Statee
+}
