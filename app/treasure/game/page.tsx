@@ -8,18 +8,20 @@ import { TreasureHeader } from "@/app/treasure//components/treasure-header";
 import { Hearts } from "@/app/treasure/components/treasure-hearts";
 import { GameBadges } from "@/app/treasure/components/treasure-badges";
 
-import { toggleRuleOptionsSelection } from "@/app/treasure/lib/treasure-game-logic";
+import { generateRound, toggleRuleOptionsSelection } from "@/app/treasure/lib/treasure-game-logic";
 import { TreasureGameAPI, GameState, SubmitResult, RuleId } from "@/app/treasure/lib/types";
 
 import { useState } from "react";
 
-const initialMockState: GameState = {
-  currentNumber: 78,
-  ruleOptions: [2, 3, 4, 6, 7, 8],
+const initialRound = generateRound();
+
+const initialGameState: GameState = {
+  currentNumber: initialRound.currentNumber,
+  ruleOptions: initialRound.ruleOptions,
   selectedRules: [],
   level: 1,
-  score: 150,
-  lives: 2,
+  score: 0,
+  lives: 3,
   status: "playing",
 };
 
@@ -35,7 +37,7 @@ const ruleInfo = {
 };
 
 export default function TreasureGamePage() {
-    const [gameState, setGameState] = useState<GameState>(initialMockState);
+    const [gameState, setGameState] = useState<GameState>(initialGameState);
     
     const handleSelectRule = (rule: RuleId) => {
         setGameState(prev => ({
