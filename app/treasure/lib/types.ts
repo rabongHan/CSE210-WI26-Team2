@@ -53,5 +53,5 @@ export type TreasureGameAPI = {
     nextRound: () => void;
 
     // OPTIONAL: reset game to initial state
-    resetGame: () => void;
+    resetGame?: () => void;
 };
