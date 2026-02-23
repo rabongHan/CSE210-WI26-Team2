@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn-pink {
+    @apply bg-[#FFB6C1] text-black font-extrabold
+      border-none rounded-full cursor-pointer;
+    font: inherit;
+    font-weight: 800;
+  }
+
+  .page-ocean {
+    @apply min-h-screen flex flex-col items-center p-6 bg-cover bg-center;
+    font-family: 'Comic Sans MS', 'Baloo 2', cursive, system-ui;
+    background-image: url('/Underwater_background.png');
+  }
+}
