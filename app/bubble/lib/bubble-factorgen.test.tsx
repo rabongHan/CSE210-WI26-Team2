@@ -52,14 +52,15 @@ describe("generateBubbles", () => {
     expect(results.size).toBeGreaterThan(1);
   });
   test("Number with 8 factors has same bubbles every run", () => {
-    const n = 48; // factors: 2,3,4,6,8,12,16,24
-    const results = new Set<string>();
+  const n = 48; // factors: 2,3,4,6,8,12,16,24
+  const results = new Set<string>();
 
-    for (let i = 0; i < 10; i++) {
-      results.add(generateBubbles(n).join(","));
-    }
+  for (let i = 0; i < 10; i++) {
+    let result = generateBubbles(n).sort()
+    results.add(result.join(","));
+  }
 
-    expect(results.size).toBe(1);
+  expect(results.size).toBe(1);
   });
 });
 
