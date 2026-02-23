@@ -143,3 +143,4 @@ export function isPrime(n: number){
  * How many lives the player starts with.
  */
 export const STARTING_LIVES = 3;
+export const NUM_ROUNDS = 5;

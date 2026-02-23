@@ -7,6 +7,7 @@ import {
   isCorrectAnswer,
   getNextFactor,
   STARTING_LIVES,
+  NUM_ROUNDS,
 } from "./bubble-game-logic";
 
 // Game Status
@@ -16,6 +17,7 @@ type BubbleGameState = {
   factor: number;
   bubbles: number[];
   lives: number;
+  round: number;
   status: GameStatus;
   handleBubbleClick: (num: number) => void;
   resetGame: () => void;
@@ -39,6 +41,7 @@ function generateNewGame() {
     factor,
     bubbles: generateBubbles(factor),
     lives: STARTING_LIVES,
+    round: 1,
     status: "playing" as GameStatus
   };
 }
@@ -60,8 +63,16 @@ export function BubbleGameProvider({ children }: { children: ReactNode }) {
 
         // Player wins when factor is fully reduced to 1
         if (nextFactor <= 1) {
-          return { ...prev, factor: nextFactor, bubbles: [], status: "won" };
+          if (prev.round >= NUM_ROUNDS) {
+            return { ...prev, factor: nextFactor, bubbles: [], status: "won" };
+          }
+          else {
+            const factor = generateComposite();
+            const newBubbles = generateBubbles(factor)
+            return { ...prev, factor: factor, bubbles: newBubbles, round: prev.round + 1};
+          }
         }
+
 
         // Generate fresh bubbles for the new factor so the player
         // always has valid options (no more stuck states)
@@ -95,6 +106,7 @@ export function BubbleGameProvider({ children }: { children: ReactNode }) {
         bubbles: game.bubbles,
         lives: game.lives,
         status: game.status,
+        round: game.round,
         handleBubbleClick,
         resetGame }}
     >

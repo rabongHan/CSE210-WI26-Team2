@@ -7,7 +7,7 @@ import {
   useBubbleGame,
   INITIAL_LIVES,
 } from "./bubble-context";
-import { isCorrectAnswer } from "./bubble-game-logic";
+import {isCorrectAnswer} from "./bubble-game-logic";
 
 // Helper: finds a number that isCorrectAnswer returns true/false for.
 // Searches 1–200 so it works no matter what logic the teammate implements.
@@ -21,7 +21,7 @@ function findAnswer(factor: number, wantCorrect: boolean): number | undefined {
 
 // Dynamically finds a correct and wrong answer based on the current factor.
 function Harness() {
-  const { lives, status, bubbles, factor, handleBubbleClick, resetGame } =
+  const { lives, status, bubbles, factor, round, handleBubbleClick, resetGame } =
     useBubbleGame();
 
   const correctNum = findAnswer(factor, true);
@@ -33,6 +33,7 @@ function Harness() {
       <div data-testid="status">{status}</div>
       <div data-testid="factor">{factor}</div>
       <div data-testid="bubble-count">{bubbles.length}</div>
+      <div data-testid="round">{round}</div>
       {wrongNum !== undefined && (
         <button onClick={() => handleBubbleClick(wrongNum)}>click-wrong</button>
       )}
@@ -205,4 +206,21 @@ test("resetGame restores lives back to 3", async () => {
 
   expect(screen.getByTestId("lives")).toHaveTextContent("3");
   expect(screen.getByTestId("status")).toHaveTextContent("playing");
+});
+
+test("player reaches won state after factorizing all numbers", async () => {
+    const user = userEvent.setup();
+    render(
+      <BubbleGameProvider>
+        <Harness />
+      </BubbleGameProvider>
+    );
+
+    while (screen.queryByRole("button", { name: "click-correct" })) {
+      await user.click(
+        screen.getByRole("button", { name: "click-correct" })
+      );
+    }
+
+    expect(screen.getByTestId("status")).toHaveTextContent("won");
 });

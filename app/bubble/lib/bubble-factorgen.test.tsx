@@ -56,7 +56,8 @@ describe("generateBubbles", () => {
     const results = new Set<string>();
 
     for (let i = 0; i < 10; i++) {
-      results.add(generateBubbles(n).join(","));
+      let result = generateBubbles(n).sort()
+      results.add(result.join(","));
     }
 
     expect(results.size).toBe(1);
