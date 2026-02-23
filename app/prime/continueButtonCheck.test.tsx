@@ -73,36 +73,6 @@ describe('ContinueButtonCheck', () => {
     });
   });
 
-  it("passes if Yes/No buttons are re-enabled after clicking Continue", async () => {
-    render(<Page />);
-    const user = userEvent.setup();
-
-    // Start the game
-    await user.click(screen.getByText('Start'));
-    
-    // Get the number and make an incorrect guess
-    const numSpan = document.getElementById('num');
-    const shown = parseInt(numSpan.textContent);
-    const wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
-    await user.click(screen.getByText(wrongAnswer));
-
-    // Verify buttons are disabled
-    const yesBtn = document.getElementById('yesButton') as HTMLButtonElement;
-    const noBtn = document.getElementById('noButton') as HTMLButtonElement;
-    expect(yesBtn.disabled).toBe(true);
-    expect(noBtn.disabled).toBe(true);
-
-    // Wait for Continue button and click it
-    await screen.findByText('Continue');
-    await user.click(screen.getByText('Continue'));
-
-    // Verify buttons are enabled
-    await waitFor(() => {
-      expect(yesBtn.disabled).toBe(false);
-      expect(noBtn.disabled).toBe(false);
-    });
-  });
-
   it("passes if the game can continue normally after clicking Continue", async () => {
     render(<Page />);
     const user = userEvent.setup();

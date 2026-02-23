@@ -104,10 +104,14 @@ var hideGameContent = function() {
   document.getElementById("gameContent").style.display = "none";
 }
 var playerWin = function() {
+  stopTimer();
+  disableAnswerButtons();
   showPlayerWin();
   hideGameContent();
 }
 var gameOver = function() {
+  stopTimer();
+  disableAnswerButtons();
   showGameOver();
   hideGameContent();
 }
