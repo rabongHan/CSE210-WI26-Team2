@@ -1,4 +1,5 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import TreasureGamePage from "@/app/treasure/game/page";
 
 describe("TreasureGame page", () => {
@@ -28,5 +29,17 @@ describe("TreasureGame page", () => {
         render(<TreasureGamePage />);
         expect(screen.getByText("Submit")).toBeInTheDocument();
         expect(screen.getByText("Back")).toBeInTheDocument();
+    });
+
+    it("adds border to rule option box after selecting", async () => {
+        render(<TreasureGamePage />);
+        const ruleBoxes = document.querySelectorAll(".grid .primary-box");
+        const firstBox = ruleBoxes[0];
+        expect(firstBox).toHaveClass("border-transparent"); // Initially transparent
+
+        await userEvent.click(firstBox);
+
+        expect(firstBox).not.toHaveClass("border-transparent");
+        expect(firstBox).toHaveClass("border-4");
     });
 });
