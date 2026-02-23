@@ -127,25 +127,30 @@ describe('generateBalancedNumbers', () => {
     }
   });
 
-  test('[2.4.2] distribution is balanced across all test categories', () => {
+  test('[2.4.2] distribution follows target frequency ratios', () => {
     const result = generateBalancedNumbers(2, 200, 60);
-    
+
     const counts = Object.values(result.testCount);
     expect(counts.length).toBeGreaterThan(1);
-    
-    // Check that counts are relatively balanced (not too extreme)
-    const maxCount = Math.max(...counts);
-    const minCount = Math.min(...counts);
-    const avgCount = counts.reduce((a, b) => a + b, 0) / counts.length;
-    
-    // Standard deviation should be small relative to mean
-    const variance = counts.reduce((sum, val) => sum + Math.pow(val - avgCount, 2), 0) / counts.length;
-    const stdDev = Math.sqrt(variance);
-    const coefficientOfVariation = stdDev / avgCount;
-    
-    // All these checks ensure balancing is working
-    expect(coefficientOfVariation).toBeLessThan(0.6);
-    expect(maxCount - minCount).toBeLessThan(avgCount * 2);
+
+    const total = counts.reduce((a, b) => a + b, 0);
+    const primeCount = result.testCount['prime'] ?? 0;
+    const primeRatio = total > 0 ? primeCount / total : 0;
+
+    // Prime target frequency is ~50%
+    expect(primeRatio).toBeGreaterThan(0.4);
+    expect(primeRatio).toBeLessThan(0.6);
+
+    const compositeKeys = Object.keys(result.testCount).filter((k) => k !== 'prime');
+    const compositeTotal = total - primeCount;
+    const compositeAvg = compositeKeys.length > 0 ? compositeTotal / compositeKeys.length : 0;
+
+    for (const key of compositeKeys) {
+      const count = result.testCount[key] ?? 0;
+      // Allow some variance in composite distribution
+      expect(count).toBeGreaterThan(compositeAvg * 0.5);
+      expect(count).toBeLessThan(compositeAvg * 1.5);
+    }
   });
 
   // ===== 2.5 Options & Configuration =====
