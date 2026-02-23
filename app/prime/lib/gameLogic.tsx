@@ -25,6 +25,8 @@ export function startGame() {
   document.getElementById("welcomeBox").style.display = "none";
   document.getElementById("startButtonWrap").style.display = "none";
   hideContinueButton();
+  clearFeedback();
+  enableAnswerButtons();
   startTimer();
   showGameContent();
   hidePlayerWin();
@@ -102,10 +104,14 @@ var hideGameContent = function() {
   document.getElementById("gameContent").style.display = "none";
 }
 var playerWin = function() {
+  stopTimer();
+  disableAnswerButtons();
   showPlayerWin();
   hideGameContent();
 }
 var gameOver = function() {
+  stopTimer();
+  disableAnswerButtons();
   showGameOver();
   hideGameContent();
 }
@@ -181,6 +187,14 @@ var showContinueButton = function() {
 var hideContinueButton = function() {
   const btn = document.getElementById("continueButton");
   if (btn) btn.style.display = "none";
+}
+
+var clearFeedback = function() {
+  document.getElementById("correct").textContent = "";
+  document.getElementById("feedback").textContent = "";
+  document.getElementById("feedback").style.display = "none";
+  document.getElementById("divisibilityFeedback").textContent = "";
+  document.getElementById("divisibilityFeedback").style.display = "none";
 }
 
 var disableAnswerButtons = function() {
