@@ -1,56 +1,25 @@
 "use client";
 
 import { NavButton } from "@/app/bubble/components/bubble-buttons";
+import TargetCursor from "@/app/bubble/components/TargetCursor";
 
 export default function Page() {
   return (
     <main
-      style={{
-        fontFamily: "'Comic Sans MS', 'Baloo 2', cursive, system-ui",
-        backgroundImage: "url('/Underwater_background.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        textAlign: "center",
-        padding: 24,
-      }}
+      className="page-ocean justify-center text-center"
     >
-      <h1
-        style={{
-          fontSize: "5rem",
-          fontWeight: 900,
-          color: "white",
-          margin: 0,
-          lineHeight: 1.1,
-          textShadow: "2px 2px 8px rgba(0,0,0,0.3)",
-        }}
-      >
+      <TargetCursor/>
+
+      <h1 className="text-7xl font-black text-white leading-tight drop-shadow-lg">
         WELCOME
       </h1>
-      <h2
-        style={{
-          fontSize: "3.5rem",
-          fontWeight: 900,
-          color: "white",
-          margin: "0 0 2rem 0",
-          lineHeight: 1.1,
-          textShadow: "2px 2px 8px rgba(0,0,0,0.3)",
-        }}
-      >
+      <h2 className="text-5xl font-black text-white leading-tight mb-8 drop-shadow-lg">
         TO THE WORLD OF ATLANTIS
       </h2>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-        <NavButton href={"/bubble/game"}>
-        START
-        </NavButton>
-        <NavButton href={"/"}>
-        BACK
-        </NavButton>
+      <div className="flex flex-col gap-4">
+        <NavButton href={"/bubble/game"}>START</NavButton>
+        <NavButton href={"/"}>BACK</NavButton>
       </div>
     </main>
   );
