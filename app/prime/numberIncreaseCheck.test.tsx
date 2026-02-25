@@ -24,9 +24,7 @@ describe('NumberIncreaseCheck', () => {
             }
             prevNum = currentNum;
             currentNum = parseInt(document.getElementById('num').textContent!);
-            if (currentNum <= prevNum) {
-                throw new Error("Number did not increase monotonically");
-            }
+            expect(currentNum).toBeGreaterThan(prevNum);
         }
     });
 });
