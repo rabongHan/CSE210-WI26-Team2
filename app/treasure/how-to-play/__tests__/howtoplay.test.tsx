@@ -10,12 +10,13 @@ describe("TreasureHowToPlay page", () => {
         expect(main?.className).toMatch(/bg-\[url\('.*background1\.png'\)\]/);
     });
 
-    // Ensures the dom content contains the 5 how to play steps 
+    // Ensures the dom content contains the 6 how to play steps 
     // and numbers corresponding for each
-    test("lists five steps in order with expected text", () => {
+    test("lists six steps in order with expected text", () => {
         render(<TreasureHowToPlay />);
         const steps = [
         "Find all applicable divisibility rules for a number.",
+        "Select every rule box that applies; if none apply, submit with no boxes selected.",
         "If you get any wrong, you lose a life.",
         "You will get a total of 3 lives.",
         "You can get partial points for getting some correct answers.",

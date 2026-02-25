@@ -107,7 +107,7 @@ export default function TreasureGuidelinesPage() {
 
             {/* Buttons */}
             <div className="flex mt-6 justify-center gap-4">
-                <NavButton href="/treasure/start">Next</NavButton>
+                <NavButton href="/treasure/game">Next</NavButton>
                 <NavButton href="/treasure/how-to-play">Back</NavButton>
             </div>
         </div>
