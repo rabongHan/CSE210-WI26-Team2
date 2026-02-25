@@ -1,0 +1,71 @@
+<html>
+  <!-- Note: This is obsolete, don't update it -->
+  <head>
+    <meta charset="utf-8">
+    <title>Prime testing game</title>
+  </head>
+  <script>
+    var currNum = 101;
+    var isPrime = function(num) {
+      if (num < 2) {
+        return false;
+      }
+      if (num % 2 === 0) {
+        return false;
+      }
+      for (var i = 3; i**2 <= num; i += 2) {
+        if (num % i === 0) {
+          return false;
+        }
+      }
+      return true;
+    }
+    var clickYes = function() {
+      if (isPrime(currNum)) {
+        displayCorrectPrime(currNum);
+      }
+      else {
+        displayIncorrectPrime(currNum);
+      }
+      nextNumber();
+    }
+    var clickNo = function() {
+      if (isPrime(currNum)) {
+        displayIncorrectComposite(currNum);
+      }
+      else {
+        displayCorrectComposite(currNum);
+      }
+      nextNumber();
+    }
+    var displayCorrectPrime = function(n) {
+      console.log("Yes, it's prime")
+      console.log(n)
+    }
+    var displayIncorrectPrime = function(n) {
+      console.log("No, it's composite")
+      console.log(n)
+    }
+    var displayCorrectComposite = function(n) {
+      console.log("Yes, it's composite")
+      console.log(n)
+    }
+    var displayIncorrectComposite = function(n) {
+      console.log("No, it's prime")
+      console.log(n)
+    }
+    var nextNumber = function() {
+      currNum += 1;
+      document.getElementById("num").textContent = currNum;
+      // clear feedback message once we've added that to the page itself
+      // ...
+    }
+    // ...
+  </script>
+  <body>
+    <p>Welcome to the prime testing game!</p>
+    <p>Is <span id="num">101</span> prime?</p>
+    <button onclick="clickYes()">Yes</button>
+    <button onclick="clickNo()">No</button>
+  </body>
+</html>

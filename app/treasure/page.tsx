@@ -1,20 +1,28 @@
 "use client";
 
-import { Target } from "lucide-react";
-import { useEffect, useState } from "react";
+import { NavButton } from "@/app/treasure/components/treasure-buttons";
+import "@/app/treasure/treasure.css";
 
-export default function Page() {
-  const [now, setNow] = useState("");
-
-  useEffect(() => setNow(new Date().toISOString()), []);
+export default function TreasureBeginningPage() {
 
   return (
-    <main style={{ fontFamily: "system-ui", padding: 24 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <Target />
-        <h1 style={{ margin: 0 }}>✅ Next.js Client Page Render</h1>
-      </div>
-      <p>Time: {now}</p>
+    <main className="bg-[url('app/treasure/assets/background1.png')] bg-cover bg-center min-h-screen">
+        <div className="mx-auto px-4 pb-16">
+            {/* Header */}
+            <div className="text-center py-5">
+                <h1 className="text-3xl font-extrabold">
+                    <a href="/treasure" className="hover:text-black/80">Treasure Game</a>
+                </h1>
+                <p className="text-black-600">Hello!</p>
+            </div>
+            
+
+            {/* Buttons */}
+            <div className="mt-6 text-center">
+            <NavButton href="/treasure/how-to-play">Start Game</NavButton>
+            <NavButton href="/">Back</NavButton>
+            </div>
+        </div>
     </main>
   );
 }

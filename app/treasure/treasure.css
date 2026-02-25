@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.primary-box {
+    @apply rounded-xl shadow-lg p-3 my-2 bg-white/20 backdrop-blur;
+}
+
+.number-box {
+    @apply rounded-2xl px-8 py-6 shadow-lg bg-white/20 backdrop-blur border-2 border-black/50;
+}
