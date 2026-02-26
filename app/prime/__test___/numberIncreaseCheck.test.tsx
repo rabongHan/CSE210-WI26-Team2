@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import Page from './page';
-import { isPrime } from './lib/numberGenerator';
+import Page from '../page';
+import { isPrime } from '../lib/numberGenerator';
 
 describe('NumberIncreaseCheck', () => {
     it ("passes if the number increases monotonically throughout the game", async () => {

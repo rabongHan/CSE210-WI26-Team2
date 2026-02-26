@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import Page from './page';
-import { isPrime } from './lib/numberGenerator';
+import Page from '../page';
+import { isPrime } from '../lib/numberGenerator';
 
 describe('LivesHealthCheck', () => {
   it ("passes if the player's health is decremented for each incorrect guess", async () => {

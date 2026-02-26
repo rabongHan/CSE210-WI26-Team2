@@ -1,8 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import Page from './page';
-import { isPrime } from './lib/numberGenerator';
+import Page from '../page';
+import { isPrime } from '../lib/numberGenerator';
 
 describe('ButtonStateCheck', () => {
   it("passes if Yes/No buttons are enabled after clicking Start", async () => {

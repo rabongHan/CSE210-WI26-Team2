@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import Page from './page';
+import Page from '../page';
 
 jest.setTimeout(20000); // test takes 11 seconds to run, so set timeout to 20 seconds to be safe
 
