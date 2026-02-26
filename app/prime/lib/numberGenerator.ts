@@ -147,13 +147,16 @@ function getMinCountTests(
   let best = Infinity;
   const out: Test[] = [];
   for (const t of tests) {
-    // instead of minimizing over test counts, we minimize over testCount[testKey(t)]/testFreq[testKey(t)]
+    // Instead of minimizing over test counts, we minimize over testCount[testKey(t)]/testFreq[testKey(t)]
+    // The distribution weights are rational, and the ratios will also be rational, but they are stored as floating points.
+    // If two floating point values differ by less than 0.000001, we assume they
+    // represent the same rational number.
     const ratio = testCount[testKey(t)] / (testFreq[testKey(t)] ?? 1);
     if (ratio < best - 0.000001) {
       best = ratio;
       out.length = 0;
       out.push(t);
-    } else if (Math.abs(ratio - best) < 0.000001) { // we assume the two floating points represent the same (rational) number
+    } else if (Math.abs(ratio - best) < 0.000001) {
       out.push(t);
     }
   }
