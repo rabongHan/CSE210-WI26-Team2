@@ -4,6 +4,20 @@ import '@testing-library/jest-dom';
 import Page from '../page';
 import { isPrime } from '../lib/numberGenerator';
 
+function userClickCorrectAnswer(user) {
+  const numSpan = document.getElementById('num');
+  const shown = parseInt(numSpan.textContent);
+  const correctAnswer = isPrime(shown) ? 'Yes' : 'No';
+  return user.click(screen.getByText(correctAnswer));
+}
+
+function userClickWrongAnswer(user) {
+  const numSpan = document.getElementById('num');
+  const shown = parseInt(numSpan.textContent);
+  const wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
+  return user.click(screen.getByText(wrongAnswer));
+}
+
 describe('PlayAgainCheck', () => {
   it("passes if feedback is cleared when restarting a new game after winning", async () => {
     render(<Page />);
@@ -14,13 +28,7 @@ describe('PlayAgainCheck', () => {
     
     // Win the game by correct guesses (20 times to reduce boss health to 0)
     for (let i = 0; i < 20; i++) {
-      const numSpan = document.getElementById('num');
-      const shown = parseInt(numSpan.textContent);
-      if (isPrime(shown)) {
-        await user.click(screen.getByText('Yes'));
-      } else {
-        await user.click(screen.getByText('No'));
-      }
+      await userClickCorrectAnswer(user);
     }
 
     // Verify win message is displayed
@@ -59,13 +67,7 @@ describe('PlayAgainCheck', () => {
     
     // Lose the game by 5 incorrect guesses
     for (let i = 0; i < 5; i++) {
-      const numSpan = document.getElementById('num');
-      const shown = parseInt(numSpan.textContent);
-      if (isPrime(shown)) {
-        await user.click(screen.getByText('No'));
-      } else {
-        await user.click(screen.getByText('Yes'));
-      }
+      await userClickWrongAnswer(user);
       // Click Continue after each incorrect guess
       if (i < 4 && screen.queryByText('Continue')) {
         await user.click(screen.getByText('Continue'));

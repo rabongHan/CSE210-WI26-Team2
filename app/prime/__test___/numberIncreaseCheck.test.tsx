@@ -4,6 +4,20 @@ import '@testing-library/jest-dom';
 import Page from '../page';
 import { isPrime } from '../lib/numberGenerator';
 
+function userClickCorrectAnswer(user) {
+  const numSpan = document.getElementById('num');
+  const shown = parseInt(numSpan.textContent);
+  const correctAnswer = isPrime(shown) ? 'Yes' : 'No';
+  return user.click(screen.getByText(correctAnswer));
+}
+
+function userClickWrongAnswer(user) {
+  const numSpan = document.getElementById('num');
+  const shown = parseInt(numSpan.textContent);
+  const wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
+  return user.click(screen.getByText(wrongAnswer));
+}
+
 describe('NumberIncreaseCheck', () => {
     it ("passes if the number increases monotonically throughout the game", async () => {
         render(<Page />);
@@ -16,12 +30,7 @@ describe('NumberIncreaseCheck', () => {
         let prevNum;
 
         for (let i = 0; i < 19; i++) {
-            if (isPrime(currentNum)) {
-                await user.click(screen.getByText('Yes'));
-            }
-            else {
-                await user.click(screen.getByText('No'));
-            }
+            await userClickCorrectAnswer(user);
             prevNum = currentNum;
             currentNum = parseInt(document.getElementById('num').textContent!);
             expect(currentNum).toBeGreaterThan(prevNum);

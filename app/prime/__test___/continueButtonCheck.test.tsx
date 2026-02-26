@@ -65,6 +65,7 @@ describe('ContinueButtonCheck', () => {
     await user.click(screen.getByText('Start'));
     
     // Get the first number and make an incorrect guess
+    const firstNum = parseInt(document.getElementById('num').textContent);
     await userClickWrongAnswer(user);
 
     // Wait for Continue button and click it
