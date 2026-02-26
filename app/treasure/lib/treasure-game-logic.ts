@@ -54,12 +54,22 @@ export function generateRound(level: number): {
     let currentNumber = 0;
     let correctRules: RuleId[] = [];
 
+    // helper function to generate random number based on min and max value
+    function randomInRange(lo: number, hi: number): number {
+        return Math.floor(Math.random() * (hi - lo + 1)) + lo;
+    }
+
     // Incorporate larger numbers as levels increase
     const L = Math.max(0, Math.floor(level));
+
+    // chance of getting number that no rules apply to.
+    const noRuleChance = Math.min(0.5, 0.08 + L * 0.015);
+
+    // Make digits larger as levels go up.
     const digits =
-    L < 3 ? 2 :    // levels 0-2 are 2 digits
-    L < 10 ? 3 : // levels 3-9 are 3 digits
-    4 + Math.floor((L - 10) / 10); // 10-19 are 4 digits, and so on.
+        L < 6 ? 2 :    // levels 0-5 are 2 digits
+        L < 10 ? 3 : // levels 5-9 are 3 digits
+        4 + Math.floor((L - 10) / 10); // 10-19 are 4 digits, and so on.
 
     // range we will randomly sample our number from
     const min = 10 ** (digits - 1);
@@ -82,22 +92,39 @@ export function generateRound(level: number): {
     const MAX_TRIES = 60;
     let tries = 0;
 
-    while (tries < MAX_TRIES) {
-        tries++;
-        const targetRule = weightedPick(ALL_RULES, weights);
-        const candidate = Math.floor(Math.random() * (max - min + 1)) + min;
-
-    if (candidate % targetRule === 0) {
-        currentNumber = candidate;
-        break;
+    // 1st path: intentionally generate a "no-rule" round
+    // (number not divisible by any rule in 2..9)
+    if (Math.random() < noRuleChance) {
+        while (tries < MAX_TRIES) {
+            tries++;
+            const candidate = randomInRange(min, max);
+            if (getCorrectRules(candidate).length === 0) {
+                currentNumber = candidate;
+                break;
+            }
         }
     }
 
-    // fallback if no weighted hit
+    // 2nd path: weighted divisible-rule generation
+    if (currentNumber === 0) {
+        tries = 0;
+        while (tries < MAX_TRIES) {
+            tries++;
+            const targetRule = weightedPick(ALL_RULES, weights);
+            const candidate = randomInRange(min, max);
+            if (candidate % targetRule === 0) {
+                currentNumber = candidate;
+                break;
+            }
+        }
+    }
+
+    // 3rd path: fallback if no weighted hit
     if (currentNumber === 0) {
         currentNumber = Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
+    // gets all correct divisibility rules for the generated number
     correctRules = getCorrectRules(currentNumber);
 
     // generate 6 divisibility rules for each box option
