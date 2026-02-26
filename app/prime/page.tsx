@@ -18,11 +18,12 @@ export default function Page() {
       className="min-h-screen"
       style={{
         fontFamily: "system-ui",
-        minHeight: "120vh",
-        paddingTop: 1,
+        height: "100vh",
+        overflow: "auto",
+        paddingTop: 0,
         backgroundImage: "url('/prime-background.png')",
-        backgroundSize: "100% auto",
-        backgroundPosition: "top center",
+        backgroundSize: "cover",
+        backgroundPosition: "center 70%",
         backgroundRepeat: "no-repeat"
       }}
     >
@@ -31,8 +32,8 @@ export default function Page() {
         className="welcome"
         style={{
           maxWidth: "40%",
-          margin: "20% auto 0",
-          padding: "2vh 3vw",
+          margin: "5vh auto 1vh",
+          padding: "1.5vh 3vw",
           backgroundColor: "rgba(128, 128, 128, 0.3)",
           border: "5px solid black",
           borderRadius: "12px",
@@ -66,12 +67,12 @@ export default function Page() {
           Start
         </button>
       </div>
-      <div id="gameContent" style={{ display: "none" }}>
+      <div id="gameContent" style={{ display: "none", paddingBottom: "2vh" }}>
         <div
           style={{
             maxWidth: "40%",
-            margin: "12vh auto 0",
-            padding: "2vh 3vw",
+            margin: "2vh auto 1vh",
+            padding: "1.5vh 3vw",
             backgroundColor: "rgba(128, 128, 128, 0.3)",
             border: "5px solid black",
             borderRadius: "12px",
@@ -121,10 +122,10 @@ export default function Page() {
             No
           </button>
         </div>
-        <div style={{ textAlign: "center", marginTop: "2vh", fontSize: "clamp(16px, 1.5vw, 24px)", minHeight: "180px" }}>
-          <p id="correct" style={{ color: "green", minHeight: "24px" }}></p>
-          <p id="feedback" style={{ display: "none", minHeight: "24px" }}>Feedback will appear here.</p>
-          <p id="divisibilityFeedback" style={{ display: "none", minHeight: "60px" }}>Divisibility feedback will appear here.</p>
+        <div style={{ textAlign: "center", marginTop: "1vh", fontSize: "clamp(16px, 1.5vw, 24px)", minHeight: "80px" }}>
+          <p id="correct" style={{ color: "green", minHeight: "20px" }}></p>
+          <p id="feedback" style={{ display: "none", minHeight: "20px" }}>Feedback will appear here.</p>
+          <p id="divisibilityFeedback" style={{ display: "none", minHeight: "40px" }}>Divisibility feedback will appear here.</p>
           <p>Time left: <span id="timer">10</span> sec</p>
         </div>
         <div style={{ display: "flex", justifyContent: "center", marginTop: "1vh" }}>
@@ -164,8 +165,8 @@ export default function Page() {
         </div>
       </div>
       <div id="winMsg" style={{ maxWidth: "40%",
-          margin: "20% auto 0",
-          padding: "2vh 3vw",
+          margin: "10vh auto 0",
+          padding: "1.5vh 3vw",
           backgroundColor: "rgba(128, 128, 128, 0.3)",
           border: "5px solid black",
           borderRadius: "12px",
@@ -189,8 +190,8 @@ export default function Page() {
         }}>Play again</button>
       </div>
       <div id="loseMsg" style={{ maxWidth: "40%",
-          margin: "20% auto 0",
-          padding: "2vh 3vw",
+          margin: "10vh auto 0",
+          padding: "1.5vh 3vw",
           backgroundColor: "rgba(128, 128, 128, 0.3)",
           border: "5px solid black",
           borderRadius: "12px",
