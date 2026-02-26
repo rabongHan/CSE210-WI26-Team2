@@ -229,7 +229,7 @@ export default function Page() {
           fontFamily: "'Trebuchet MS', 'Verdana', 'Geneva', sans-serif",
           boxShadow: "0 6px 0 #111",
           cursor: "pointer"
-        }}>Home</button>
+        }}>Back</button>
       </div>
     </main>
   );
