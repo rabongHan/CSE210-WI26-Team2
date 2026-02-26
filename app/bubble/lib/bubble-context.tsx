@@ -19,16 +19,10 @@ type BubbleGameState = {
   lives: number;
   round: number;
   status: GameStatus;
+  wrongBubble: number | null;
   handleBubbleClick: (num: number) => void;
   resetGame: () => void;
 };
-
-// Initial values come from game-logic functions
-// Thinking of deleting these because they freeze the initial factor
-// at whatever it was when the page loaded, meaning a user will always
-// start with the same factor.
-// export const INITIAL_FACTOR = generateFactor();
-// export const INITIAL_BUBBLES = generateBubbles();
 
 export const INITIAL_LIVES = STARTING_LIVES;
 
@@ -36,46 +30,37 @@ export const INITIAL_LIVES = STARTING_LIVES;
 const BubbleGameContext = createContext<BubbleGameState | null>(null);
 
 function generateNewGame() {
-  const factor = generateComposite()
-  return{
+  const factor = generateComposite();
+  return {
     factor,
     bubbles: generateBubbles(factor),
     lives: STARTING_LIVES,
     round: 1,
-    status: "playing" as GameStatus
+    status: "playing" as GameStatus,
   };
 }
+
 export function BubbleGameProvider({ children }: { children: ReactNode }) {
-  // Lazy initialization to get random factor every time module loads
-  // const [factor, setFactor] = useState(() => generateFactor());
-  // const [bubbles, setBubbles] = useState(() => generateBubbles(factor)) ;
-  // const [lives, setLives] = useState(INITIAL_LIVES);
-  // const [status, setStatus] = useState<GameStatus>("playing");
-  const[game, setGame] = useState(() => generateNewGame());
+  const [game, setGame] = useState(() => generateNewGame());
+  const [wrongBubble, setWrongBubble] = useState<number | null>(null);
 
   function handleBubbleClick(num: number) {
     setGame((prev) => {
       if (prev.status !== "playing") return prev;
 
       if (isCorrectAnswer(num, prev.factor)) {
-        // Correct — divide the factor
         const nextFactor = getNextFactor(prev.factor, num);
 
-        // Player wins when factor is fully reduced to 1
         if (nextFactor <= 1) {
           if (prev.round >= NUM_ROUNDS) {
             return { ...prev, factor: nextFactor, bubbles: [], status: "won" };
-          }
-          else {
+          } else {
             const factor = generateComposite();
-            const newBubbles = generateBubbles(factor)
-            return { ...prev, factor: factor, bubbles: newBubbles, round: prev.round + 1};
+            const newBubbles = generateBubbles(factor);
+            return { ...prev, factor: factor, bubbles: newBubbles, round: prev.round + 1 };
           }
         }
 
-
-        // Generate fresh bubbles for the new factor so the player
-        // always has valid options (no more stuck states)
         const newBubbles = generateBubbles(nextFactor);
         return {
           ...prev,
@@ -86,11 +71,13 @@ export function BubbleGameProvider({ children }: { children: ReactNode }) {
 
       // Wrong — lose a life
       const newLives = prev.lives - 1;
+      setWrongBubble(num);
+      setTimeout(() => setWrongBubble(null), 500);
 
       return {
         ...prev,
         lives: newLives,
-        status: newLives <= 0 ? "lost" : prev.status
+        status: newLives <= 0 ? "lost" : prev.status,
       };
     });
   }
@@ -107,8 +94,10 @@ export function BubbleGameProvider({ children }: { children: ReactNode }) {
         lives: game.lives,
         status: game.status,
         round: game.round,
+        wrongBubble,
         handleBubbleClick,
-        resetGame }}
+        resetGame,
+      }}
     >
       {children}
     </BubbleGameContext.Provider>

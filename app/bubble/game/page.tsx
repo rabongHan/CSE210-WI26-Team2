@@ -9,7 +9,7 @@ import { useBubbleGame } from "@/app/bubble/lib/bubble-context";
 import TargetCursor from "@/app/bubble/components/TargetCursor";
 
 export default function Page() {
-  const { factor, bubbles, lives, status, round, handleBubbleClick, resetGame } =
+  const { factor, bubbles, lives, status, round, wrongBubble, handleBubbleClick, resetGame } =
     useBubbleGame();
   const router = useRouter();
   const gameStarted = useRef(false);
@@ -42,6 +42,7 @@ export default function Page() {
           <BubbleCircle
             key={i}
             number={num}
+            isWrong={wrongBubble === num}
             onClick={() => handleBubbleClick(num)}
           />
         ))}
