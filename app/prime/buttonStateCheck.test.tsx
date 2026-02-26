@@ -4,6 +4,20 @@ import '@testing-library/jest-dom';
 import Page from './page';
 import { isPrime } from './lib/numberGenerator';
 
+function userClickCorrectAnswer(user) {
+  const numSpan = document.getElementById('num');
+  const shown = parseInt(numSpan.textContent);
+  const correctAnswer = isPrime(shown) ? 'Yes' : 'No';
+  return user.click(screen.getByText(correctAnswer));
+}
+
+function userClickWrongAnswer(user) {
+  const numSpan = document.getElementById('num');
+  const shown = parseInt(numSpan.textContent);
+  const wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
+  return user.click(screen.getByText(wrongAnswer));
+}
+
 describe('ButtonStateCheck', () => {
   it("passes if Yes/No buttons are enabled after clicking Start", async () => {
     render(<Page />);
@@ -30,10 +44,7 @@ describe('ButtonStateCheck', () => {
     await user.click(screen.getByText('Start'));
     
     // Get the number and make an incorrect guess
-    const numSpan = document.getElementById('num');
-    const shown = parseInt(numSpan.textContent);
-    const wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
-    await user.click(screen.getByText(wrongAnswer));
+    await userClickWrongAnswer(user);
 
     // Verify buttons are disabled during feedback period
     const yesBtn = document.getElementById('yesButton') as HTMLButtonElement;
@@ -53,10 +64,7 @@ describe('ButtonStateCheck', () => {
     await user.click(screen.getByText('Start'));
     
     // Get the number and make a correct guess
-    const numSpan = document.getElementById('num');
-    const shown = parseInt(numSpan.textContent);
-    const correctAnswer = isPrime(shown) ? 'Yes' : 'No';
-    await user.click(screen.getByText(correctAnswer));
+    await userClickCorrectAnswer(user);
 
     // Verify buttons remain enabled for the next number
     const yesBtn = document.getElementById('yesButton') as HTMLButtonElement;
@@ -83,10 +91,7 @@ describe('ButtonStateCheck', () => {
     expect(yesBtn.disabled).toBe(false);
 
     // Make an incorrect guess
-    const numSpan = document.getElementById('num');
-    const shown = parseInt(numSpan.textContent);
-    const wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
-    await user.click(screen.getByText(wrongAnswer));
+    await userClickWrongAnswer(user);
 
     // After incorrect guess, both should be disabled
     await waitFor(() => {
@@ -104,11 +109,7 @@ describe('ButtonStateCheck', () => {
     
     // Make 5 incorrect guesses to lose the game
     for (let i = 0; i < 5; i++) {
-      const numSpan = document.getElementById('num');
-      const shown = parseInt(numSpan.textContent);
-      const wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
-      await user.click(screen.getByText(wrongAnswer));
-      
+      await userClickWrongAnswer(user);      
       // Only click Continue if not the last round (to trigger game over)
       const continueBtn = screen.queryByText('Continue');
       if (continueBtn && i < 4) {
@@ -136,10 +137,7 @@ describe('ButtonStateCheck', () => {
     
     // Win the game by 20 correct guesses
     for (let i = 0; i < 20; i++) {
-      const numSpan = document.getElementById('num');
-      const shown = parseInt(numSpan.textContent);
-      const correctAnswer = isPrime(shown) ? 'Yes' : 'No';
-      await user.click(screen.getByText(correctAnswer));
+      await userClickCorrectAnswer(user);
     }
 
     // Verify win message is displayed
@@ -160,10 +158,7 @@ describe('ButtonStateCheck', () => {
     // Start the game and lose
     await user.click(screen.getByText('Start'));
     for (let i = 0; i < 5; i++) {
-      const numSpan = document.getElementById('num');
-      const shown = parseInt(numSpan.textContent);
-      const wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
-      await user.click(screen.getByText(wrongAnswer));
+      await userClickWrongAnswer(user);
       const continueBtn = screen.queryByText('Continue');
       if (continueBtn && i < 4) {
         await user.click(continueBtn);
