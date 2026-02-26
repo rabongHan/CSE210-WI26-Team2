@@ -4,6 +4,20 @@ import '@testing-library/jest-dom';
 import Page from '../page';
 import { isPrime } from '../lib/numberGenerator';
 
+function userClickCorrectAnswer(user) {
+  const numSpan = document.getElementById('num');
+  const shown = parseInt(numSpan.textContent);
+  const correctAnswer = isPrime(shown) ? 'Yes' : 'No';
+  return user.click(screen.getByText(correctAnswer));
+}
+
+function userClickWrongAnswer(user) {
+  const numSpan = document.getElementById('num');
+  const shown = parseInt(numSpan.textContent);
+  const wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
+  return user.click(screen.getByText(wrongAnswer));
+}
+
 describe('FeedbackCheck', () => {
   it ("passes if yes/no feedback is displayed", async () => {
     render(<Page />);
@@ -62,13 +76,7 @@ describe('FeedbackCheck', () => {
     const user = userEvent.setup();
 
     await user.click(screen.getByText('Start'));
-    const num = parseInt(document.getElementById('num').textContent);
-    if (isPrime(num)) {
-      await user.click(screen.getByText('No'));
-    }
-    else {
-      await user.click(screen.getByText('Yes'));
-    }
+    await userClickWrongAnswer(user);
     // expect the divisibilityFeedback element to be visible
     const feedback = document.getElementById('divisibilityFeedback');
     expect(feedback.style.display).toBe("block");
