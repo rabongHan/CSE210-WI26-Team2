@@ -48,7 +48,7 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
     // runs once after components mount
     useEffect(() => {
         // generate random number, its correct rules, and multiple choices.
-        const round = generateRound(STARTING_LEVEL);
+        const round = generateRound();
         setGame((prev) => ({
             ...prev,
             correctRules: round.correctRules,
@@ -165,8 +165,7 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
             }
 
             // create new random round with new number, options, answer key.
-            const nextLevel = prev.state.level + 1;
-            const round = generateRound(nextLevel);
+            const round = generateRound();
 
             // update next game state in the next level.
             return {
@@ -176,7 +175,7 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
                     currentNumber: round.currentNumber,
                     ruleOptions: round.ruleOptions,
                     selectedRules: [],
-                    level: nextLevel,
+                    level: prev.state.level + 1,
                 },
             };
         });
