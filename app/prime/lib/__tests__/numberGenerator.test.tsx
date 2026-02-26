@@ -127,7 +127,7 @@ describe('generateBalancedNumbers', () => {
     }
   });
 
-  test('[2.4.2] distribution follows target frequency ratios', () => {
+  test('[2.4.2] distribution of composite and prime numbers follows target frequency ratios', () => {
     const result = generateBalancedNumbers(2, 200, 60);
 
     const counts = Object.values(result.testCount);
