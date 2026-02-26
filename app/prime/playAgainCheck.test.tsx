@@ -67,7 +67,9 @@ describe('PlayAgainCheck', () => {
         await user.click(screen.getByText('Yes'));
       }
       // Click Continue after each incorrect guess
-      await user.click(screen.getByText('Continue'));
+      if (i < 4 && screen.queryByText('Continue')) {
+        await user.click(screen.getByText('Continue'));
+      }
     }
 
     // Verify game over message is displayed
