@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Page from './page';
+import Page from '../page';
 import '@testing-library/jest-dom';
 
 describe('NumberAdvancement', () => {
