@@ -69,7 +69,7 @@ describe("TreasureEndPage", () => {
         expect(screen.getByText("Level Reached: 0")).toBeInTheDocument();
     });
 
-    it("navigates on Retry and Return to Home", async () => {
+    it("navigates on Retry, Return to Home, and Start the Next Game", async () => {
         const user = userEvent.setup();
         getMock.mockImplementation((key: string) => {
             if (key === "status") return "won";
@@ -85,6 +85,8 @@ describe("TreasureEndPage", () => {
 
         await user.click(screen.getByRole("button", { name: "Return to Home" }));
         expect(pushMock).toHaveBeenCalledWith("/");
+
+        await user.click(screen.getByRole("button", { name: "Start the Next Game!" }));
+        expect(pushMock).toHaveBeenCalledWith("/bubble/menu");
     });
 });
-
