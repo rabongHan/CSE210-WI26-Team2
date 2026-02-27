@@ -31,7 +31,26 @@ export default function TreasureGamePage() {
 
 function TreasureGameContent() {
   const game = useTreasureGame();
+  let numberBoxGlow = "";
+  let resultText = "";
 
+  if (game.feedback?.show && game.feedback.result) {
+    const { result, selectedRules } = game.feedback;
+    const hasCorrectSelection = selectedRules.some((r) =>
+      result.correctRules.includes(r),
+    );
+
+    if (result.isCorrect) {
+      numberBoxGlow = "!shadow-[0_0_15px_rgba(52,211,153,0.7),0_0_45px_rgba(52,211,153,0.3)]";  // emerald-400
+      resultText = "Correct!";
+    } else if (hasCorrectSelection) {
+        numberBoxGlow = "!shadow-[0_0_15px_rgba(103,232,249,0.7),0_0_45px_rgba(103,232,249,0.3)]";  // cyan-300
+        resultText = "Partially Correct!";
+    } else {
+        numberBoxGlow = "!shadow-[0_0_15px_rgba(251,113,133,0.7),0_0_45px_rgba(251,113,133,0.3)]";  // rose-400
+        resultText = "Wrong!";
+    }
+  }
   return (
     <main className={"bg-[url('app/treasure/assets/background1.png')] bg-cover bg-center min-h-screen"}>
       <div className="mx-auto p-6">
@@ -40,13 +59,35 @@ function TreasureGameContent() {
 
         <div className="flex items-center gap-4 justify-center mb-4">
           <Hearts lives={game.state.lives} />
-          <GameBadges label="Score" input={game.state.score} />
+          {game.feedback?.show ? (
+              <div className="primary-box">
+                  <div className="font-bold">
+                      Score: {game.feedback.previousScore}
+                      <span className={game.feedback.scoreDelta > 0 ? "text-emerald-600 font-extrabold" : "text-rose-300 font-extrabold"}>
+                          {" "}(+{game.feedback.scoreDelta})
+                      </span>
+                  </div>
+              </div>
+          ) : (
+              <GameBadges label="Score" input={game.state.score} />
+          )}
           <GameBadges label="Level" input={game.state.level} />
         </div>
 
         {/* Display Current Number */}
         <div className="flex flex-col items-center gap-2">
-          <div className="number-box">
+          {resultText && (
+            <div className={`w-full max-w-md mx-auto text-center py-3 px-6 rounded-xl font-bold text-xl tracking-wide animate-bounce-in ${
+              resultText === "Correct!"
+              ? "bg-emerald-500/40 text-emerald-100 border border-emerald-300/70"
+              : resultText === "Partially Correct!"
+                ? "bg-cyan-500/40 text-cyan-100 border border-cyan-300/70"
+                : "bg-rose-500/40 text-rose-100 border border-rose-300/70"
+            }`}>
+              {resultText}
+            </div>
+          )}
+          <div className={`number-box ${numberBoxGlow}`}>
             <div className="font-bold text-4xl md:text-5xl">{game.state.currentNumber}</div>
           </div>
         </div>
@@ -60,16 +101,20 @@ function TreasureGameContent() {
 
               if (game.feedback && game.feedback.show && game.feedback.result) {
                 if (game.feedback.result.correctRules.includes(rule)) {
-                  borderColor = "border-green-500";
+                  borderColor = "border-emerald-400";       // emerald-400 for correct
                 } else if (game.feedback.result.incorrectRules.includes(rule)) {
-                  borderColor = "border-red-500";
+                    borderColor = "border-rose-400";        // coral for incorrect
                 }
 
                 if (game.feedback.selectedRules?.includes(rule)) {
-                  bgClass = "!bg-white/50";
+                  if (game.feedback.result.correctRules.includes(rule)) {
+                    bgClass = "!bg-emerald-400/30";       // emerald-400 tint — "I picked this and it was right"
+                  } else {
+                    bgClass = "!bg-rose-400/40";          // coral tint — "I picked this and it was wrong"
+                  }
                 }
               } else if (game.state.selectedRules.includes(rule)) {
-                borderColor = "border-white";
+                borderColor = "border-cyan-300";         // bright cyan = active selection
               }
               return (
                 <div
