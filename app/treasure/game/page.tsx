@@ -54,37 +54,57 @@ function TreasureGameContent() {
         {/* Display Rule Options */}
         <div className="container mx-auto max-w-4xl">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-2 gap-y-4 py-3 place-items-center">
-            {game.state.ruleOptions.map((rule) => (
-              <div
-                key={rule}
-                className={`primary-box w-full min-h-[130px] text-center flex flex-col justify-center border-4 
-                  ${game.state.selectedRules.includes(rule) ? "" : "border-transparent"}`}
-                onClick={() => game.toggleRule(rule)}
-                style={{ cursor: "pointer" }}
-              >
-                <h3 className="font-bold">{ruleInfo[rule].title}</h3>
-                <p className="mt-1">{ruleInfo[rule].desc}</p>
-              </div>
-            ))}
+            {game.state.ruleOptions.map((rule) => {
+              let borderColor = "border-transparent";
+              let bgClass = ""; 
+
+              if (game.feedback && game.feedback.show && game.feedback.result) {
+                if (game.feedback.result.correctRules.includes(rule)) {
+                  borderColor = "border-green-500";
+                } else if (game.feedback.result.incorrectRules.includes(rule)) {
+                  borderColor = "border-red-500";
+                }
+
+                if (game.feedback.selectedRules?.includes(rule)) {
+                  bgClass = "!bg-white/50";
+                }
+              } else if (game.state.selectedRules.includes(rule)) {
+                borderColor = "border-white";
+              }
+              return (
+                <div
+                  key={rule}
+                  className={`primary-box w-full min-h-[130px] text-center flex flex-col justify-center border-4 ${borderColor} ${bgClass}`}
+                  onClick={() => !(game.feedback && game.feedback.show) && game.toggleRule(rule)}
+                  style={{ cursor: game.feedback && game.feedback.show ? "default" : "pointer" }}
+                >
+                  <h3 className="font-bold">{ruleInfo[rule].title}</h3>
+                  <p className="mt-1">{ruleInfo[rule].desc}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
 
         {/* Buttons */}
         <div className="flex mt-6 justify-center gap-4">
-          <button
-            type="button"
-            onClick={game.submitAnswer}
-            className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 font-bold shadow-lg backdrop-blur transition-all duration-200 hover:scale-105 hover:shadow-xl active:scale-95"
-          >
-            Submit
-          </button>
-          <button
-            type="button"
-            onClick={game.nextRound}
-            className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 font-bold shadow-lg backdrop-blur transition-all duration-200 hover:scale-105 hover:shadow-xl active:scale-95"
-          >
-            Next
-          </button>
+          {!(game.feedback && game.feedback.show) ? (
+            <button
+              type="button"
+              onClick={game.submitAnswer}
+              className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 font-bold shadow-lg backdrop-blur transition-all duration-200 hover:scale-105 hover:shadow-xl active:scale-95"
+            >
+              Submit
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={game.nextRound}
+              className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 font-bold shadow-lg backdrop-blur transition-all duration-200 hover:scale-105 hover:shadow-xl active:scale-95"
+            >
+              Next Round
+            </button>
+          )}
           <NavButton href="/treasure/guideline">Back</NavButton>
         </div>
       </div>

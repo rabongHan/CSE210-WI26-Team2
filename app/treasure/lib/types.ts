@@ -54,4 +54,10 @@ export type TreasureGameAPI = {
 
     // OPTIONAL: reset game to initial state
     resetGame?: () => void;
+
+    feedback: {
+        show: boolean;
+        result: SubmitResult | null;
+        selectedRules: RuleId[];
+    }
 };

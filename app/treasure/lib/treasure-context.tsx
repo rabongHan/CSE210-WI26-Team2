@@ -39,12 +39,20 @@ function createInitialGame(): InternalTreasureState {
     };
 }
 
+type TreasureGameFeedback = {
+    show: boolean;
+    result: SubmitResult | null;
+    selectedRules: RuleId[];
+};
+
 // component function that accepts children (UI it wraps), owns shared game state, returns context
 export function TreasureGameProvider({ children }: { children: ReactNode }) {
 
     // initializes context with initialization and allows updates through setGame
     const [game, setGame] = useState<InternalTreasureState>(() => createInitialGame());
-
+    
+    const [feedback, setFeedback] = useState<TreasureGameFeedback>({ show: false, result: null, selectedRules: [] });
+    
     // runs once after components mount
     useEffect(() => {
         // generate random number, its correct rules, and multiple choices.
@@ -93,6 +101,12 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
         const correctRules = game.correctRules;
         const isCorrect = isSelectionCorrect(selectedRules, correctRules);
         const incorrectRules = selectedRules.filter((rule) => !correctRules.includes(rule));
+
+        setFeedback({ 
+            show: true, 
+            result: { isCorrect, correctRules, incorrectRules },
+            selectedRules: [...selectedRules],
+        });
 
         setGame((prev) => {
             // if game won or lost keep it as previous state
@@ -148,6 +162,7 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
 
     // Moves game state forward based on current state
     function nextRound() {
+        setFeedback({ show: false, result: null, selectedRules: [] });
         setGame((prev) => {
             if (prev.state.status !== "playing") {
                 return prev;
@@ -188,6 +203,7 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
         toggleRule,
         submitAnswer,
         nextRound,
+        feedback,
     };
 
     // return provider value
