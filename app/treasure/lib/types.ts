@@ -59,5 +59,7 @@ export type TreasureGameAPI = {
         show: boolean;
         result: SubmitResult | null;
         selectedRules: RuleId[];
+        scoreDelta: number;
+        previousScore: number;
     }
 };

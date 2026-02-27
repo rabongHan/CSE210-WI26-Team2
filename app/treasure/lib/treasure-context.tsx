@@ -43,6 +43,8 @@ type TreasureGameFeedback = {
     show: boolean;
     result: SubmitResult | null;
     selectedRules: RuleId[];
+    scoreDelta: number;
+    previousScore: number;
 };
 
 // component function that accepts children (UI it wraps), owns shared game state, returns context
@@ -51,7 +53,7 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
     // initializes context with initialization and allows updates through setGame
     const [game, setGame] = useState<InternalTreasureState>(() => createInitialGame());
     
-    const [feedback, setFeedback] = useState<TreasureGameFeedback>({ show: false, result: null, selectedRules: [] });
+    const [feedback, setFeedback] = useState<TreasureGameFeedback>({ show: false, result: null, selectedRules: [], scoreDelta: 0, previousScore: 0 });
     
     // runs once after components mount
     useEffect(() => {
@@ -101,11 +103,19 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
         const correctRules = game.correctRules;
         const isCorrect = isSelectionCorrect(selectedRules, correctRules);
         const incorrectRules = selectedRules.filter((rule) => !correctRules.includes(rule));
+        const selectedCorrectCount = selectedRules.filter((r) => correctRules.includes(r)).length;
+        const scoreDelta = isCorrect
+            ? CORRECT_SCORE
+            : selectedCorrectCount > 0
+                ? PARTIAL_SCORE
+                : 0;
 
         setFeedback({ 
             show: true, 
             result: { isCorrect, correctRules, incorrectRules },
             selectedRules: [...selectedRules],
+            scoreDelta,
+            previousScore: game.state.score,
         });
 
         setGame((prev) => {
@@ -162,7 +172,7 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
 
     // Moves game state forward based on current state
     function nextRound() {
-        setFeedback({ show: false, result: null, selectedRules: [] });
+        setFeedback({ show: false, result: null, selectedRules: [], scoreDelta: 0, previousScore: 0 });
         setGame((prev) => {
             if (prev.state.status !== "playing") {
                 return prev;
