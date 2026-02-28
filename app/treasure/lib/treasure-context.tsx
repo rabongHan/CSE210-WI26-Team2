@@ -8,7 +8,7 @@ import {
     toggleRuleOptionsSelection,
 } from "@/app/treasure/lib/treasure-game-logic";
 
-const STARTING_LEVEL = 0;
+const STARTING_LEVEL = 1;
 const STARTING_LIVES = 3;
 const CORRECT_SCORE = 50;
 const PARTIAL_SCORE = 25;
