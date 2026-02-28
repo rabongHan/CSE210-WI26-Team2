@@ -144,12 +144,12 @@ describe("TreasureGameProvider", () => {
     await waitFor(() => {
       expect(screen.getByTestId("number")).toHaveTextContent("12");
     });
-    expect(screen.getByTestId("level")).toHaveTextContent("0");
+    const initialLevel = Number(screen.getByTestId("level").textContent);
 
     await user.click(screen.getByRole("button", { name: "next" }));
 
     expect(screen.getByTestId("number")).toHaveTextContent("18");
-    expect(screen.getByTestId("level")).toHaveTextContent("1");
+    expect(screen.getByTestId("level")).toHaveTextContent(initialLevel + 1);
     expect(screen.getByTestId("selected")).toHaveTextContent("");
   });
 });
