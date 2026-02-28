@@ -8,7 +8,7 @@ import { TreasureHeader } from "@/app/treasure//components/treasure-header";
 import { Hearts } from "@/app/treasure/components/treasure-hearts";
 import { GameBadges } from "@/app/treasure/components/treasure-badges";
 import { TreasureGameProvider, useTreasureGame } from "@/app/treasure/lib/treasure-context";
-
+import { useRouter } from "next/navigation";
 
 const ruleInfo = {
     2: { title: "Divisible by 2", desc: "If number ends in 0 or is even (= number is divisible by 2)" },
@@ -31,6 +31,8 @@ export default function TreasureGamePage() {
 
 function TreasureGameContent() {
   const game = useTreasureGame();
+  const router = useRouter();
+
   let numberBoxGlow = "";
   let resultText = "";
 
@@ -140,6 +142,16 @@ function TreasureGameContent() {
               className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 font-bold shadow-lg backdrop-blur transition-all duration-200 hover:scale-105 hover:shadow-xl active:scale-95"
             >
               Submit
+            </button>
+          ) : game.state.status === "lost" || game.state.status === "won" ? (
+            <button
+              type="button"
+              onClick={() => router.push(
+                `/treasure/end?status=${game.state.status}&score=${game.state.score}&level=${game.state.level}`
+              )}
+              className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 font-bold shadow-lg backdrop-blur transition-all duration-200 hover:scale-105 hover:shadow-xl active:scale-95"
+            >
+              Next
             </button>
           ) : (
             <button

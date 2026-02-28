@@ -12,6 +12,7 @@ const STARTING_LEVEL = 0;
 const STARTING_LIVES = 3;
 const CORRECT_SCORE = 50;
 const PARTIAL_SCORE = 25;
+const WINNING_SCORE = 500;
 
 // initialize object with state and correctrules
 type InternalTreasureState = {
@@ -142,19 +143,24 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
 
             // lose a life if not fully correct. If correct keep at 0
             const livesDelta = wasCorrect ? 0 : -1;
-
+            // Updates the score with state
+            const newScore = prev.state.score + scoreDelta;
             // Updates the life with state
             const lives = Math.max(0, prev.state.lives + livesDelta);
 
             // if lives less than 0, then set game status as lost.
-            const status = lives <= 0 ? "lost" : prev.state.status;
+            const status = lives <= 0 
+                ? "lost" 
+                : newScore >= WINNING_SCORE
+                    ? "won"
+                    :prev.state.status;
 
             // return new immutable state with updates score/lives/status
             return {
                 ...prev,
                 state: {
                     ...prev.state,
-                    score: prev.state.score + scoreDelta,
+                    score: newScore,
                     lives,
                     status,
                     selectedRules: [], // show empty selection again
