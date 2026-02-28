@@ -18,6 +18,7 @@ type BubbleGameState = {
   bubbles: number[];
   lives: number;
   round: number;
+  stage: number;
   status: GameStatus;
   wrongBubble: number | null;
   handleBubbleClick: (num: number) => void;
@@ -34,8 +35,9 @@ function generateNewGame() {
   return {
     factor,
     bubbles: generateBubbles(factor),
-    lives: STARTING_LIVES,
+    lives: INITIAL_LIVES,
     round: 1,
+    stage: 1,
     status: "playing" as GameStatus,
   };
 }
@@ -49,8 +51,10 @@ export function BubbleGameProvider({ children }: { children: ReactNode }) {
       if (prev.status !== "playing") return prev;
 
       if (isCorrectAnswer(num, prev.factor)) {
+        // Correct — divide the factor
         const nextFactor = getNextFactor(prev.factor, num);
 
+        // Player wins when factor is fully reduced to 1
         if (nextFactor <= 1) {
           if (prev.round >= NUM_ROUNDS) {
             return { ...prev, factor: nextFactor, bubbles: [], status: "won" };
@@ -61,6 +65,9 @@ export function BubbleGameProvider({ children }: { children: ReactNode }) {
           }
         }
 
+
+        // Generate fresh bubbles for the new factor so the player
+        // always has valid options (no more stuck states)
         const newBubbles = generateBubbles(nextFactor);
         return {
           ...prev,
@@ -95,6 +102,7 @@ export function BubbleGameProvider({ children }: { children: ReactNode }) {
         status: game.status,
         round: game.round,
         wrongBubble,
+        stage: game.stage,
         handleBubbleClick,
         resetGame,
       }}

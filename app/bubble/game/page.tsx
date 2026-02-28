@@ -13,6 +13,10 @@ export default function Page() {
     useBubbleGame();
   const router = useRouter();
   const gameStarted = useRef(false);
+  // Needed so game resets state on mount
+  useEffect(() => {
+    resetGame();
+  }, []);
 
   useEffect(() => {
     if (status !== "playing") {

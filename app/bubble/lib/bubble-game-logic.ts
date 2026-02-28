@@ -1,4 +1,7 @@
 const NUM_BUBBLES : number = 8;
+const stage_ranges = {
+  1: [10, 50],
+}
 // BUBBLE GAME LOGIC 
 //
 // Currently hard-coded for a single round with factor 8.
@@ -63,11 +66,12 @@ export function generateBubbles(n: number): number[] {
 
   // Use a wide enough range so even small numbers (like 5) get plenty of wrong answers.
   // Range: [2, max(n*2, 20)] — guarantees at least 18 possible values to pick from.
-  const wrongMax = Math.max(n * 2, 20);
+  const wrongMax = n;
   // add random wrong answers (numbers that are NOT factors of n)
   let attempts = 0;
+
   while (bubbles.size < NUM_BUBBLES && attempts < 200) {
-    const rand = Math.floor(Math.random() * (wrongMax - 2 + 1)) + 2;
+    const rand = Math.floor(Math.random() * (wrongMax - 2)) + 2;
     // only add if it's NOT a correct factor (so it's a wrong answer)
     if (n % rand !== 0) {
       bubbles.add(rand);
