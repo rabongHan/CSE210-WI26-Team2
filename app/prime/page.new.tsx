@@ -73,25 +73,21 @@ export default function Page() {
 
   const handlePlayerPasses = (num: number, isPrimeNum: boolean) => {
     const newBossHealth = gameData.bossHealth - 1;
+
+    const newFeedback = generateFeedback(num, isPrimeNum, true);
+    setFeedback(newFeedback);
     
-    if (newBossHealth === 0) {
-      setGameState('won');
-    } else {
-      const newFeedback = generateFeedback(num, isPrimeNum, true);
-      setFeedback(newFeedback);
-      
-      const next = getNextNumber(gameData);
-      setGameData(prev => ({
-        ...prev,
-        bossHealth: newBossHealth,
-        currNum: next.num,
-        currNumIndex: next.index,
-        timeLeft: INITIAL_TIME,
-      }));
-      
-      // Clear feedback after a short delay
-      setTimeout(() => setFeedback(null), 2000);
-    }
+    const next = getNextNumber(gameData);
+    setGameData(prev => ({
+      ...prev,
+      bossHealth: newBossHealth,
+      currNum: next.num,
+      currNumIndex: next.index,
+      timeLeft: INITIAL_TIME,
+    }));
+    
+    // Clear feedback after a short delay
+    setTimeout(() => setFeedback(null), 2000);
   };
 
   const handlePlayerFails = (num: number, isPrimeNum: boolean) => {
@@ -99,30 +95,34 @@ export default function Page() {
     const newFeedback = generateFeedback(num, isPrimeNum, false);
     setFeedback(newFeedback);
     
-    if (newUserHealth === 0) {
-      setGameState('lost');
-    } else {
-      setGameData(prev => ({ 
-        ...prev, 
-        userHealth: newUserHealth,
-        buttonsDisabled: true,
-      }));
-      setShowContinue(true);
-    }
+    setGameData(prev => ({ 
+      ...prev, 
+      userHealth: newUserHealth,
+      buttonsDisabled: true,
+    }));
+    setShowContinue(true);
   };
 
   const handleContinue = useCallback(() => {
-    setShowContinue(false);
-    setFeedback(null);
     
-    const next = getNextNumber(gameData);
-    setGameData(prev => ({
-      ...prev,
-      currNum: next.num,
-      currNumIndex: next.index,
-      timeLeft: INITIAL_TIME,
-      buttonsDisabled: false,
-    }));
+    if (gameData.userHealth <= 0) {
+      setGameState('lost');
+    }
+    else if (gameData.bossHealth <= 0) {
+      setGameState('won');
+    }
+    else {
+      setShowContinue(false);
+      setFeedback(null);
+      const next = getNextNumber(gameData);
+      setGameData(prev => ({
+        ...prev,
+        currNum: next.num,
+        currNumIndex: next.index,
+        timeLeft: INITIAL_TIME,
+        buttonsDisabled: false,
+      }));
+    }
   }, [gameData]);
 
   // ===== Render =====
