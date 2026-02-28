@@ -1,218 +1,80 @@
 import { generateBalancedNumbers, isPrime } from "./numberGenerator";
 import { primeMnemonic, compositeMnemonic, factorizationMessage } from "./factorCheck";
+import { GameData, Feedback, AnswerResult } from "./types";
 
-var maxGuesses = 25;
-var numList;
-var currNumInd;
-var timerInterval;
-var timeLeft;
+// Constants
+export const MAX_USER_HEALTH = 5;
+export const MAX_BOSS_HEALTH = 20;
+export const MAX_GUESSES = 25;
+export const INITIAL_TIME = 10;
 
-export var currNum;
-export var bossHealth;
-export var userHealth;
-export var maxUserHealth = 5;
-export var maxBossHealth = 20;
-
-export function startGame() {
-  numList = generateBalancedNumbers(100, 300, maxGuesses, {});
-  currNumInd = 0; // the index into the num list
-  currNum = numList.numbers[currNumInd];
-  document.getElementById("num").textContent = currNum;
-  userHealth = maxUserHealth;
-  updateHealthBar("userHealthBar", "userHealthText", userHealth, maxUserHealth);
-  bossHealth = maxBossHealth;
-  updateHealthBar("bossHealthBar", "bossHealthText", bossHealth, maxBossHealth);
-  document.getElementById("welcomeBox").style.display = "none";
-  document.getElementById("startButtonWrap").style.display = "none";
-  hideContinueButton();
-  clearFeedback();
-  enableAnswerButtons();
-  startTimer();
-  showGameContent();
-  hidePlayerWin();
-  hideGameOver();
+/**
+ * Initialize a new game
+ * @returns Initial game data
+ */
+export function initializeGame(): GameData {
+  const generated = generateBalancedNumbers(100, 300, MAX_GUESSES, {});
+  
+  return {
+    currNum: generated.numbers[0],
+    numList: generated.numbers,
+    currNumIndex: 0,
+    userHealth: MAX_USER_HEALTH,
+    bossHealth: MAX_BOSS_HEALTH,
+    timeLeft: INITIAL_TIME,
+    buttonsDisabled: false,
+  };
 }
 
-export function clickYes() {
-  var nIsPrime = isPrime(currNum);
-  var correct = nIsPrime;
-  if (correct) {
-    playerPasses(currNum, nIsPrime);
-  }
-  else {
-    playerFails(currNum, nIsPrime);
-  }
-}
-export function clickNo() {
-  var nIsPrime = isPrime(currNum);
-  var correct = !nIsPrime;
-  if (correct) {
-    playerPasses(currNum, nIsPrime);
-  }
-  else {
-    playerFails(currNum, nIsPrime);
-  }
+/**
+ * Check if the user's answer is correct
+ * @param num - The number being tested
+ * @param userSaidPrime - Whether the user said the number is prime
+ * @returns Answer result with correctness and actual primality
+ */
+export function checkAnswer(num: number, userSaidPrime: boolean): AnswerResult {
+  const isPrimeNum = isPrime(num);
+  return {
+    correct: userSaidPrime === isPrimeNum,
+    isPrime: isPrimeNum,
+  };
 }
 
-// Functions for when the player guesses correctly or incorrectly.
-// These include the code for moving to the next number or ending the game.
-var playerPasses = function(currNum, nIsPrime) {
-  bossHealth -= 1;
-  updateHealthBar("bossHealthBar", "bossHealthText", bossHealth, maxBossHealth);
-  if (bossHealth === 0) {
-    stopTimer();
-    playerWin();
-  }
-  else {
-    giveFeedback(currNum, nIsPrime, true);
-    nextNumber();
-  }
+/**
+ * Generate feedback message for the user
+ * @param num - The number that was tested
+ * @param isPrimeNum - Whether the number is actually prime
+ * @param correct - Whether the user answered correctly
+ * @returns Feedback object with messages
+ */
+export function generateFeedback(num: number, isPrimeNum: boolean, correct: boolean): Feedback {
+  return {
+    correctText: correct ? "Correct!" : "Incorrect!",
+    isCorrect: correct,
+    factorization: factorizationMessage(num),
+    divisibility: !correct ? (isPrimeNum ? primeMnemonic(num) : compositeMnemonic(num)) : "",
+  };
 }
 
-var playerFails = function(currNum, nIsPrime) {
-  userHealth -= 1;
-  updateHealthBar("userHealthBar", "userHealthText", userHealth, maxUserHealth);
-  if (userHealth === 0) {
-    gameOver();
-  }
-  else {
-    giveFeedback(currNum, nIsPrime, false);
-    stopTimer();
-    disableAnswerButtons();
-    showContinueButton();
-  }
+/**
+ * Get the next number in the sequence
+ * @param gameData - Current game data
+ * @returns Next number and updated index
+ */
+export function getNextNumber(gameData: GameData): { num: number; index: number } {
+  const newIndex = Math.min(gameData.currNumIndex + 1, gameData.numList.length - 1);
+  return {
+    num: gameData.numList[newIndex],
+    index: newIndex,
+  };
 }
 
-var giveFeedback = function(n, nIsPrime, correct) {
-  document.getElementById("correct").textContent = correct ? "Correct!" : "Incorrect!";
-  document.getElementById("correct").style.color = correct ? "green" : "red";
-  document.getElementById("feedback").style.display = "block";
-  document.getElementById("feedback").textContent = factorizationMessage(n);
-  if (!correct) { // only display the mnemonic if the user is wrong
-    document.getElementById("divisibilityFeedback").style.display = "block";
-    document.getElementById("divisibilityFeedback").textContent = nIsPrime ? primeMnemonic(n) : compositeMnemonic(n);
-  }
-  else {
-    document.getElementById("divisibilityFeedback").style.display = "none";
-  }
-}
-
-var showGameContent = function() {
-  document.getElementById("gameContent").style.display = "block";
-}
-var hideGameContent = function() {
-  document.getElementById("gameContent").style.display = "none";
-}
-var playerWin = function() {
-  stopTimer();
-  disableAnswerButtons();
-  showPlayerWin();
-  hideGameContent();
-}
-var gameOver = function() {
-  stopTimer();
-  disableAnswerButtons();
-  showGameOver();
-  hideGameContent();
-}
-var showPlayerWin = function() {
-  document.getElementById("winMsg").style.display = "block";
-}
-var showGameOver = function() {
-  document.getElementById("loseMsg").style.display = "block";
-}
-var hidePlayerWin = function() {
-  document.getElementById("winMsg").style.display = "none";
-}
-var hideGameOver = function() {
-  document.getElementById("loseMsg").style.display = "none";
-}
-var nextNumber = function() {
-  if (currNumInd < maxGuesses - 1) {
-    currNumInd += 1;
-  }
-  currNum = numList.numbers[currNumInd];
-  document.getElementById("num").textContent = currNum;
-  startTimer();
-}
-
-var startTimer = function() {
-  // initialize and start a 10-second countdown; when it hits 0 advance the number
-  if (typeof timerInterval !== 'undefined') clearInterval(timerInterval);
-  timeLeft = 10;
-  const el = document.getElementById('timer');
-  if (el) el.textContent = String(timeLeft);
-  timerInterval = setInterval(() => {
-    timeLeft -= 1;
-    const t = document.getElementById('timer');
-    if (t) t.textContent = String(timeLeft);
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      // time's up, which means the user lost this round
-      resetTimer();
-      playerFails(currNum, isPrime(currNum));
-    }
-  }, 1000);
-}
-
-var resetTimer = function() {
-  timeLeft = 10;
-  const el = document.getElementById('timer');
-  if (el) el.textContent = String(timeLeft);
-}
-
-var stopTimer = function() {
-  if (typeof timerInterval !== 'undefined') {
-    clearInterval(timerInterval);
-  }
-}
-
-var updateHealthBar = function(barId, textId, currentHealth, maxHealth) {
-  const percentage = (currentHealth / maxHealth) * 100;
-  const bar = document.getElementById(barId);
-  if (bar) {
-    bar.style.width = percentage + "%";
-  }
-  const text = document.getElementById(textId);
-  if (text) {
-    text.textContent = currentHealth + "/" + maxHealth;
-  }
-}
-
-var showContinueButton = function() {
-  const btn = document.getElementById("continueButton");
-  if (btn) btn.style.display = "block";
-}
-
-var hideContinueButton = function() {
-  const btn = document.getElementById("continueButton");
-  if (btn) btn.style.display = "none";
-}
-
-var clearFeedback = function() {
-  document.getElementById("correct").textContent = "";
-  document.getElementById("feedback").textContent = "";
-  document.getElementById("feedback").style.display = "none";
-  document.getElementById("divisibilityFeedback").textContent = "";
-  document.getElementById("divisibilityFeedback").style.display = "none";
-}
-
-var disableAnswerButtons = function() {
-  const yesBtn = document.getElementById("yesButton") as HTMLButtonElement;
-  const noBtn = document.getElementById("noButton") as HTMLButtonElement;
-  if (yesBtn) yesBtn.disabled = true;
-  if (noBtn) noBtn.disabled = true;
-}
-
-var enableAnswerButtons = function() {
-  const yesBtn = document.getElementById("yesButton") as HTMLButtonElement;
-  const noBtn = document.getElementById("noButton") as HTMLButtonElement;
-  if (yesBtn) yesBtn.disabled = false;
-  if (noBtn) noBtn.disabled = false;
-}
-
-export function continueGame() {
-  hideContinueButton();
-  enableAnswerButtons();
-  nextNumber();
+/**
+ * Calculate health bar percentage
+ * @param current - Current health
+ * @param max - Maximum health
+ * @returns Percentage (0-100)
+ */
+export function getHealthPercentage(current: number, max: number): number {
+  return (current / max) * 100;
 }

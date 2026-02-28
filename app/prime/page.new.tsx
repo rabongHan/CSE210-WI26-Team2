@@ -73,28 +73,32 @@ export default function Page() {
 
   const handlePlayerPasses = (num: number, isPrimeNum: boolean) => {
     const newBossHealth = gameData.bossHealth - 1;
-
-    const newFeedback = generateFeedback(num, isPrimeNum, true);
-    setFeedback(newFeedback);
-
+    
     if (newBossHealth === 0) {
       setGameState('won');
-      return;
+    } else {
+      const newFeedback = generateFeedback(num, isPrimeNum, true);
+      setFeedback(newFeedback);
+      
+      const next = getNextNumber(gameData);
+      setGameData(prev => ({
+        ...prev,
+        bossHealth: newBossHealth,
+        currNum: next.num,
+        currNumIndex: next.index,
+        timeLeft: INITIAL_TIME,
+      }));
+      
+      // Clear feedback after a short delay
+      setTimeout(() => setFeedback(null), 2000);
     }
-
-    setGameData(prev => ({
-      ...prev,
-      bossHealth: newBossHealth,
-      buttonsDisabled: true,
-    }));
-    setShowContinue(true);
   };
 
   const handlePlayerFails = (num: number, isPrimeNum: boolean) => {
     const newUserHealth = gameData.userHealth - 1;
     const newFeedback = generateFeedback(num, isPrimeNum, false);
     setFeedback(newFeedback);
-
+    
     if (newUserHealth === 0) {
       setGameState('lost');
     } else {
@@ -110,7 +114,7 @@ export default function Page() {
   const handleContinue = useCallback(() => {
     setShowContinue(false);
     setFeedback(null);
-
+    
     const next = getNextNumber(gameData);
     setGameData(prev => ({
       ...prev,
@@ -122,14 +126,11 @@ export default function Page() {
   }, [gameData]);
 
   // ===== Render =====
+  // ===== Render =====
   return (
     <main 
-      className="min-h-screen"
+      className="min-h-screen h-screen overflow-auto"
       style={{
-        fontFamily: "system-ui",
-        height: "100vh",
-        overflow: "auto",
-        paddingTop: 0,
         backgroundImage: "url('/prime-background.png')",
         backgroundSize: "cover",
         backgroundPosition: "center 70%",
@@ -168,23 +169,13 @@ export default function Page() {
       )}
 
       {/* Back button - always visible */}
-      <div
-        id="homeButtonWrap"
-        style={{ display: "flex", justifyContent: "center", marginTop: "2vh" }}
-      >
-        <button onClick={() => window.location.href = "/"} style={{
-          backgroundColor: "#f7c948",
-          color: "#111",
-          border: "3px solid #111",
-          borderRadius: "999px",
-          textAlign: "center",
-          padding: "2% 4%",
-          fontSize: "clamp(20%, 2vw, 35px)",
-          fontWeight: 700,
-          fontFamily: "'Trebuchet MS', 'Verdana', 'Geneva', sans-serif",
-          boxShadow: "0 6px 0 #111",
-          cursor: "pointer"
-        }}>Back</button>
+      <div className="flex justify-center mt-[2vh]">
+        <GameButton 
+          onClick={() => window.location.href = "/"} 
+          variant="primary"
+        >
+          Back
+        </GameButton>
       </div>
     </main>
   );
