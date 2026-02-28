@@ -101,7 +101,7 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
     function submitAnswer(): SubmitResult {
         // updated based on what user selects
         const selectedRules = game.state.selectedRules;
-        const correctRules = game.correctRules;
+        const correctRules = game.correctRules.filter((r) => game.state.ruleOptions.includes(r));
         const isCorrect = isSelectionCorrect(selectedRules, correctRules);
         const incorrectRules = selectedRules.filter((rule) => !correctRules.includes(rule));
         const selectedCorrectCount = selectedRules.filter((r) => correctRules.includes(r)).length;
@@ -127,11 +127,12 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
             }
 
             // recomputes correctness from latest state
-            const wasCorrect = isSelectionCorrect(prev.state.selectedRules, prev.correctRules);
+            const visibleCorrectRules = prev.correctRules.filter((r) => prev.state.ruleOptions.includes(r));
+            const wasCorrect = isSelectionCorrect(prev.state.selectedRules, visibleCorrectRules);   
 
             // deduplicates selected rules
             const selectedCorrectCount = prev.state.selectedRules.filter((rule) =>
-                prev.correctRules.includes(rule)
+                visibleCorrectRules.includes(rule)
             ).length;
 
             // determines score change (partial points, full points, no points)
