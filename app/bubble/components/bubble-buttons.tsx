@@ -10,20 +10,7 @@ type PrimaryButtonProps = {
 export function NavButton({ href, children }: PrimaryButtonProps) {
   return (
     <Link href={href}>
-      <button
-        style={{
-          backgroundColor: "#FFB6C1",
-          color: "black",
-          fontSize: "1.8rem",
-          fontWeight: 800,
-          padding: "0.8rem 3rem",
-          border: "none",
-          borderRadius: "9999px",
-          cursor: "pointer",
-          fontFamily: "inherit",
-          letterSpacing: "0.05em",
-        }}
-      >
+      <button className="cursor-target btn-pink text-3xl py-3 px-12 tracking-wide">
         {children}
       </button>
     </Link>

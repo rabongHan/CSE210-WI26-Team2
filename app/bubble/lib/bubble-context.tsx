@@ -6,8 +6,8 @@ import {
   generateBubbles,
   isCorrectAnswer,
   getNextFactor,
-  hasCorrectAnswersLeft,
   STARTING_LIVES,
+  NUM_ROUNDS,
 } from "./bubble-game-logic";
 
 // Game Status
@@ -17,6 +17,7 @@ type BubbleGameState = {
   factor: number;
   bubbles: number[];
   lives: number;
+  round: number;
   status: GameStatus;
   handleBubbleClick: (num: number) => void;
   resetGame: () => void;
@@ -40,6 +41,7 @@ function generateNewGame() {
     factor,
     bubbles: generateBubbles(factor),
     lives: STARTING_LIVES,
+    round: 1,
     status: "playing" as GameStatus
   };
 }
@@ -56,18 +58,29 @@ export function BubbleGameProvider({ children }: { children: ReactNode }) {
       if (prev.status !== "playing") return prev;
 
       if (isCorrectAnswer(num, prev.factor)) {
-        // Correct — remove the bubble
-        const remaining = prev.bubbles.filter((b) => b !== num);
-        // Update factor for next step
+        // Correct — divide the factor
         const nextFactor = getNextFactor(prev.factor, num);
 
-        // Check if all correct answers have been popped
-        const won = !hasCorrectAnswersLeft(remaining, nextFactor)
+        // Player wins when factor is fully reduced to 1
+        if (nextFactor <= 1) {
+          if (prev.round >= NUM_ROUNDS) {
+            return { ...prev, factor: nextFactor, bubbles: [], status: "won" };
+          }
+          else {
+            const factor = generateComposite();
+            const newBubbles = generateBubbles(factor)
+            return { ...prev, factor: factor, bubbles: newBubbles, round: prev.round + 1};
+          }
+        }
+
+
+        // Generate fresh bubbles for the new factor so the player
+        // always has valid options (no more stuck states)
+        const newBubbles = generateBubbles(nextFactor);
         return {
           ...prev,
           factor: nextFactor,
-          bubbles: remaining,
-          status: won? "won" : prev.status
+          bubbles: newBubbles,
         };
       }
 
@@ -93,6 +106,7 @@ export function BubbleGameProvider({ children }: { children: ReactNode }) {
         bubbles: game.bubbles,
         lives: game.lives,
         status: game.status,
+        round: game.round,
         handleBubbleClick,
         resetGame }}
     >

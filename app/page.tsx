@@ -17,6 +17,12 @@ export default function Page() {
           <NavButton href={'/bubble/menu'}>
               Bubble
           </NavButton>
+          <NavButton href={'/treasure'}>
+              Treasure
+          </NavButton>
+          <NavButton href={'/prime'}>
+              Prime
+          </NavButton>
       </div>
       <p>Time: {now}</p>
     </main>
