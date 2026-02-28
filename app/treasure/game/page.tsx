@@ -33,6 +33,10 @@ function TreasureGameContent() {
   const game = useTreasureGame();
   const router = useRouter();
 
+  // Hide description at level 10
+  const HIDE_DESC_LEVEL = 10;
+  const showDescriptions = game.state.level < HIDE_DESC_LEVEL;
+
   let numberBoxGlow = "";
   let resultText = "";
 
@@ -126,7 +130,7 @@ function TreasureGameContent() {
                   style={{ cursor: game.feedback && game.feedback.show ? "default" : "pointer" }}
                 >
                   <h3 className="font-bold">{ruleInfo[rule].title}</h3>
-                  <p className="mt-1">{ruleInfo[rule].desc}</p>
+                  {showDescriptions && <p className="mt-1">{ruleInfo[rule].desc}</p>}
                 </div>
               );
             })}
