@@ -22,44 +22,19 @@ export default function GameScreen({
   onContinue 
 }: GameScreenProps) {
   return (
-    <div style={{ paddingBottom: "2vh" }}>
+    <div className="pb-[2vh]">
       {/* Question */}
-      <div 
-        style={{
-          maxWidth: "40%",
-          margin: "2vh auto 1vh",
-          padding: "1.5vh 3vw",
-          backgroundColor: "rgba(128, 128, 128, 0.3)",
-          border: "5px solid black",
-          borderRadius: "12px",
-          textAlign: "center",
-          fontSize: "clamp(22px, 3vw, 36px)",
-          fontWeight: "bold",
-          fontFamily: "'Trebuchet MS', 'Verdana', 'Geneva', sans-serif"
-        }}
-      >
+      <div className="max-w-[40%] mt-[2vh] mx-auto mb-[1vh] py-[1.5vh] px-[3vw] bg-gray-500/30 border-[5px] border-black rounded-xl text-center text-[clamp(22px,3vw,36px)] font-bold font-sans">
         Is <span id="num">{gameData.currNum}</span> prime?
       </div>
 
       {/* Answer Buttons */}
-      <div style={{ display: "flex", justifyContent: "center", gap: "2vw", marginTop: "2vh" }}>
+      <div className="flex justify-center gap-[2vw] mt-[2vh]">
         <button
           id="yesButton"
           onClick={() => onAnswer(true)} 
           disabled={gameData.buttonsDisabled}
-          style={{
-            backgroundColor: "#7dd3fc",
-            color: "#0f172a",
-            border: "3px solid #0f172a",
-            borderRadius: "999px",
-            padding: "2% 4%",
-            fontSize: "clamp(18px, 2vw, 28px)",
-            fontWeight: 700,
-            fontFamily: "'Trebuchet MS', 'Verdana', 'Geneva', sans-serif",
-            cursor: gameData.buttonsDisabled ? "not-allowed" : "pointer",
-            opacity: gameData.buttonsDisabled ? 0.5 : 1,
-            boxShadow: gameData.buttonsDisabled ? 'none' : "0 6px 0 #0f172a",
-          }}
+          className="bg-sky-300 text-slate-900 border-[3px] border-slate-900 rounded-full py-[2%] px-[4%] text-[clamp(18px,2vw,28px)] font-bold font-sans cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none shadow-[0_6px_0_#0f172a]"
         >
           Yes
         </button>
@@ -67,63 +42,39 @@ export default function GameScreen({
           id="noButton"
           onClick={() => onAnswer(false)} 
           disabled={gameData.buttonsDisabled}
-          style={{
-            backgroundColor: "#fda4af",
-            color: "#0f172a",
-            border: "3px solid #0f172a",
-            borderRadius: "999px",
-            padding: "2% 4%",
-            fontSize: "clamp(18px, 2vw, 28px)",
-            fontWeight: 700,
-            fontFamily: "'Trebuchet MS', 'Verdana', 'Geneva', sans-serif",
-            cursor: gameData.buttonsDisabled ? "not-allowed" : "pointer",
-            opacity: gameData.buttonsDisabled ? 0.5 : 1,
-            boxShadow: gameData.buttonsDisabled ? 'none' : "0 6px 0 #0f172a",
-          }}
+          className="bg-rose-300 text-slate-900 border-[3px] border-slate-900 rounded-full py-[2%] px-[4%] text-[clamp(18px,2vw,28px)] font-bold font-sans cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none shadow-[0_6px_0_#0f172a]"
         >
           No
         </button>
       </div>
 
       {/* Feedback Section */}
-      <div style={{ textAlign: "center", marginTop: "1vh", fontSize: "clamp(16px, 1.5vw, 24px)", minHeight: "80px" }}>
-        <p id="correct" style={{ color: feedback?.isCorrect ? "green" : "red", minHeight: "20px" }}>
+      <div className="text-center mt-[1vh] text-[clamp(16px,1.5vw,24px)] min-h-[80px]">
+        <p id="correct" className={`min-h-[20px] ${feedback?.isCorrect ? 'text-green-500' : 'text-red-500'}`}>
           {feedback?.correctText || ""}
         </p>
-        <p id="feedback" style={{ display: feedback ? "block" : "none", minHeight: "20px" }}>
+        <p id="feedback" className={`min-h-[20px] ${feedback ? 'block' : 'hidden'}`}>
           {feedback?.factorization || ""}
         </p>
-        <p id="divisibilityFeedback" style={{ display: feedback?.divisibility ? "block" : "none", minHeight: "40px" }}>
+        <p id="divisibilityFeedback" className={`min-h-[40px] ${feedback?.divisibility ? 'block' : 'hidden'}`}>
           {feedback?.divisibility || ""}
         </p>
         <p>Time left: <span id="timer">{gameData.timeLeft}</span> sec</p>
       </div>
 
       {/* Continue Button */}
-      <div style={{ display: "flex", justifyContent: "center", marginTop: "1vh" }}>
+      <div className="flex justify-center mt-[1vh]">
         <button
           id="continueButton"
           onClick={onContinue}
-          style={{
-            display: showContinue ? "block" : "none",
-            backgroundColor: "#4ade80",
-            color: "#0f172a",
-            border: "3px solid #0f172a",
-            borderRadius: "999px",
-            padding: "1.5% 3.5%",
-            fontSize: "clamp(18px, 2vw, 28px)",
-            fontWeight: 700,
-            fontFamily: "'Trebuchet MS', 'Verdana', 'Geneva', sans-serif",
-            boxShadow: "0 6px 0 #0f172a",
-            cursor: "pointer"
-          }}
+          className={`${showContinue ? 'block' : 'hidden'} bg-green-400 text-slate-900 border-[3px] border-slate-900 rounded-full py-[1.5%] px-[3.5%] text-[clamp(18px,2vw,28px)] font-bold font-sans shadow-[0_6px_0_#0f172a] cursor-pointer`}
         >
           Continue
         </button>
       </div>
 
       {/* Health Bars */}
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "2vh", marginTop: "1vh" }}>
+      <div className="flex flex-col items-center gap-[2vh] mt-[1vh]">
         <HealthBar 
           label="Boss Health" 
           current={gameData.bossHealth} 

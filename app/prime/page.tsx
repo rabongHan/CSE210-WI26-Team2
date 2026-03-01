@@ -138,17 +138,8 @@ export default function Page() {
   }, [gameData]);
 
   // ===== Render =====
-  // ===== Render =====
   return (
-    <main 
-      className="min-h-screen h-screen overflow-auto"
-      style={{
-        backgroundImage: "url('/prime-background.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center 70%",
-        backgroundRepeat: "no-repeat"
-      }}
-    >
+    <main className="min-h-screen h-screen overflow-auto bg-[url('/prime-background.png')] bg-cover bg-[center_70%] bg-no-repeat">
       {/* Conditional rendering based on game state */}
       {gameState === 'welcome' && (
         <WelcomeScreen onStart={handleStart} />

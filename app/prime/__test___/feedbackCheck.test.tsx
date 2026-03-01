@@ -84,6 +84,6 @@ describe('FeedbackCheck', () => {
     await userClickWrongAnswer(user);
     // expect the divisibilityFeedback element to be visible
     const feedback = document.getElementById('divisibilityFeedback');
-    expect(feedback.style.display).toBe("block");
+    expect(feedback).toBeVisible();
   });
 });

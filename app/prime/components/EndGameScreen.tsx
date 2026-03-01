@@ -20,37 +20,13 @@ export default function EndGameScreen({ message, color, onPlayAgain, incorrectGu
   return (
     <div 
       id={color === 'green' ? "winMsg" : "loseMsg"}
-      style={{ 
-        maxWidth: "60%",
-        margin: "5vh auto",
-        padding: "2vh 3vw",
-        backgroundColor: "rgba(128, 128, 128, 0.3)",
-        border: "5px solid black",
-        borderRadius: "12px",
-        display: "flex",
-        flexDirection: "column",
-        textAlign: "center",
-        color: color,
-        fontFamily: "'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', sans-serif",
-      }}
+      className={`max-w-[60%] my-[5vh] mx-auto py-[2vh] px-[3vw] bg-gray-500/30 border-[5px] border-black rounded-xl flex flex-col text-center font-sans ${color === 'green' ? 'text-green-500' : 'text-red-500'}`}
     >
-      <p style={{ fontSize: "clamp(40px, 4vw, 60px)", fontWeight: 700, margin: "0 0 1.5vh 0" }}>{message}</p>
+      <p className="text-[clamp(40px,4vw,60px)] font-bold mb-[1.5vh]">{message}</p>
 
-      <div style={{ 
-        flex: 1,
-        maxHeight: "50vh",
-        overflowY: "auto",
-        overflowX: "hidden",
-        color: '#111',
-        textAlign: 'left',
-        padding: "1vh 1.5vw",
-        marginBottom: "1.5vh",
-        border: "2px solid #333",
-        borderRadius: "8px",
-        backgroundColor: "rgba(255, 255, 255, 0.5)",
-      }}>
-        <p style={{ fontWeight: 700, marginBottom: '0.8vh', fontSize: 'clamp(18px, 1.5vw, 24px)' }}>Correct Prime Guesses</p>
-        <ul id="correctPrimeList" style={{ margin: '0 0 1.5vh 1.5rem', fontSize: 'clamp(16px, 1.3vw, 20px)', lineHeight: '1.6' }}>
+      <div className="flex-1 max-h-[50vh] overflow-y-auto overflow-x-hidden text-gray-900 text-left py-[1vh] px-[1.5vw] mb-[1.5vh] border-2 border-gray-700 rounded-lg bg-white/50">
+        <p className="font-bold mb-[0.8vh] text-[clamp(18px,1.5vw,24px)]">Correct Prime Guesses</p>
+        <ul id="correctPrimeList" className="mb-[1.5vh] ml-6 text-[clamp(16px,1.3vw,20px)] leading-relaxed">
           {correctPrimes.length === 0 ? (
             <li>None</li>
           ) : (
@@ -60,8 +36,8 @@ export default function EndGameScreen({ message, color, onPlayAgain, incorrectGu
           )}
         </ul>
 
-        <p style={{ fontWeight: 700, marginBottom: '0.8vh', fontSize: 'clamp(18px, 1.5vw, 24px)' }}>Correct Composite Guesses</p>
-        <ul id="correctCompositeList" style={{ margin: '0 0 1.5vh 1.5rem', fontSize: 'clamp(16px, 1.3vw, 20px)', lineHeight: '1.6' }}>
+        <p className="font-bold mb-[0.8vh] text-[clamp(18px,1.5vw,24px)]">Correct Composite Guesses</p>
+        <ul id="correctCompositeList" className="mb-[1.5vh] ml-6 text-[clamp(16px,1.3vw,20px)] leading-relaxed">
           {correctComposites.length === 0 ? (
             <li>None</li>
           ) : (
@@ -73,8 +49,8 @@ export default function EndGameScreen({ message, color, onPlayAgain, incorrectGu
           )}
         </ul>
 
-        <p style={{ fontWeight: 700, marginBottom: '0.8vh', fontSize: 'clamp(18px, 1.5vw, 24px)' }}>Incorrect Prime Guesses</p>
-        <ul id="incorrectPrimeList" style={{ margin: '0 0 1.5vh 1.5rem', fontSize: 'clamp(16px, 1.3vw, 20px)', lineHeight: '1.6' }}>
+        <p className="font-bold mb-[0.8vh] text-[clamp(18px,1.5vw,24px)]">Incorrect Prime Guesses</p>
+        <ul id="incorrectPrimeList" className="mb-[1.5vh] ml-6 text-[clamp(16px,1.3vw,20px)] leading-relaxed">
           {incorrectPrimes.length === 0 ? (
             <li>None</li>
           ) : (
@@ -84,8 +60,8 @@ export default function EndGameScreen({ message, color, onPlayAgain, incorrectGu
           )}
         </ul>
 
-        <p style={{ fontWeight: 700, marginBottom: '0.8vh', fontSize: 'clamp(18px, 1.5vw, 24px)' }}>Incorrect Composite Guesses</p>
-        <ul id="incorrectCompositeList" style={{ margin: '0 0 0 1.5rem', fontSize: 'clamp(16px, 1.3vw, 20px)', lineHeight: '1.6' }}>
+        <p className="font-bold mb-[0.8vh] text-[clamp(18px,1.5vw,24px)]">Incorrect Composite Guesses</p>
+        <ul id="incorrectCompositeList" className="ml-6 text-[clamp(16px,1.3vw,20px)] leading-relaxed">
           {incorrectComposites.length === 0 ? (
             <li>None</li>
           ) : (
@@ -98,19 +74,12 @@ export default function EndGameScreen({ message, color, onPlayAgain, incorrectGu
         </ul>
       </div>
 
-      <button onClick={onPlayAgain} style={{
-        backgroundColor: "#f7c948",
-        color: "#111",
-        border: "3px solid #111",
-        borderRadius: "999px",
-        textAlign: "center",
-        padding: "2% 4%",
-        fontSize: "clamp(20%, 2vw, 35px)",
-        fontWeight: 700,
-        fontFamily: "'Trebuchet MS', 'Verdana', 'Geneva', sans-serif",
-        boxShadow: "0 6px 0 #111",
-        cursor: "pointer"
-      }}>Play again</button>
+      <button 
+        onClick={onPlayAgain}
+        className="bg-[#f7c948] text-gray-900 border-[3px] border-gray-900 rounded-full text-center py-[2%] px-[4%] text-[clamp(20%,2vw,35px)] font-bold font-sans shadow-[0_6px_0_#111] cursor-pointer"
+      >
+        Play again
+      </button>
     </div>
   );
 }

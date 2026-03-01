@@ -32,7 +32,7 @@ describe('ContinueButtonCheck', () => {
     // Verify Continue button is displayed
     const continueButton = document.getElementById('continueButton');
     await waitFor(() => {
-      expect(continueButton.style.display).toBe('block');
+      expect(continueButton).toBeVisible();
     });
   });
 
@@ -52,9 +52,9 @@ describe('ContinueButtonCheck', () => {
     // Click Continue
     await user.click(screen.getByText('Continue'));
 
-    // Verify Continue button is hidden
+    // Verify Continue button is hidden (has 'hidden' class in Tailwind)
     const continueButton = document.getElementById('continueButton');
-    expect(continueButton.style.display).toBe('none');
+    expect(continueButton).toHaveClass('hidden');
   });
 
   it("passes if the game advances to the next number after clicking Continue", async () => {
@@ -136,7 +136,7 @@ describe('ContinueButtonCheck', () => {
     // Verify Continue button IS displayed (since correct answer also shows Continue)
     const continueButton = document.getElementById('continueButton');
     await waitFor(() => {
-      expect(continueButton.style.display).toBe('block');
+      expect(continueButton).toBeVisible();
     });
   });
 

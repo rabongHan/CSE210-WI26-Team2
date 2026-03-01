@@ -18,14 +18,15 @@ export default function HealthBar({
   const percentage = getHealthPercentage(current, max);
   
   return (
-    <div style={{ width: "300px" }}>
-      <p style={{ marginBottom: "0.5vh", fontWeight: "bold", textAlign: "center" }}>
+    <div className="w-[300px]">
+      <p className="mb-[0.5vh] font-bold text-center">
         {label}: <span id={label === "Boss Health" ? "bossHealthText" : "userHealthText"}>{current}/{max}</span>
       </p>
-      <div style={{ width: "100%", height: "30px", backgroundColor: "#ddd", border: "2px solid #000", borderRadius: "8px", overflow: "hidden" }}>
+      <div className="w-full h-[30px] bg-gray-300 border-2 border-black rounded-lg overflow-hidden">
         <div 
           id={label === "Boss Health" ? "bossHealthBar" : "userHealthBar"}
-          style={{ height: "100%", width: `${percentage}%`, backgroundColor: "red", transition: "width 0.3s ease" }}
+          className="h-full bg-red-500 transition-[width] duration-300 ease-in-out"
+          style={{ width: `${percentage}%` }}
         />
       </div>
     </div>

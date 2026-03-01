@@ -15,56 +15,18 @@ export default function GameButton({
   disabled = false, 
   children
 }: GameButtonProps) {
-  const variantStyles = {
-    primary: {
-      backgroundColor: "#f7c948",
-      color: "#111",
-      border: "3px solid #111",
-      padding: "2% 4%",
-      fontSize: "clamp(20%, 2vw, 35px)",
-      boxShadow: "0 6px 0 #111",
-    },
-    yes: {
-      backgroundColor: "#7dd3fc",
-      color: "#0f172a",
-      border: "3px solid #0f172a",
-      padding: "2% 4%",
-      fontSize: "clamp(18px, 2vw, 28px)",
-      boxShadow: "0 6px 0 #0f172a",
-    },
-    no: {
-      backgroundColor: "#fda4af",
-      color: "#0f172a",
-      border: "3px solid #0f172a",
-      padding: "2% 4%",
-      fontSize: "clamp(18px, 2vw, 28px)",
-      boxShadow: "0 6px 0 #0f172a",
-    },
-    continue: {
-      backgroundColor: "#4ade80",
-      color: "#0f172a",
-      border: "3px solid #0f172a",
-      padding: "1.5% 3.5%",
-      fontSize: "clamp(18px, 2vw, 28px)",
-      boxShadow: "0 6px 0 #0f172a",
-    },
+  const variantClasses = {
+    primary: "bg-[#f7c948] text-gray-900 border-gray-900 py-[2%] px-[4%] text-[clamp(20%,2vw,35px)] shadow-[0_6px_0_#111]",
+    yes: "bg-sky-300 text-slate-900 border-slate-900 py-[2%] px-[4%] text-[clamp(18px,2vw,28px)] shadow-[0_6px_0_#0f172a]",
+    no: "bg-rose-300 text-slate-900 border-slate-900 py-[2%] px-[4%] text-[clamp(18px,2vw,28px)] shadow-[0_6px_0_#0f172a]",
+    continue: "bg-green-400 text-slate-900 border-slate-900 py-[1.5%] px-[3.5%] text-[clamp(18px,2vw,28px)] shadow-[0_6px_0_#0f172a]",
   };
-
-  const currentStyle = variantStyles[variant];
 
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      style={{
-        ...currentStyle,
-        borderRadius: "999px",
-        fontWeight: 700,
-        fontFamily: "'Trebuchet MS', 'Verdana', 'Geneva', sans-serif",
-        cursor: disabled ? "not-allowed" : "pointer",
-        opacity: disabled ? 0.5 : 1,
-        boxShadow: disabled ? 'none' : currentStyle.boxShadow,
-      }}
+      className={`${variantClasses[variant]} border-[3px] rounded-full font-bold font-sans cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none`}
     >
       {children}
     </button>
