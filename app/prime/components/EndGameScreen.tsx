@@ -21,23 +21,36 @@ export default function EndGameScreen({ message, color, onPlayAgain, incorrectGu
     <div 
       id={color === 'green' ? "winMsg" : "loseMsg"}
       style={{ 
-        maxWidth: "40%",
-        margin: "10vh auto 0",
-        padding: "1.5vh 3vw",
+        maxWidth: "60%",
+        margin: "5vh auto",
+        padding: "2vh 3vw",
         backgroundColor: "rgba(128, 128, 128, 0.3)",
         border: "5px solid black",
         borderRadius: "12px",
-        display: "block",
+        display: "flex",
+        flexDirection: "column",
         textAlign: "center",
-        fontSize: "clamp(30%, 3vw, 50px)",
-        color: color
+        color: color,
+        fontFamily: "'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', sans-serif",
       }}
     >
-      <p>{message}</p>
+      <p style={{ fontSize: "clamp(40px, 4vw, 60px)", fontWeight: 700, margin: "0 0 1.5vh 0" }}>{message}</p>
 
-      <div style={{ color: '#111', textAlign: 'left', fontSize: 'clamp(14px, 1.2vw, 18px)', margin: '1.5vh 0' }}>
-        <p style={{ fontWeight: 700, marginBottom: '0.5vh' }}>Correct Prime Guesses</p>
-        <ul id="correctPrimeList" style={{ margin: '0 0 1vh 1.2rem' }}>
+      <div style={{ 
+        flex: 1,
+        maxHeight: "50vh",
+        overflowY: "auto",
+        overflowX: "hidden",
+        color: '#111',
+        textAlign: 'left',
+        padding: "1vh 1.5vw",
+        marginBottom: "1.5vh",
+        border: "2px solid #333",
+        borderRadius: "8px",
+        backgroundColor: "rgba(255, 255, 255, 0.5)",
+      }}>
+        <p style={{ fontWeight: 700, marginBottom: '0.8vh', fontSize: 'clamp(18px, 1.5vw, 24px)' }}>Correct Prime Guesses</p>
+        <ul id="correctPrimeList" style={{ margin: '0 0 1.5vh 1.5rem', fontSize: 'clamp(16px, 1.3vw, 20px)', lineHeight: '1.6' }}>
           {correctPrimes.length === 0 ? (
             <li>None</li>
           ) : (
@@ -47,8 +60,8 @@ export default function EndGameScreen({ message, color, onPlayAgain, incorrectGu
           )}
         </ul>
 
-        <p style={{ fontWeight: 700, marginBottom: '0.5vh' }}>Correct Composite Guesses</p>
-        <ul id="correctCompositeList" style={{ margin: '0 0 1vh 1.2rem' }}>
+        <p style={{ fontWeight: 700, marginBottom: '0.8vh', fontSize: 'clamp(18px, 1.5vw, 24px)' }}>Correct Composite Guesses</p>
+        <ul id="correctCompositeList" style={{ margin: '0 0 1.5vh 1.5rem', fontSize: 'clamp(16px, 1.3vw, 20px)', lineHeight: '1.6' }}>
           {correctComposites.length === 0 ? (
             <li>None</li>
           ) : (
@@ -60,8 +73,8 @@ export default function EndGameScreen({ message, color, onPlayAgain, incorrectGu
           )}
         </ul>
 
-        <p style={{ fontWeight: 700, marginBottom: '0.5vh' }}>Incorrect Prime Guesses</p>
-        <ul id="incorrectPrimeList" style={{ margin: '0 0 1vh 1.2rem' }}>
+        <p style={{ fontWeight: 700, marginBottom: '0.8vh', fontSize: 'clamp(18px, 1.5vw, 24px)' }}>Incorrect Prime Guesses</p>
+        <ul id="incorrectPrimeList" style={{ margin: '0 0 1.5vh 1.5rem', fontSize: 'clamp(16px, 1.3vw, 20px)', lineHeight: '1.6' }}>
           {incorrectPrimes.length === 0 ? (
             <li>None</li>
           ) : (
@@ -71,8 +84,8 @@ export default function EndGameScreen({ message, color, onPlayAgain, incorrectGu
           )}
         </ul>
 
-        <p style={{ fontWeight: 700, marginBottom: '0.5vh' }}>Incorrect Composite Guesses</p>
-        <ul id="incorrectCompositeList" style={{ margin: '0 0 1vh 1.2rem' }}>
+        <p style={{ fontWeight: 700, marginBottom: '0.8vh', fontSize: 'clamp(18px, 1.5vw, 24px)' }}>Incorrect Composite Guesses</p>
+        <ul id="incorrectCompositeList" style={{ margin: '0 0 0 1.5rem', fontSize: 'clamp(16px, 1.3vw, 20px)', lineHeight: '1.6' }}>
           {incorrectComposites.length === 0 ? (
             <li>None</li>
           ) : (
