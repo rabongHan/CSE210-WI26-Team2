@@ -4,6 +4,7 @@ export type TreasureResult = {
     curr_score: number; // Final score when the game finished
     total_lives: number; // how many lives left before user finished
     largest_number: number; // Largest number solved by the user
+    level: number; // last level the user completed
 };
 
 // localStorage key for treasure result data

@@ -197,6 +197,7 @@ describe("TreasureGameProvider", () => {
       curr_score: 0,
       total_lives: 0,
       largest_number: 99,
+      level: 3,
     });
   });
 });

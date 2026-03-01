@@ -170,6 +170,7 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
                     curr_score: newScore,
                     total_lives: lives,
                     largest_number: largestNumber,
+                    level:prev.state.level,
                 });
             }
 
