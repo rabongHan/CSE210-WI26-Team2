@@ -7,6 +7,8 @@ import {
     isSelectionCorrect,
     toggleRuleOptionsSelection,
 } from "@/app/treasure/lib/treasure-game-logic";
+import { saveTreasureResult } from "@/app/treasure/lib/treasure-progress";
+
 
 const STARTING_LEVEL = 1;
 const STARTING_LIVES = 3;
@@ -155,6 +157,16 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
                 : newScore >= WINNING_SCORE
                     ? "won"
                     :prev.state.status;
+
+            // Save only when game reaches a terminal state.
+            if (status === "won" || status === "lost") {
+                saveTreasureResult({
+                    status,
+                    curr_score: newScore,
+                    total_lives: lives,
+                    largest_number: prev.state.currentNumber,
+                });
+            }
 
             // return new immutable state with updates score/lives/status
             return {
