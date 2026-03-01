@@ -9,6 +9,7 @@ import { Hearts } from "@/app/treasure/components/treasure-hearts";
 import { GameBadges } from "@/app/treasure/components/treasure-badges";
 import { TreasureGameProvider, useTreasureGame } from "@/app/treasure/lib/treasure-context";
 import { useRouter } from "next/navigation";
+import { HomeButton } from "@/app/shared_components/home-button";
 
 const ruleInfo = {
     2: { title: "Divisible by 2", desc: "If number ends in 0 or is even (= number is divisible by 2)" },
@@ -59,6 +60,7 @@ function TreasureGameContent() {
   }
   return (
     <main className={"bg-[url('app/treasure/assets/background1.png')] bg-cover bg-center min-h-screen"}>
+      <HomeButton />
       <div className="mx-auto p-6">
         {/* Header */}
         <TreasureHeader />

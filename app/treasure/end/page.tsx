@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import "@/app/treasure/treasure.css";
 import { getTreasureResult } from "@/app/treasure/lib/treasure-progress";
+import { HomeButton } from "@/app/shared_components/home-button";
 
 export default function TreasureEndPage() {
     const router = useRouter();
@@ -23,6 +24,7 @@ export default function TreasureEndPage() {
 
     return (
         <main className={"bg-[url('app/treasure/assets/background1.png')] bg-cover bg-center min-h-screen flex items-center justify-center p-6"}>
+            <HomeButton />
             <div className="flex flex-col items-center w-full max-w-2xl -mt-8">
 
                 {/* Summary Box */}

@@ -3,10 +3,12 @@
 import { NavButton } from "@/app/treasure/components/treasure-buttons";
 import "@/app/treasure/treasure.css";
 import { TreasureHeader } from "../components/treasure-header"
+import { HomeButton } from "@/app/shared_components/home-button";
 
 export default function TreasureHowToPlay() {
     return (
         <main className="min-h-screen p-6 bg-cover bg-center bg-fixed bg-[url('@/app/treasure/assets/background1.png')]">
+            <HomeButton />
             <div className="">
                 <TreasureHeader subtitle = "How To Play"/>
                 <div className="list-decimal pl-6 space-y-3 max-w-xl mx-auto text-slate-800">
