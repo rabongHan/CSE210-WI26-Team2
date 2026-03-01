@@ -4,7 +4,6 @@
 
 import { GameData, Feedback } from '../lib/types';
 import { MAX_USER_HEALTH, MAX_BOSS_HEALTH } from '../lib/gameLogic';
-import GameButton from './GameButton';
 import HealthBar from './HealthBar';
 
 interface GameScreenProps {
@@ -44,20 +43,46 @@ export default function GameScreen({
 
       {/* Answer Buttons */}
       <div style={{ display: "flex", justifyContent: "center", gap: "2vw", marginTop: "2vh" }}>
-        <GameButton 
+        <button
+          id="yesButton"
           onClick={() => onAnswer(true)} 
-          variant="yes"
           disabled={gameData.buttonsDisabled}
+          style={{
+            backgroundColor: "#7dd3fc",
+            color: "#0f172a",
+            border: "3px solid #0f172a",
+            borderRadius: "999px",
+            padding: "2% 4%",
+            fontSize: "clamp(18px, 2vw, 28px)",
+            fontWeight: 700,
+            fontFamily: "'Trebuchet MS', 'Verdana', 'Geneva', sans-serif",
+            cursor: gameData.buttonsDisabled ? "not-allowed" : "pointer",
+            opacity: gameData.buttonsDisabled ? 0.5 : 1,
+            boxShadow: gameData.buttonsDisabled ? 'none' : "0 6px 0 #0f172a",
+          }}
         >
           Yes
-        </GameButton>
-        <GameButton 
+        </button>
+        <button
+          id="noButton"
           onClick={() => onAnswer(false)} 
-          variant="no"
           disabled={gameData.buttonsDisabled}
+          style={{
+            backgroundColor: "#fda4af",
+            color: "#0f172a",
+            border: "3px solid #0f172a",
+            borderRadius: "999px",
+            padding: "2% 4%",
+            fontSize: "clamp(18px, 2vw, 28px)",
+            fontWeight: 700,
+            fontFamily: "'Trebuchet MS', 'Verdana', 'Geneva', sans-serif",
+            cursor: gameData.buttonsDisabled ? "not-allowed" : "pointer",
+            opacity: gameData.buttonsDisabled ? 0.5 : 1,
+            boxShadow: gameData.buttonsDisabled ? 'none' : "0 6px 0 #0f172a",
+          }}
         >
           No
-        </GameButton>
+        </button>
       </div>
 
       {/* Feedback Section */}

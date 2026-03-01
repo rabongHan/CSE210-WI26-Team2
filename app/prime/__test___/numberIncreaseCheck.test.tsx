@@ -31,6 +31,9 @@ describe('NumberIncreaseCheck', () => {
 
         for (let i = 0; i < 19; i++) {
             await userClickCorrectAnswer(user);
+            // Click Continue to advance to next number
+            const continueBtn = await screen.findByText('Continue');
+            await user.click(continueBtn);
             prevNum = currentNum;
             currentNum = parseInt(document.getElementById('num').textContent!);
             expect(currentNum).toBeGreaterThan(prevNum);

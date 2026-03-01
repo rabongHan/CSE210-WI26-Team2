@@ -123,7 +123,7 @@ describe('ContinueButtonCheck', () => {
     expect(userHealthText).toBeInTheDocument();
   });
 
-  it("passes if Continue button is not shown after a correct guess", async () => {
+  it("passes if Continue button is shown after a correct guess", async () => {
     render(<Page />);
     const user = userEvent.setup();
 
@@ -133,9 +133,11 @@ describe('ContinueButtonCheck', () => {
     // Get the number and make a correct guess
     await userClickCorrectAnswer(user);
 
-    // Verify Continue button is NOT displayed
+    // Verify Continue button IS displayed (since correct answer also shows Continue)
     const continueButton = document.getElementById('continueButton');
-    expect(continueButton.style.display).toBe('none');
+    await waitFor(() => {
+      expect(continueButton.style.display).toBe('block');
+    });
   });
 
   it("passes if the timer resets to 10 seconds after clicking Continue", async () => {

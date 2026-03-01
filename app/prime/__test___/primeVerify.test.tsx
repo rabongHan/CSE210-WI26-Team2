@@ -31,7 +31,10 @@ describe('PrimeVerification', () => {
 
     await userClickCorrectAnswer(user);
     const feedback = await screen.findByText("Correct!");
+    // Correct answer also shows Continue button now
+    const continueButton = await screen.findByText('Continue');
     expect(feedback).toBeInTheDocument();
+    expect(continueButton).toBeInTheDocument();
   });
 
   it("passes if user incorrectly guesses if the number is prime or composite", async () => {

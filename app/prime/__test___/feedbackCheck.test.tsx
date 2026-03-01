@@ -30,6 +30,8 @@ describe('FeedbackCheck', () => {
     let feedback;
     if (isPrime(num1)) {
       feedback = await screen.findByText("Correct!");
+      // Now correct answer also shows Continue
+      await user.click(screen.getByText('Continue'));
     }
     else {
       feedback = await screen.findByText("Incorrect!");
@@ -47,6 +49,7 @@ describe('FeedbackCheck', () => {
     }
     else {
       feedback = await screen.findByText("Correct!");
+      await user.click(screen.getByText('Continue'));
     }
     expect(feedback).toBeInTheDocument();
   });
@@ -62,6 +65,8 @@ describe('FeedbackCheck', () => {
     let feedback;
     if (isPrime(num)) {
       feedback = await screen.getByText(num + " is prime");
+      // Now correct also needs Continue
+      await user.click(screen.getByText('Continue'));
     }
     else {
       // This has to be a partial match, because `${num} =` doesn't match everything in the text field.

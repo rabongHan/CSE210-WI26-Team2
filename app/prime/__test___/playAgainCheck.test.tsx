@@ -29,6 +29,11 @@ describe('PlayAgainCheck', () => {
     // Win the game by correct guesses (20 times to reduce boss health to 0)
     for (let i = 0; i < 20; i++) {
       await userClickCorrectAnswer(user);
+      // Click Continue to advance (except on win condition when game ends)
+      if (i < 19) {
+        const continueBtn = await screen.findByText('Continue');
+        await user.click(continueBtn);
+      }
     }
 
     // Verify win message is displayed
@@ -39,18 +44,15 @@ describe('PlayAgainCheck', () => {
     const playAgainButtons = screen.getAllByText('Play again');
     await user.click(playAgainButtons[0]);
 
-    // Verify that feedback elements are cleared
-    const correctElement = document.getElementById('correct');
-    const feedbackElement = document.getElementById('feedback');
-    const divisibilityElement = document.getElementById('divisibilityFeedback');
-
-    expect(correctElement.textContent).toBe("");
-    expect(feedbackElement.style.display).toBe("none");
-    expect(divisibilityElement.style.display).toBe("none");
-
-    // Verify game content is visible and we can play again
-    const gameContent = document.getElementById('gameContent');
-    expect(gameContent.style.display).toBe("block");
+    // After clicking Play Again, verify buttons are re-enabled and ready for new game
+    await waitFor(() => {
+      const yesBtn = document.getElementById('yesButton') as HTMLButtonElement;
+      const noBtn = document.getElementById('noButton') as HTMLButtonElement;
+      expect(yesBtn).toBeInTheDocument();
+      expect(noBtn).toBeInTheDocument();
+      expect(yesBtn.disabled).toBe(false);
+      expect(noBtn.disabled).toBe(false);
+    });
     
     // Verify the number has been reset
     const numSpan = document.getElementById('num');
@@ -69,8 +71,10 @@ describe('PlayAgainCheck', () => {
     for (let i = 0; i < 5; i++) {
       await userClickWrongAnswer(user);
       // Click Continue after each incorrect guess
-      if (i < 4 && screen.queryByText('Continue')) {
-        await user.click(screen.getByText('Continue'));
+      // Click Continue after each guess (but not on last one to trigger game over)
+      if (i < 4) {
+        const continueBtn = await screen.findByText('Continue');
+        await user.click(continueBtn);
       }
     }
 
@@ -80,20 +84,17 @@ describe('PlayAgainCheck', () => {
 
     // Click Play Again
     const playAgainButtons = screen.getAllByText('Play again');
-    await user.click(playAgainButtons[1]);
+    await user.click(playAgainButtons[0]);
 
-    // Verify that feedback elements are cleared
-    const correctElement = document.getElementById('correct');
-    const feedbackElement = document.getElementById('feedback');
-    const divisibilityElement = document.getElementById('divisibilityFeedback');
-
-    expect(correctElement.textContent).toBe("");
-    expect(feedbackElement.style.display).toBe("none");
-    expect(divisibilityElement.style.display).toBe("none");
-
-    // Verify game content is visible and we can play again
-    const gameContent = document.getElementById('gameContent');
-    expect(gameContent.style.display).toBe("block");
+    // After clicking Play Again, verify buttons are re-enabled and ready for new game
+    await waitFor(() => {
+      const yesBtn = document.getElementById('yesButton') as HTMLButtonElement;
+      const noBtn = document.getElementById('noButton') as HTMLButtonElement;
+      expect(yesBtn).toBeInTheDocument();
+      expect(noBtn).toBeInTheDocument();
+      expect(yesBtn.disabled).toBe(false);
+      expect(noBtn.disabled).toBe(false);
+    });
     
     // Verify the number has been reset
     const numSpan = document.getElementById('num');

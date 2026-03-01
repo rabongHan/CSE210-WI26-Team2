@@ -41,7 +41,10 @@ describe('LivesHealthCheck', () => {
 
     // if the number is prime, clicking "Yes" should decrement boss health
     await userClickCorrectAnswer(user);
-    const bossHealth = await screen.findByText(/^19\/20$/); // health should go from 20 to 19
+      // Correct answer now also needs Continue
+      const continueBtn = await screen.findByText('Continue');
+      await user.click(continueBtn);
+      const bossHealth = await screen.findByText(/^19\/20$/); // health should go from 20 to 19
     expect(bossHealth).toBeInTheDocument();
   });
 
@@ -55,7 +58,11 @@ describe('LivesHealthCheck', () => {
         // do five incorrect guesses
         await userClickWrongAnswer(user);
         // Click Continue after each incorrect guess
-        await user.click(screen.getByText('Continue'));
+        // Click Continue after each incorrect guess (but not on last one)
+        if (i < 4) {
+          const continueBtn = await screen.findByText('Continue');
+          await user.click(continueBtn);
+        }
     }
     const gameOverMessage = await screen.findByText('Game over!');
   });
@@ -69,6 +76,11 @@ describe('LivesHealthCheck', () => {
     for (let i = 0; i < 20; i++) {
         // do twenty correct guesses
         await userClickCorrectAnswer(user);
+        // Now correct answers also need Continue (except on win condition)
+        if (i < 19) {
+          const continueBtn = await screen.findByText('Continue');
+          await user.click(continueBtn);
+        }
     }
     const gameOverMessage = await screen.findByText('You win!');
   });
