@@ -29,11 +29,9 @@ describe('PlayAgainCheck', () => {
     // Win the game by correct guesses (20 times to reduce boss health to 0)
     for (let i = 0; i < 20; i++) {
       await userClickCorrectAnswer(user);
-      // Click Continue to advance (except on win condition when game ends)
-      if (i < 19) {
-        const continueBtn = await screen.findByText('Continue');
-        await user.click(continueBtn);
-      }
+      // Click Continue after every guess; final click enters win screen
+      const continueBtn = await screen.findByText('Continue');
+      await user.click(continueBtn);
     }
 
     // Verify win message is displayed
@@ -70,12 +68,9 @@ describe('PlayAgainCheck', () => {
     // Lose the game by 5 incorrect guesses
     for (let i = 0; i < 5; i++) {
       await userClickWrongAnswer(user);
-      // Click Continue after each incorrect guess
-      // Click Continue after each guess (but not on last one to trigger game over)
-      if (i < 4) {
-        const continueBtn = await screen.findByText('Continue');
-        await user.click(continueBtn);
-      }
+      // Click Continue after every guess; final click enters game-over screen
+      const continueBtn = await screen.findByText('Continue');
+      await user.click(continueBtn);
     }
 
     // Verify game over message is displayed

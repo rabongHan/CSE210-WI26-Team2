@@ -57,12 +57,9 @@ describe('LivesHealthCheck', () => {
     for (let i = 0; i < 5; i++) {
         // do five incorrect guesses
         await userClickWrongAnswer(user);
-        // Click Continue after each incorrect guess
-        // Click Continue after each incorrect guess (but not on last one)
-        if (i < 4) {
-          const continueBtn = await screen.findByText('Continue');
-          await user.click(continueBtn);
-        }
+        // Click Continue after every guess; the final click transitions to game over
+        const continueBtn = await screen.findByText('Continue');
+        await user.click(continueBtn);
     }
     const gameOverMessage = await screen.findByText('Game over!');
   });
@@ -76,11 +73,9 @@ describe('LivesHealthCheck', () => {
     for (let i = 0; i < 20; i++) {
         // do twenty correct guesses
         await userClickCorrectAnswer(user);
-        // Now correct answers also need Continue (except on win condition)
-        if (i < 19) {
-          const continueBtn = await screen.findByText('Continue');
-          await user.click(continueBtn);
-        }
+        // Click Continue after every guess; the final click transitions to win
+        const continueBtn = await screen.findByText('Continue');
+        await user.click(continueBtn);
     }
     const gameOverMessage = await screen.findByText('You win!');
   });

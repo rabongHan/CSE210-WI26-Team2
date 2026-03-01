@@ -109,12 +109,10 @@ describe('ButtonStateCheck', () => {
     
     // Make 5 incorrect guesses to lose the game
     for (let i = 0; i < 5; i++) {
-      await userClickWrongAnswer(user);      
-      // Click Continue after each guess except the final game-over guess
-      if (i < 4) {
-        const continueBtn = await screen.findByText('Continue');
-        await user.click(continueBtn);
-      }
+      await userClickWrongAnswer(user);
+      // Click Continue after every guess; final click enters game-over screen
+      const continueBtn = await screen.findByText('Continue');
+      await user.click(continueBtn);
     }
 
     // Verify game over message is displayed
@@ -135,11 +133,9 @@ describe('ButtonStateCheck', () => {
     // Win the game by 20 correct guesses
     for (let i = 0; i < 20; i++) {
       await userClickCorrectAnswer(user);
-      // Click Continue after each correct guess except final win guess
-      if (i < 19) {
-        const continueBtn = await screen.findByText('Continue');
-        await user.click(continueBtn);
-      }
+      // Click Continue after every guess; final click enters win screen
+      const continueBtn = await screen.findByText('Continue');
+      await user.click(continueBtn);
     }
 
     // Verify win message is displayed
@@ -158,11 +154,9 @@ describe('ButtonStateCheck', () => {
     await user.click(screen.getByText('Start'));
     for (let i = 0; i < 5; i++) {
       await userClickWrongAnswer(user);
-      // Wait for and click Continue (except on last iteration which triggers game over)
-      if (i < 4) {
-        const continueBtn = await screen.findByText('Continue');
-        await user.click(continueBtn);
-      }
+      // Click Continue after every guess; final click enters game-over screen
+      const continueBtn = await screen.findByText('Continue');
+      await user.click(continueBtn);
     }
 
     // Click Play Again
