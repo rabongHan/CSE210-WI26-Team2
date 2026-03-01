@@ -27,6 +27,9 @@ export type GameState = {
     // when lives = 0 redirect to final page.
     lives: number; // 
 
+    // save largest number for summary
+    largestNumber: number;
+
     // explicit game status so UI can render playing/win/lose states cleanly
     status: GameStatus;
 };

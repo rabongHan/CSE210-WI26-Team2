@@ -37,6 +37,7 @@ function createInitialGame(): InternalTreasureState {
             score: 0,
             lives: STARTING_LIVES, // start with 3 lives
             status: "playing", 
+            largestNumber: 0,
         },
         correctRules: [], // answer key (checks with selected rule options)
     };
@@ -70,6 +71,7 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
             currentNumber: round.currentNumber,
             ruleOptions: round.ruleOptions,
             selectedRules: [],
+            largestNumber: round.currentNumber,
             },
         }));
     }, []);
@@ -151,6 +153,9 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
             // Updates the life with state
             const lives = Math.max(0, prev.state.lives + livesDelta);
 
+            // save the largest possible number
+            const largestNumber = Math.max(prev.state.largestNumber, prev.state.currentNumber)
+
             // if lives less than 0, then set game status as lost.
             const status = lives <= 0 
                 ? "lost" 
@@ -164,7 +169,7 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
                     status,
                     curr_score: newScore,
                     total_lives: lives,
-                    largest_number: prev.state.currentNumber,
+                    largest_number: largestNumber,
                 });
             }
 
@@ -221,6 +226,7 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
                     ruleOptions: round.ruleOptions,
                     selectedRules: [],
                     level: nextLevel,
+                    largestNumber: Math.max(prev.state.largestNumber, round.currentNumber),
                 },
             };
         });
@@ -255,4 +261,3 @@ export function useTreasureGame() {
     }
     return context;
 }
-
