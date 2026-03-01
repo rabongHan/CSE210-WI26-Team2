@@ -3,7 +3,6 @@ import userEvent from "@testing-library/user-event";
 import TreasureEndPage from "@/app/treasure/end/page";
 
 const pushMock = jest.fn();
-const getMock = jest.fn();
 
 // Page includes TreasureGameProvider, which uses next/navigation useRouter().
 // Mock router APIs because this unit test is not running inside Next App Router.
@@ -16,24 +15,25 @@ jest.mock("next/navigation", () => ({
         forward: jest.fn(),
         refresh: jest.fn(),
     }),
-    useSearchParams: () => ({
-        get: getMock,
-    }),
 }));
 
 describe("TreasureEndPage", () => {
     beforeEach(() => {
         pushMock.mockReset();
-        getMock.mockReset();
+        localStorage.clear();
     });
 
-    it("renders win content from search params", () => {
-        getMock.mockImplementation((key: string) => {
-            if (key === "status") return "won";
-            if (key === "score") return "500";
-            if (key === "level") return "12";
-            return null;
-        });
+    it("renders win content from localStorage", () => {
+        localStorage.setItem(
+            "progress.treasure",
+            JSON.stringify({
+                status: "won",
+                curr_score: 500,
+                total_lives: 2,
+                largest_number: 1237,
+                level: 12,
+            }),
+        );
 
         render(<TreasureEndPage />);
 
@@ -42,13 +42,17 @@ describe("TreasureEndPage", () => {
         expect(screen.getByText("Level Reached: 12")).toBeInTheDocument();
     });
 
-    it("renders lose content from search params", () => {
-        getMock.mockImplementation((key: string) => {
-            if (key === "status") return "lost";
-            if (key === "score") return "250";
-            if (key === "level") return "6";
-            return null;
-        });
+    it("renders lose content from localStorage", () => {
+        localStorage.setItem(
+            "progress.treasure",
+            JSON.stringify({
+                status: "lost",
+                curr_score: 250,
+                total_lives: 0,
+                largest_number: 999,
+                level: 6,
+            }),
+        );
 
         render(<TreasureEndPage />);
 
@@ -57,11 +61,8 @@ describe("TreasureEndPage", () => {
         expect(screen.getByText("Level Reached: 6")).toBeInTheDocument();
     });
 
-    it("defaults score/level to 0 if missing", () => {
-        getMock.mockImplementation((key: string) => {
-            if (key === "status") return "lost";
-            return null;
-        });
+    it("defaults score/level to 0 if nothing is stored", () => {
+        localStorage.removeItem("progress.treasure");
 
         render(<TreasureEndPage />);
 
@@ -71,12 +72,16 @@ describe("TreasureEndPage", () => {
 
     it("navigates on Retry, Return to Home, and Start the Next Game", async () => {
         const user = userEvent.setup();
-        getMock.mockImplementation((key: string) => {
-            if (key === "status") return "won";
-            if (key === "score") return "500";
-            if (key === "level") return "10";
-            return null;
-        });
+        localStorage.setItem(
+            "progress.treasure",
+            JSON.stringify({
+                status: "won",
+                curr_score: 500,
+                total_lives: 1,
+                largest_number: 1500,
+                level: 10,
+            }),
+        );
 
         render(<TreasureEndPage />);
 

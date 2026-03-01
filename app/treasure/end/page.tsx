@@ -1,18 +1,22 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import "@/app/treasure/treasure.css";
+import { getTreasureResult } from "@/app/treasure/lib/treasure-progress";
 
 export default function TreasureEndPage() {
     const router = useRouter();
-    const searchParams = useSearchParams();
+
+    // call localStorage for result, not from URL parameters
+    const saved = getTreasureResult();
 
     // "won" or "lost"
-    const status = searchParams.get("status"); 
-
     // if not exists, default to 0
-    const score = searchParams.get("score") ?? "0";
-    const level = searchParams.get("level") ?? "0";
+    const status = saved?.status ?? "lost";
+    const score = saved?.curr_score ?? 0;
+    const lives = saved?.total_lives ?? 0;
+    const largestNumber = saved?.largest_number ?? 0;
+    const level = saved?.level ?? 0;
 
     // Use as condition to update the text
     const isWin = status === "won";
