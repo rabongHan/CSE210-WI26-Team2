@@ -1,4 +1,4 @@
-// Make StageKey it's own type to avoid errors with unexpected values at runtime
+// Make StageKey its own type to avoid errors with unexpected values at runtime
 const NUM_BUBBLES : number = 8;
 
 export type StageKey = 1 | 2 | 3;
@@ -12,12 +12,11 @@ export const STAGE_CONFIG: Record<StageKey, { label: string; range: [number, num
 
 
 /**
- * Generate the target factor for a round.
+ * Generate the target dividend for a round.
  */
-export function generateComposite(): number {
+export function generateDividend(stage: StageKey): number {
   // Range of numbers the user can be tested on
-  const numberRange = [10, 50]
-  const [min, max] = numberRange
+  const [min, max] = STAGE_CONFIG[stage].range;
   let num: number
   // Math.random() returns a floating point number between 0 and 1
   // We multiply this by the range (max - min) to get a number
@@ -62,17 +61,25 @@ function generateFactors(n:number): Set<number> {
   return bubbles
 }
 
-export function generateBubbles(n: number): number[] {
+export function generateBubbles(n: number, stage: StageKey): number[] {
   // First generate correct factors
-  const bubbles = generateFactors(n);
+  const { numBubbles } = STAGE_CONFIG[stage];
 
-  // Use a wide enough range so even small numbers (like 5) get plenty of wrong answers.
-  // Range: [2, max(n*2, 20)] — guarantees at least 18 possible values to pick from.
-  const wrongMax = n;
+
+  const maxCorrect = Math.floor(numBubbles / 2);
+  const bubbles = new Set<number>();
+  const factors = generateFactors(n);
+  for (const f of factors) {
+    if (bubbles.size >= maxCorrect) break;
+    bubbles.add(f);
+  }
+
   // add random wrong answers (numbers that are NOT factors of n)
+  const wrongMax = Math.floor(n/2);
   let attempts = 0;
 
-  while (bubbles.size < NUM_BUBBLES && attempts < 200) {
+
+  while (bubbles.size < numBubbles && attempts < 1000) {
     const rand = Math.floor(Math.random() * (wrongMax - 2)) + 2;
     // only add if it's NOT a correct factor (so it's a wrong answer)
     if (n % rand !== 0) {

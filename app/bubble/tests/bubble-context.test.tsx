@@ -34,6 +34,7 @@ function Harness() {
       <div data-testid="factor">{factor}</div>
       <div data-testid="bubble-count">{bubbles.length}</div>
       <div data-testid="round">{round}</div>
+      <div data-testid="stage">{stage}</div>
       {wrongNum !== undefined && (
         <button onClick={() => handleBubbleClick(wrongNum)}>click-wrong</button>
       )}

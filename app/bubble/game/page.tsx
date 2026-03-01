@@ -46,7 +46,7 @@ export default function Page() {
         <h1 className="text-white text-8xl font-black m-0">{factor}</h1>
       </div>
 
-      <div className="flex flex-wrap justify-center gap-5 max-w-[500px] mt-auto mb-12">
+      <div className="flex flex-wrap justify-center gap-5 max-w-[600px] mt-auto mb-12">
         {bubbles.map((num, i) => (
           <BubbleCircle
             key={i}
