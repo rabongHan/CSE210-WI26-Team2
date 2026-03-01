@@ -51,7 +51,7 @@ function primesInRange(min: number, max: number): number[] {
 }
 
 /** Default tests: all primes up to sqrt(max) plus "prime" */
-function defaultTestsFromMax(max: number): Test[] {
+export function defaultTestsFromMax(max: number): Test[] {
   const limit = Math.floor(Math.sqrt(Math.max(0, max)));
   const tests: Test[] = [];
 

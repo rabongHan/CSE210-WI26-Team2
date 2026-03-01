@@ -1,4 +1,4 @@
-import { isPrime } from "./numberGenerator";
+import { isPrime, defaultTestsFromMax } from "./numberGenerator";
 
 // compositeness check code
 
@@ -77,4 +77,27 @@ export function factorizationMessage(n: number) : string {
     else {
         return n + " = " + factorizationString(n);
     }
+}
+
+export function getCompositeRule(n: number, maxNumber: number = 300): number {
+    let factor = smallestPrimeFactor(n);
+    if (!factor) return 0;
+    
+    // Get the available tests up to the given max number
+    const knownTests = defaultTestsFromMax(maxNumber);
+    const knownFactors = knownTests
+        .filter(t => typeof t === "number") as number[];
+    
+    // If the smallest factor is in the known tests, return it
+    if (knownFactors.includes(factor)) {
+        return factor;
+    }
+    
+    // For factors outside the known tests, check for special cases
+    if (isSquare(n)) {
+        return -1; // special case for perfect squares
+    }
+    
+    // Return the factor itself for unknown divisors
+    return factor;
 }

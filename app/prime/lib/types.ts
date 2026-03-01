@@ -29,3 +29,17 @@ export interface AnswerResult {
   correct: boolean;
   isPrime: boolean;
 }
+
+// Incorrect guesses captured during gameplay
+export interface IncorrectGuess {
+  num: number;
+  isPrime: boolean;
+  compositeRule: number; // rule number for composite numbers
+}
+
+// Correct guesses captured during gameplay
+export interface CorrectGuess {
+  num: number;
+  isPrime: boolean;
+  compositeRule: number; // rule number for composite numbers
+}

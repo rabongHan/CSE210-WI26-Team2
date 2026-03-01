@@ -6,14 +6,12 @@ import {
   checkAnswer, 
   generateFeedback, 
   getNextNumber,
-  createIncorrectGuess,
-  createCorrectGuess,
   INITIAL_TIME,
   MAX_BOSS_HEALTH,
   MAX_USER_HEALTH
 } from "./lib/gameLogic";
 import { isPrime } from "./lib/numberGenerator";
-import { GameState, GameData, Feedback, IncorrectGuess, CorrectGuess } from "./lib/types";
+import { GameState, GameData, Feedback } from "./lib/types";
 import WelcomeScreen from "./components/WelcomeScreen";
 import GameScreen from "./components/GameScreen";
 import EndGameScreen from "./components/EndGameScreen";
@@ -25,8 +23,6 @@ export default function Page() {
   const [gameData, setGameData] = useState<GameData>(() => initializeGame());
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [showContinue, setShowContinue] = useState(false);
-  const [incorrectGuesses, setIncorrectGuesses] = useState<IncorrectGuess[]>([]);
-  const [correctGuesses, setCorrectGuesses] = useState<CorrectGuess[]>([]);
 
   // ===== Timer Effect =====
   useEffect(() => {
@@ -60,8 +56,6 @@ export default function Page() {
     setGameData(newGame);
     setFeedback(null);
     setShowContinue(false);
-    setIncorrectGuesses([]);
-    setCorrectGuesses([]);
     setGameState('playing');
   }, []);
 
@@ -82,59 +76,53 @@ export default function Page() {
 
     const newFeedback = generateFeedback(num, isPrimeNum, true);
     setFeedback(newFeedback);
-    setCorrectGuesses(prev => [...prev, createCorrectGuess(num, isPrimeNum)]);
-
+    
+    const next = getNextNumber(gameData);
     setGameData(prev => ({
       ...prev,
       bossHealth: newBossHealth,
+      currNum: next.num,
+      currNumIndex: next.index,
       timeLeft: INITIAL_TIME,
-      buttonsDisabled: true,
     }));
-
-    // Correct answers also pause on feedback and require Continue
-    setShowContinue(true);
+    
+    // Clear feedback after a short delay
+    setTimeout(() => setFeedback(null), 2000);
   };
 
   const handlePlayerFails = (num: number, isPrimeNum: boolean) => {
     const newUserHealth = gameData.userHealth - 1;
     const newFeedback = generateFeedback(num, isPrimeNum, false);
     setFeedback(newFeedback);
-    setIncorrectGuesses(prev => [...prev, createIncorrectGuess(num, isPrimeNum)]);
-
+    
     setGameData(prev => ({ 
       ...prev, 
       userHealth: newUserHealth,
-      timeLeft: INITIAL_TIME,
       buttonsDisabled: true,
     }));
-
-    // Incorrect answers pause on feedback and require Continue
     setShowContinue(true);
   };
 
   const handleContinue = useCallback(() => {
-    setShowContinue(false);
-
-    // End-game happens after showing feedback page and clicking Continue
+    
     if (gameData.userHealth <= 0) {
       setGameState('lost');
-      return;
     }
-
-    if (gameData.bossHealth <= 0) {
+    else if (gameData.bossHealth <= 0) {
       setGameState('won');
-      return;
     }
-
-    setFeedback(null);
-    const next = getNextNumber(gameData);
-    setGameData(prev => ({
-      ...prev,
-      currNum: next.num,
-      currNumIndex: next.index,
-      timeLeft: INITIAL_TIME,
-      buttonsDisabled: false,
-    }));
+    else {
+      setShowContinue(false);
+      setFeedback(null);
+      const next = getNextNumber(gameData);
+      setGameData(prev => ({
+        ...prev,
+        currNum: next.num,
+        currNumIndex: next.index,
+        timeLeft: INITIAL_TIME,
+        buttonsDisabled: false,
+      }));
+    }
   }, [gameData]);
 
   // ===== Render =====
@@ -169,8 +157,8 @@ export default function Page() {
           message="You win!" 
           color="green" 
           onPlayAgain={handleStart}
-          incorrectGuesses={incorrectGuesses}
-          correctGuesses={correctGuesses}
+          incorrectGuesses={[]}
+          correctGuesses={[]}
         />
       )}
 
@@ -179,8 +167,8 @@ export default function Page() {
           message="Game over!" 
           color="red" 
           onPlayAgain={handleStart}
-          incorrectGuesses={incorrectGuesses}
-          correctGuesses={correctGuesses}
+          incorrectGuesses={[]}
+          correctGuesses={[]}
         />
       )}
 

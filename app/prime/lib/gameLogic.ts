@@ -1,8 +1,10 @@
 import { generateBalancedNumbers, isPrime } from "./numberGenerator";
-import { primeMnemonic, compositeMnemonic, factorizationMessage } from "./factorCheck";
-import { GameData, Feedback, AnswerResult } from "./types";
+import { primeMnemonic, compositeMnemonic, factorizationMessage, getCompositeRule } from "./factorCheck";
+import { GameData, Feedback, AnswerResult, IncorrectGuess, CorrectGuess } from "./types";
 
 // Constants
+export const MIN_NUMBER = 100;
+export const MAX_NUMBER = 300;
 export const MAX_USER_HEALTH = 5;
 export const MAX_BOSS_HEALTH = 20;
 export const MAX_GUESSES = 25;
@@ -13,7 +15,7 @@ export const INITIAL_TIME = 10;
  * @returns Initial game data
  */
 export function initializeGame(): GameData {
-  const generated = generateBalancedNumbers(100, 300, MAX_GUESSES, {});
+  const generated = generateBalancedNumbers(MIN_NUMBER, MAX_NUMBER, MAX_GUESSES, {});
   
   return {
     currNum: generated.numbers[0],
@@ -77,4 +79,52 @@ export function getNextNumber(gameData: GameData): { num: number; index: number 
  */
 export function getHealthPercentage(current: number, max: number): number {
   return (current / max) * 100;
+}
+
+/**
+ * Build an incorrect-guess record for summary display
+ */
+export function createIncorrectGuess(num: number, isPrimeNum: boolean): IncorrectGuess {
+  return {
+    num,
+    isPrime: isPrimeNum,
+    compositeRule: isPrimeNum ? 0 : getCompositeRule(num, MAX_NUMBER),
+  };
+}
+
+/**
+ * Split incorrect guesses into prime/composite lists
+ */
+export function splitIncorrectGuesses(incorrectGuesses: IncorrectGuess[]): {
+  primeGuesses: IncorrectGuess[];
+  compositeGuesses: IncorrectGuess[];
+} {
+  return {
+    primeGuesses: incorrectGuesses.filter(guess => guess.isPrime),
+    compositeGuesses: incorrectGuesses.filter(guess => !guess.isPrime),
+  };
+}
+
+/**
+ * Build a correct-guess record for summary display
+ */
+export function createCorrectGuess(num: number, isPrimeNum: boolean): CorrectGuess {
+  return {
+    num,
+    isPrime: isPrimeNum,
+    compositeRule: isPrimeNum ? 0 : getCompositeRule(num, MAX_NUMBER),
+  };
+}
+
+/**
+ * Split correct guesses into prime/composite lists
+ */
+export function splitCorrectGuesses(correctGuesses: CorrectGuess[]): {
+  primeGuesses: CorrectGuess[];
+  compositeGuesses: CorrectGuess[];
+} {
+  return {
+    primeGuesses: correctGuesses.filter(guess => guess.isPrime),
+    compositeGuesses: correctGuesses.filter(guess => !guess.isPrime),
+  };
 }
