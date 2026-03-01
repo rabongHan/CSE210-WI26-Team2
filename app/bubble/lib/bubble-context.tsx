@@ -8,6 +8,8 @@ import {
   getNextFactor,
   STARTING_LIVES,
   NUM_ROUNDS,
+  STAGE_CONFIG,
+  StageKey,
 } from "./bubble-game-logic";
 
 // Game Status
@@ -18,12 +20,21 @@ type BubbleGameState = {
   bubbles: number[];
   lives: number;
   round: number;
-  stage: number;
+  stage: StageKey;
   status: GameStatus;
   wrongBubble: number | null;
+  // unlockedStages: StageKey[];
   handleBubbleClick: (num: number) => void;
+  // selectStage: (stage: StageKey) => void;
   resetGame: () => void;
 };
+
+// Initial values come from game-logic functions
+// Thinking of deleting these because they freeze the initial factor
+// at whatever it was when the page loaded, meaning a user will always
+// start with the same factor.
+// export const INITIAL_FACTOR = generateFactor();
+// export const INITIAL_BUBBLES = generateBubbles();
 
 export const INITIAL_LIVES = STARTING_LIVES;
 
@@ -37,12 +48,12 @@ function generateNewGame() {
     bubbles: generateBubbles(factor),
     lives: INITIAL_LIVES,
     round: 1,
-    stage: 1,
     status: "playing" as GameStatus,
   };
 }
 
 export function BubbleGameProvider({ children }: { children: ReactNode }) {
+  const [selectedStage, setSelectedStage] = useState<StageKey>(1);
   const [game, setGame] = useState(() => generateNewGame());
   const [wrongBubble, setWrongBubble] = useState<number | null>(null);
 
@@ -101,8 +112,8 @@ export function BubbleGameProvider({ children }: { children: ReactNode }) {
         lives: game.lives,
         status: game.status,
         round: game.round,
+        stage: selectedStage,
         wrongBubble,
-        stage: game.stage,
         handleBubbleClick,
         resetGame,
       }}

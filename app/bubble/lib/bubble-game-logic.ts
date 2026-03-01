@@ -1,15 +1,18 @@
+// Make StageKey it's own type to avoid errors with unexpected values at runtime
 const NUM_BUBBLES : number = 8;
-const stage_ranges = {
-  1: [10, 50],
-}
-// BUBBLE GAME LOGIC 
-//
-// Currently hard-coded for a single round with factor 8.
+
+export type StageKey = 1 | 2 | 3;
+
+export const STAGE_CONFIG: Record<StageKey, { label: string; range: [number, number]; numBubbles: number }> =
+    {
+  1: { label: "Stage 1", range: [10,  50],  numBubbles: 8  },
+  2: { label: "Stage 2", range: [51,  200], numBubbles: 10 },
+  3: { label: "Stage 3", range: [201, 500], numBubbles: 12 },
+};
 
 
 /**
  * Generate the target factor for a round.
- * TODO: Replace with random generation logic.
  */
 export function generateComposite(): number {
   // Range of numbers the user can be tested on
@@ -33,7 +36,6 @@ export function generateComposite(): number {
 /**
  * Generate the array of bubble numbers for a round.
  * Should include some correct answers (factors/multiples) and some wrong ones.
- * TODO: Replace with dynamic generation based on the factor.
  */
 function generateFactors(n:number): Set<number> {
   // use set to have unique bubbles
@@ -89,7 +91,6 @@ export function generateBubbles(n: number): number[] {
 
 /**
  * Check if clicking `num` is a correct answer given the current `factor`.
- * TODO: Replace with the real factorization check.
  */
 export function isCorrectAnswer(num: number, factor: number): boolean {
   return factor % num === 0; // is num a factor of the big number?
@@ -97,7 +98,6 @@ export function isCorrectAnswer(num: number, factor: number): boolean {
 
 /**
  * After a correct answer, compute the new factor.
- * TODO: Replace with real logic (e.g. factor / num, or next sub-problem).
  */
 export function getNextFactor(factor: number, num: number): number {
   return Math.floor(factor / num); // hard-coded 
@@ -106,7 +106,6 @@ export function getNextFactor(factor: number, num: number): number {
 /**
  * Check if there are any correct answers left in the remaining bubbles.
  * Used to determine if the player has won the round.
- * TODO: Update if the definition of "correct" changes.
  */
 export function hasCorrectAnswersLeft(
   bubbles: number[],
@@ -148,3 +147,4 @@ export function isPrime(n: number){
  */
 export const STARTING_LIVES = 3;
 export const NUM_ROUNDS = 5;
+export const NUM_STAGES   = 3;
