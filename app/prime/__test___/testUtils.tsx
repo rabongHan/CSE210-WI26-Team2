@@ -1,3 +1,6 @@
+import { screen } from '@testing-library/react';
+import { isPrime } from '../lib/numberGenerator';
+
 export function userClickCorrectAnswer(user) {
   const numSpan = document.getElementById('num');
   const shown = parseInt(numSpan.textContent);
