@@ -2,21 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import Page from '../page';
-import { isPrime } from '../lib/numberGenerator';
-
-function userClickCorrectAnswer(user) {
-  const numSpan = document.getElementById('num');
-  const shown = parseInt(numSpan.textContent);
-  const correctAnswer = isPrime(shown) ? 'Yes' : 'No';
-  return user.click(screen.getByText(correctAnswer));
-}
-
-function userClickWrongAnswer(user) {
-  const numSpan = document.getElementById('num');
-  const shown = parseInt(numSpan.textContent);
-  const wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
-  return user.click(screen.getByText(wrongAnswer));
-}
+import { userClickCorrectAnswer, userClickWrongAnswer } from './testUtils';
 
 describe('PrimeVerification', () => {
   it("passes if user correctly guesses if the number is prime or composite", async () => {

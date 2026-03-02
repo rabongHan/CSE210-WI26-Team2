@@ -3,20 +3,7 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import Page from '../page';
 import { isPrime } from '../lib/numberGenerator';
-
-function userClickCorrectAnswer(user) {
-  const numSpan = document.getElementById('num');
-  const shown = parseInt(numSpan.textContent);
-  const correctAnswer = isPrime(shown) ? 'Yes' : 'No';
-  return user.click(screen.getByText(correctAnswer));
-}
-
-function userClickWrongAnswer(user) {
-  const numSpan = document.getElementById('num');
-  const shown = parseInt(numSpan.textContent);
-  const wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
-  return user.click(screen.getByText(wrongAnswer));
-}
+import { userClickCorrectAnswer, userClickWrongAnswer } from './testUtils';
 
 describe('FeedbackCheck', () => {
   it ("passes if yes/no feedback is displayed", async () => {

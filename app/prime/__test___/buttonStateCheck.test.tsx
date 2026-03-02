@@ -2,21 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import Page from '../page';
-import { isPrime } from '../lib/numberGenerator';
-
-function userClickCorrectAnswer(user) {
-  const numSpan = document.getElementById('num');
-  const shown = parseInt(numSpan.textContent);
-  const correctAnswer = isPrime(shown) ? 'Yes' : 'No';
-  return user.click(screen.getByText(correctAnswer));
-}
-
-function userClickWrongAnswer(user) {
-  const numSpan = document.getElementById('num');
-  const shown = parseInt(numSpan.textContent);
-  const wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
-  return user.click(screen.getByText(wrongAnswer));
-}
+import { userClickCorrectAnswer, userClickWrongAnswer } from './testUtils';
 
 describe('ButtonStateCheck', () => {
   it("passes if Yes/No buttons are enabled after clicking Start", async () => {
