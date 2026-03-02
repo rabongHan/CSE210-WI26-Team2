@@ -18,6 +18,7 @@ import WelcomeScreen from "./components/WelcomeScreen";
 import GameScreen from "./components/GameScreen";
 import EndGameScreen from "./components/EndGameScreen";
 import GameButton from "./components/GameButton";
+import { saveEndGame } from "./lib/save";
 
 export default function Page() {
   // ===== React State Management =====
@@ -118,11 +119,13 @@ export default function Page() {
     // End-game happens after showing feedback page and clicking Continue
     if (gameData.userHealth <= 0) {
       setGameState('lost');
+      saveEndGame(false);
       return;
     }
 
     if (gameData.bossHealth <= 0) {
       setGameState('won');
+      saveEndGame(true);
       return;
     }
 
