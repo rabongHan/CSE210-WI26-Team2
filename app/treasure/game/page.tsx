@@ -153,7 +153,7 @@ function TreasureGameContent() {
             <button
               type="button"
               onClick={() => router.push(
-                `/treasure/end?status=${game.state.status}&score=${game.state.score}&level=${game.state.level}`
+                `/treasure/end`
               )}
               className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 font-bold shadow-lg backdrop-blur transition-all duration-200 hover:scale-105 hover:shadow-xl active:scale-95"
             >
