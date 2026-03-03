@@ -6,12 +6,6 @@ import TargetCursor from "@/app/bubble/components/TargetCursor";
 import { useBubbleGame } from "@/app/bubble/lib/bubble-context";
 import { STAGE_CONFIG, StageKey } from "@/app/bubble/lib/bubble-game-logic";
 
-const STAGE_COLORS: Record<StageKey, string> = {
-  1: "#5BC0EB",
-  2: "#9B59B6",
-  3: "#FF6B6B",
-};
-
 const STAGE_DESCRIPTIONS: Record<StageKey, string> = {
   1: "Numbers 10–50",
   2: "Numbers 51–200",
@@ -41,7 +35,6 @@ export default function MenuPage() {
       <div className="flex flex-col gap-5">
         {([1, 2, 3] as StageKey[]).map((stage) => {
           const unlocked = unlockedStages.includes(stage);
-          const color = STAGE_COLORS[stage];
 
           return (
             <StageButton

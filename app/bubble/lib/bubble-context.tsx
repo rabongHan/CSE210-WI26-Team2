@@ -1,3 +1,6 @@
+// TODO: add skip button
+// TODO: Next stage button, next game button
+
 "use client";
 
 import { createContext, useContext, useState, ReactNode, useEffect} from "react";
@@ -11,7 +14,14 @@ import {
   STAGE_CONFIG,
   StageKey,
 } from "./bubble-game-logic";
+import {Property} from "csstype";
+import PaddingRight = Property.PaddingRight;
 
+const LS_KEY = "bubble.status";
+type BubbleStorage = {
+  unlocked_stages: StageKey[];
+  status: GameStatus;
+}
 // Game Status
 type GameStatus = "playing" | "won" | "lost";
 
@@ -34,9 +44,22 @@ export const INITIAL_LIVES = STARTING_LIVES;
 // Context
 const BubbleGameContext = createContext<BubbleGameState | null>(null);
 
-function loadUnlocked(): StageKey[] {
-  return [1];
+function loadStorage(): BubbleStorage {
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) return JSON.parse(raw) as BubbleStorage;
+  } catch {}
+  return {unlocked_stages: [1], status: "playing"};
 }
+
+function saveStorage(data: Partial<BubbleStorage>){
+  try {
+    const current = loadStorage();
+    localStorage.setItem(LS_KEY, JSON.stringify({...current, ...data}));
+  }catch{}
+}
+
+
 
 function generateNewGame(stage: StageKey) {
   const factor = generateDividend(stage);
@@ -57,8 +80,21 @@ export function BubbleGameProvider({ children }: { children: ReactNode }) {
 
   // Hydrate unlocked stages
   useEffect(() => {
-    setUnlockedStages(loadUnlocked());
+    const stored = loadStorage();
+    setUnlockedStages(stored.unlocked_stages);
   }, []);
+
+  function unlockNextStage(current: StageKey) {
+    const next = (current + 1) as StageKey;
+    if (next in STAGE_CONFIG) {
+      setUnlockedStages((prev) => {
+        if (prev.includes(next)) return prev;
+        const updated = [...prev, next];
+        saveStorage({ unlocked_stages: updated });
+        return updated;
+      });
+    }
+  }
 
   function handleBubbleClick(num: number) {
     setGame((prev) => {
@@ -71,6 +107,7 @@ export function BubbleGameProvider({ children }: { children: ReactNode }) {
         // Player wins when factor is fully reduced to 1
         if (nextFactor <= 1) {
           if (prev.round >= NUM_ROUNDS) {
+            unlockNextStage(selectedStage);
             return { ...prev, factor: nextFactor, bubbles: [], status: "won" };
           } else {
             const factor = generateDividend(selectedStage);
