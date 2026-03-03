@@ -10,6 +10,15 @@ export function saveGameData(gameData) {
     localStorage.setItem('primeGameData', btoa(JSON.stringify(gameData)));
 }
 
+export function loadEndGame() {
+    // load whether or not the player won the prime testing game from local storage, decoding it from a string
+    const data = localStorage.getItem('primeWon');
+    if (data) {
+        return JSON.parse(atob(data));
+    }
+    return null;
+}
+
 export function loadGameData() {
     // load the game data from local storage, decoding it from a string
     const data = localStorage.getItem('primeGameData');
