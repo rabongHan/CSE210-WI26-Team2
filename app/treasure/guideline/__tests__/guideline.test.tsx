@@ -34,7 +34,7 @@ describe('TreasureGuidelinesPage', () => {
     it('renders navigation buttons', () => {
         render(<TreasureGuidelinesPage />);
 
-        expect(screen.getByText('Next')).toBeInTheDocument();
+        expect(screen.getByText('Play Game')).toBeInTheDocument();
         expect(screen.getByText('Back')).toBeInTheDocument();
     });
 
