@@ -9,3 +9,12 @@ export function saveGameData(gameData) {
     // save the game data in local storage, encoding it as a string
     localStorage.setItem('primeGameData', btoa(JSON.stringify(gameData)));
 }
+
+export function loadGameData() {
+    // load the game data from local storage, decoding it from a string
+    const data = localStorage.getItem('primeGameData');
+    if (data) {
+        return JSON.parse(atob(data));
+    }
+    return null;
+}
