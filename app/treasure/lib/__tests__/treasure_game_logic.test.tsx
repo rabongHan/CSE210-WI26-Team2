@@ -189,6 +189,19 @@ describe("generateRound", () => {
       expect(highHardRate).toBeGreaterThan(lowHardRate);
   });
 
+  it("does not generate duplicate numbers when usedNumbers is provided", () => {
+      const usedNumbers = new Set<number>();
+      const rounds = 30;
+
+      for (let i = 0; i < rounds; i++) {
+          const round = generateRound(i, usedNumbers);
+          expect(usedNumbers.has(round.currentNumber)).toBe(false);
+          usedNumbers.add(round.currentNumber);
+      }
+
+      expect(usedNumbers.size).toBe(rounds);
+  });
+
   it("increases no-rule rounds at higher levels", () => {
       const lowLevel = 0;
       const highLevel = 25;
