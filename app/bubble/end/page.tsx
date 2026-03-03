@@ -1,13 +1,22 @@
 "use client";
 
-import { NavButton } from "@/app/bubble/components/bubble-buttons";
+import { useRouter } from "next/navigation";
+import {NavButton, StageButton} from "@/app/bubble/components/bubble-buttons";
 import TargetCursor from "@/app/bubble/components/TargetCursor";
 import { useBubbleGame } from "@/app/bubble/lib/bubble-context";
+import {StageKey, STAGE_CONFIG} from "@/app/bubble/lib/bubble-game-logic";
 
 export default function Page() {
-  const { status } = useBubbleGame();
+  const { status, stage, selectStage } = useBubbleGame();
   const won = status === "won";
+  const router = useRouter();
+  const isFinalStage = stage === 3;
 
+  function handleNextStage() {
+    const next = (stage + 1) as StageKey;
+    selectStage(next);
+    router.push("/bubble/game");
+  }
   return (
     <main className="page-ocean justify-center text-center">
       <TargetCursor />
@@ -28,6 +37,15 @@ export default function Page() {
 
       <div className="flex flex-col gap-4">
         <NavButton href="/bubble/game">PLAY AGAIN</NavButton>
+
+          {won && (
+              isFinalStage
+              ? <NavButton href="/prime">Next Game</NavButton>
+              : <button onClick={handleNextStage} className="cursor-target btn-pink text-3xl py-3 px-12 tracking-wide">
+                Next Stage ({stage + 1})
+              </button>
+          )}
+
         <NavButton href="/bubble/menu">MENU</NavButton>
       </div>
     </main>
