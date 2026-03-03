@@ -20,6 +20,7 @@ const WINNING_SCORE = 500;
 type InternalTreasureState = {
     state: GameState;
     correctRules: RuleId[];
+    usedNumbers: Set<number>;
 };
 
 // creates react context object for game API
@@ -40,6 +41,7 @@ function createInitialGame(): InternalTreasureState {
             largestNumber: 0,
         },
         correctRules: [], // answer key (checks with selected rule options)
+        usedNumbers: new Set<number>(),
     };
 }
 
@@ -63,17 +65,22 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         // generate random number, its correct rules, and multiple choices.
         const round = generateRound(STARTING_LEVEL);
-        setGame((prev) => ({
-            ...prev,
-            correctRules: round.correctRules,
-            state: {
-            ...prev.state,
-            currentNumber: round.currentNumber,
-            ruleOptions: round.ruleOptions,
-            selectedRules: [],
-            largestNumber: round.currentNumber,
-            },
-        }));
+        setGame((prev) => {
+            const usedNumbers = new Set(prev.usedNumbers);
+            usedNumbers.add(round.currentNumber);
+            return {
+                ...prev,
+                correctRules: round.correctRules,
+                usedNumbers,
+                state: {
+                    ...prev.state,
+                    currentNumber: round.currentNumber,
+                    ruleOptions: round.ruleOptions,
+                    selectedRules: [],
+                    largestNumber: round.currentNumber,
+                },
+            };
+        });
     }, []);
 
     // Receives which rule box user clicked (2 to 9)
@@ -216,11 +223,14 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
 
             // create new random round with new number, options, answer key.
             const nextLevel = prev.state.level + 1;
-            const round = generateRound(nextLevel);
+            const round = generateRound(nextLevel, prev.usedNumbers);
+            const usedNumbers = new Set(prev.usedNumbers);
+            usedNumbers.add(round.currentNumber);
 
             // update next game state in the next level.
             return {
                 correctRules: round.correctRules,
+                usedNumbers,
                 state: {
                     ...prev.state,
                     currentNumber: round.currentNumber,

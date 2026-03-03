@@ -46,7 +46,7 @@ export function isSelectionCorrect(
 
 // Create round with generated number
 // based on level, so progressively more difficult
-export function generateRound(level: number): {
+export function generateRound(level: number, usedNumbers?: Set<number>): {
     currentNumber: number;
     correctRules: RuleId[];
     ruleOptions: RuleId[];
@@ -92,13 +92,15 @@ export function generateRound(level: number): {
     const MAX_TRIES = 60;
     let tries = 0;
 
+    const seen = usedNumbers ?? new Set<number>();
+
     // 1st path: intentionally generate a "no-rule" round
     // (number not divisible by any rule in 2..9)
     if (Math.random() < noRuleChance) {
         while (tries < MAX_TRIES) {
             tries++;
             const candidate = randomInRange(min, max);
-            if (getCorrectRules(candidate).length === 0) {
+            if (getCorrectRules(candidate).length === 0 && !seen.has(candidate)) {
                 currentNumber = candidate;
                 break;
             }
@@ -112,14 +114,14 @@ export function generateRound(level: number): {
             tries++;
             const targetRule = weightedPick(ALL_RULES, weights);
             const candidate = randomInRange(min, max);
-            if (candidate % targetRule === 0) {
+            if (candidate % targetRule === 0 && !seen.has(candidate)) {
                 currentNumber = candidate;
                 break;
             }
         }
     }
 
-    // 3rd path: fallback if no weighted hit
+    // 3rd path: fallback if no weighted hit (skip duplicate check to guarantee a number)
     if (currentNumber === 0) {
         currentNumber = Math.floor(Math.random() * (max - min + 1)) + min;
     }
