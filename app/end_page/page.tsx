@@ -6,7 +6,7 @@ import { Target } from "lucide-react";
 import {NavButton} from "@/app/bubble/components/bubble-buttons";
 import { loadStorage } from "@/app/bubble/lib/bubble-context";
 import { getTreasureResult } from "@/app/treasure/lib/treasure-progress";
-import { loadGameState } from "@/app/prime/lib/save";
+import { loadGameState, loadGameData } from "@/app/prime/lib/save";
 
 // maybe replace this separate imports from each game's save library
 // actually, we aren't going to do this because we're going to have separate files for save functions in each game
@@ -16,8 +16,11 @@ export default function Page() {
   /*const bubbleCompleted = loadBubbleGameData().status === 'won';
   const treasureCompleted = true; // replace with actual game data
   const primeCompleted = loadPrimeEndGame();*/
-  const bubbleCompleted = loadStorage() && (loadStorage().status === 'won');
-  const treasureCompleted = getTreasureResult() && (getTreasureResult().status === 'won');
+  const bubbleData = loadStorage();
+  const treasureData = getTreasureResult();
+  const primeData = loadGameData();
+  const bubbleCompleted = bubbleData && (bubbleData.status === 'won');
+  const treasureCompleted = treasureData && (treasureData.status === 'won');
   const primeCompleted = loadGameState() === 'won';
 
   return (
@@ -37,6 +40,27 @@ export default function Page() {
       {bubbleCompleted && treasureCompleted && primeCompleted && (
         <p>All games completed! You win!</p>
       )}
+      <h1>Statistics:</h1>
+      <h2>Bubble game</h2>
+        <p>Status: {bubbleCompleted ? "Completed" : "Not completed"}</p>
+        {bubbleData && <p>Unlocked stages: {bubbleData.unlocked_stages.join(", ")}</p>}
+        {!bubbleData && <p>Not played yet.</p>}
+      <h2>Treasure game</h2>
+        <p>Status: {treasureCompleted ? "Completed" : "Not completed"}</p>
+        {treasureData && (
+            <div>
+              <p>Current or latest score: {treasureData.curr_score}</p>
+              <p>Total lives: {treasureData.total_lives}</p>
+              <p>Largest number solved: {treasureData.largest_number}</p>
+              <p>Last level completed: {treasureData.level}</p>
+            </div>
+        )}
+        {!treasureData && <p>Not played yet.</p>}
+      <h2>Prime game</h2>
+        <p>Status: {primeCompleted ? "Completed" : "Not completed"}</p>
+        {/* None of the other game data is really relevant to show here */}
+        {/* to do: modify game data structure to have information like the number of incorrect guesses, the maximum number guessed, etc. */}
+        {!primeData && <p>Not played yet.</p>}
     </main>
   );
 }
