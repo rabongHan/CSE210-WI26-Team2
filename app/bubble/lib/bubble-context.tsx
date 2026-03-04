@@ -44,7 +44,7 @@ export const INITIAL_LIVES = STARTING_LIVES;
 // Context
 const BubbleGameContext = createContext<BubbleGameState | null>(null);
 
-function loadStorage(): BubbleStorage {
+export function loadStorage(): BubbleStorage {
   try{
     const raw = localStorage.getItem(LS_KEY);
     if (raw) return JSON.parse(raw) as BubbleStorage;
