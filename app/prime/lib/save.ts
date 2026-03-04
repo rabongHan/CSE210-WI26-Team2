@@ -1,12 +1,15 @@
 // Save the game information in local storage after every round
-import { GameData } from "./types";
+import { GameState, GameData } from "./types";
 
-const LS_WIN_STATUS_KEY = 'primeWon';
+const LS_STATE_KEY = 'primeGameState';
 const LS_KEY = 'primeGameData';
 
-export function saveEndGame(wonGame: boolean) {
+/*export function saveEndGame(wonGame: boolean) {
     // whether or not the player won the prime testing game
     localStorage.setItem(LS_WIN_STATUS_KEY, btoa(wonGame.toString()));
+}*/
+export function saveGameState(gameState: GameState) {
+    localStorage.setItem(LS_STATE_KEY, btoa(gameState));
 }
 
 export function saveGameData(gameData: GameData) {
@@ -14,12 +17,23 @@ export function saveGameData(gameData: GameData) {
     localStorage.setItem(LS_KEY, btoa(JSON.stringify(gameData)));
 }
 
-export function loadEndGame() {
+/*(export function loadEndGame() {
     // load whether or not the player won the prime testing game from local storage, decoding it from a string
     try {
         const data = localStorage.getItem(LS_WIN_STATUS_KEY);
         if (data) {
             return JSON.parse(atob(data));
+        }
+    } catch (e) {
+        return null;
+    }
+}*/
+
+export function loadGameState() {
+    try {
+        const data = localStorage.getItem(LS_STATE_KEY);
+        if (data) {
+            return atob(data) as GameState;
         }
     } catch (e) {
         return null;

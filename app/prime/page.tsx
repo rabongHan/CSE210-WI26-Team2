@@ -18,7 +18,7 @@ import WelcomeScreen from "./components/WelcomeScreen";
 import GameScreen from "./components/GameScreen";
 import EndGameScreen from "./components/EndGameScreen";
 import GameButton from "./components/GameButton";
-import { saveEndGame, saveGameData } from "./lib/save";
+import { saveGameState, saveGameData } from "./lib/save";
 
 export default function Page() {
   // ===== React State Management =====
@@ -115,15 +115,15 @@ export default function Page() {
 
   const handlePlayerWin = useCallback(() => {
     setGameState('won');
-    saveEndGame(true);
+    saveGameState(gameState);
     saveGameData(gameData);
-  }, [gameData]);
+  }, [gameData, gameState]);
 
   const handlePlayerLose = useCallback(() => {
     setGameState('lost');
-    saveEndGame(false);
+    saveGameState(gameState);
     saveGameData(gameData);
-  }, [gameData]);
+  }, [gameData, gameState]);
 
   const handleContinue = useCallback(() => {
     setShowContinue(false);
