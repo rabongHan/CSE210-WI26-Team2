@@ -1,4 +1,30 @@
-// Save the game information in local storage after every round
+// Save and retrieve data about each game to local storage
+
+// copied from bubble/lib/bubble-context.tsx
+import { StageKey } from "@/app/bubble/lib/bubble-game-logic";
+
+type GameStatus = "playing" | "won" | "lost";
+type BubbleStorage = {
+  unlocked_stages: StageKey[];
+  status: GameStatus;
+}
+
+// save bubble game data, using LS_KEY as given in bubble/lib/bubble-context.tsx
+const LS_KEY = "bubble.status";
+export function saveBubbleGameData(data /* : Partial<BubbleStorage> */) {
+  try {
+    const current = loadBubbleGameData();
+    localStorage.setItem(LS_KEY, JSON.stringify({...current, ...data}));
+  }catch{}
+}
+
+export function loadBubbleGameData() {
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) return JSON.parse(raw) as BubbleStorage;
+  } catch {}
+  return {unlocked_stages: [1], status: "playing"};
+}
 
 export function savePrimeEndGame(wonGame: boolean) {
     // whether or not the player won the prime testing game
