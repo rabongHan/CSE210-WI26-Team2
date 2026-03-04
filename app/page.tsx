@@ -3,16 +3,21 @@
 import { Target } from "lucide-react";
 import { useEffect, useState } from "react";
 import {NavButton} from "@/app/bubble/components/bubble-buttons";
-import { loadBubbleGameData, loadPrimeEndGame } from "./save";
+// maybe replace this separate imports from each game's save library
+// actually, we aren't going to do this because we're going to have separate files for save functions in each game
+/* import { loadBubbleGameData, loadPrimeEndGame } from "./save"; */
 
 export default function Page() {
   const [now, setNow] = useState("");
 
   useEffect(() => setNow(new Date().toISOString()), []);
 
-  const bubbleCompleted = loadBubbleGameData().status === 'won';
+  /*const bubbleCompleted = loadBubbleGameData().status === 'won';
   const treasureCompleted = true; // replace with actual game data
-  const primeCompleted = loadPrimeEndGame();
+  const primeCompleted = loadPrimeEndGame();*/
+  const bubbleCompleted = false;
+  const treasureCompleted = false;
+  const primeCompleted = false; // replace with actual game data
 
   return (
     <main style={{ fontFamily: "system-ui", padding: 24 }}>
