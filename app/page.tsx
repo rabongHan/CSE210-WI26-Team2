@@ -14,7 +14,7 @@ export default function Page() {
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
         <Target />
         <h1 style={{ margin: 0 }}>✅ Menu</h1>
-          <NavButton href={'/bubble/menu'}>
+          <NavButton href={'/bubble'}>
               Bubble
           </NavButton>
           <NavButton href={'/treasure'}>

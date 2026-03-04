@@ -10,7 +10,7 @@ import {
 import { isCorrectAnswer, getNextFactor } from "../lib/bubble-game-logic";
 
 function findAnswer(factor: number, wantCorrect: boolean): number | undefined {
-  for (let n = 2; n <= 200; n++) {
+  for (let n = 2; n <= 500; n++) {
     if (isCorrectAnswer(n, factor) === wantCorrect) return n;
   }
   return undefined;

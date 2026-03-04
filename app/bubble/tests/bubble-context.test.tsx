@@ -6,8 +6,8 @@ import {
   BubbleGameProvider,
   useBubbleGame,
   INITIAL_LIVES,
-} from "./bubble-context";
-import {isCorrectAnswer} from "./bubble-game-logic";
+} from "../lib/bubble-context";
+import {isCorrectAnswer} from "../lib/bubble-game-logic";
 
 // Helper: finds a number that isCorrectAnswer returns true/false for.
 // Searches 1–200 so it works no matter what logic the teammate implements.
@@ -21,7 +21,7 @@ function findAnswer(factor: number, wantCorrect: boolean): number | undefined {
 
 // Dynamically finds a correct and wrong answer based on the current factor.
 function Harness() {
-  const { lives, status, bubbles, factor, round, handleBubbleClick, resetGame } =
+  const { lives, status, bubbles, factor, round, stage, handleBubbleClick, resetGame } =
     useBubbleGame();
 
   const correctNum = findAnswer(factor, true);
@@ -34,6 +34,7 @@ function Harness() {
       <div data-testid="factor">{factor}</div>
       <div data-testid="bubble-count">{bubbles.length}</div>
       <div data-testid="round">{round}</div>
+      <div data-testid="stage">{stage}</div>
       {wrongNum !== undefined && (
         <button onClick={() => handleBubbleClick(wrongNum)}>click-wrong</button>
       )}

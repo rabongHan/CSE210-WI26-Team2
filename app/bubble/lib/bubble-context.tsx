@@ -1,15 +1,27 @@
+// TODO: add skip button
+// TODO: Next stage button, next game button
+
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect} from "react";
 import {
-  generateComposite,
+  generateDividend,
   generateBubbles,
   isCorrectAnswer,
   getNextFactor,
   STARTING_LIVES,
   NUM_ROUNDS,
+  STAGE_CONFIG,
+  StageKey,
 } from "./bubble-game-logic";
+import {Property} from "csstype";
+import PaddingRight = Property.PaddingRight;
 
+const LS_KEY = "bubble.status";
+type BubbleStorage = {
+  unlocked_stages: StageKey[];
+  status: GameStatus;
+}
 // Game Status
 type GameStatus = "playing" | "won" | "lost";
 
@@ -18,40 +30,71 @@ type BubbleGameState = {
   bubbles: number[];
   lives: number;
   round: number;
+  stage: StageKey;
   status: GameStatus;
+  wrongBubble: number | null;
+  unlockedStages: StageKey[];
   handleBubbleClick: (num: number) => void;
+  selectStage: (stage: StageKey) => void;
   resetGame: () => void;
 };
-
-// Initial values come from game-logic functions
-// Thinking of deleting these because they freeze the initial factor
-// at whatever it was when the page loaded, meaning a user will always
-// start with the same factor.
-// export const INITIAL_FACTOR = generateFactor();
-// export const INITIAL_BUBBLES = generateBubbles();
 
 export const INITIAL_LIVES = STARTING_LIVES;
 
 // Context
 const BubbleGameContext = createContext<BubbleGameState | null>(null);
 
-function generateNewGame() {
-  const factor = generateComposite()
-  return{
+function loadStorage(): BubbleStorage {
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) return JSON.parse(raw) as BubbleStorage;
+  } catch {}
+  return {unlocked_stages: [1], status: "playing"};
+}
+
+function saveStorage(data: Partial<BubbleStorage>){
+  try {
+    const current = loadStorage();
+    localStorage.setItem(LS_KEY, JSON.stringify({...current, ...data}));
+  }catch{}
+}
+
+
+
+function generateNewGame(stage: StageKey) {
+  const factor = generateDividend(stage);
+  return {
     factor,
-    bubbles: generateBubbles(factor),
-    lives: STARTING_LIVES,
+    bubbles: generateBubbles(factor, stage),
+    lives: INITIAL_LIVES,
     round: 1,
-    status: "playing" as GameStatus
+    status: "playing" as GameStatus,
   };
 }
+
 export function BubbleGameProvider({ children }: { children: ReactNode }) {
-  // Lazy initialization to get random factor every time module loads
-  // const [factor, setFactor] = useState(() => generateFactor());
-  // const [bubbles, setBubbles] = useState(() => generateBubbles(factor)) ;
-  // const [lives, setLives] = useState(INITIAL_LIVES);
-  // const [status, setStatus] = useState<GameStatus>("playing");
-  const[game, setGame] = useState(() => generateNewGame());
+  const [selectedStage, setSelectedStage] = useState<StageKey>(3);
+  const [unlockedStages, setUnlockedStages] = useState<StageKey[]>([1]);
+  const [game, setGame] = useState(() => generateNewGame(selectedStage));
+  const [wrongBubble, setWrongBubble] = useState<number | null>(null);
+
+  // Hydrate unlocked stages
+  useEffect(() => {
+    const stored = loadStorage();
+    setUnlockedStages(stored.unlocked_stages);
+  }, []);
+
+  function unlockNextStage(current: StageKey) {
+    const next = (current + 1) as StageKey;
+    if (next in STAGE_CONFIG) {
+      setUnlockedStages((prev) => {
+        if (prev.includes(next)) return prev;
+        const updated = [...prev, next];
+        saveStorage({ unlocked_stages: updated });
+        return updated;
+      });
+    }
+  }
 
   function handleBubbleClick(num: number) {
     setGame((prev) => {
@@ -64,19 +107,19 @@ export function BubbleGameProvider({ children }: { children: ReactNode }) {
         // Player wins when factor is fully reduced to 1
         if (nextFactor <= 1) {
           if (prev.round >= NUM_ROUNDS) {
+            unlockNextStage(selectedStage);
             return { ...prev, factor: nextFactor, bubbles: [], status: "won" };
-          }
-          else {
-            const factor = generateComposite();
-            const newBubbles = generateBubbles(factor)
-            return { ...prev, factor: factor, bubbles: newBubbles, round: prev.round + 1};
+          } else {
+            const factor = generateDividend(selectedStage);
+            const newBubbles = generateBubbles(factor, selectedStage);
+            return { ...prev, factor: factor, bubbles: newBubbles, round: prev.round + 1 };
           }
         }
 
 
         // Generate fresh bubbles for the new factor so the player
         // always has valid options (no more stuck states)
-        const newBubbles = generateBubbles(nextFactor);
+        const newBubbles = generateBubbles(nextFactor, selectedStage);
         return {
           ...prev,
           factor: nextFactor,
@@ -86,17 +129,25 @@ export function BubbleGameProvider({ children }: { children: ReactNode }) {
 
       // Wrong — lose a life
       const newLives = prev.lives - 1;
+      setWrongBubble(num);
+      setTimeout(() => setWrongBubble(null), 500);
 
       return {
         ...prev,
         lives: newLives,
-        status: newLives <= 0 ? "lost" : prev.status
+        status: newLives <= 0 ? "lost" : prev.status,
       };
     });
   }
 
+  function selectStage(stage: StageKey) {
+    setSelectedStage(stage);
+    setGame(generateNewGame(stage));
+    setWrongBubble(null);
+  }
+
   function resetGame() {
-    setGame(generateNewGame);
+    setGame(generateNewGame(selectedStage));
   }
 
   return (
@@ -107,8 +158,13 @@ export function BubbleGameProvider({ children }: { children: ReactNode }) {
         lives: game.lives,
         status: game.status,
         round: game.round,
+        stage: selectedStage,
+        wrongBubble,
+        unlockedStages,
         handleBubbleClick,
-        resetGame }}
+        selectStage,
+        resetGame,
+      }}
     >
       {children}
     </BubbleGameContext.Provider>
