@@ -23,7 +23,7 @@ export default function TreasureEndPage() {
     const isWin = status === "won";
 
     return (
-        <main className={"bg-[url('app/treasure/assets/background1.png')] bg-cover bg-center min-h-screen flex items-center justify-center p-6"}>
+        <main className={"bg-[url('app/treasure/assets/background1.png')] bg-cover bg-center bg-fixed min-h-screen flex items-center justify-center p-6"}>
             <HomeButton />
             <div className="flex flex-col items-center w-full max-w-2xl -mt-8">
 

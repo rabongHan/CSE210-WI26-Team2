@@ -19,7 +19,7 @@ const rules = [
 export default function TreasureGuidelinesPage() {
 
   return (
-    <main className="bg-[url('app/treasure/assets/background1.png')] bg-cover bg-center min-h-screen">
+    <main className="bg-[url('app/treasure/assets/background1.png')] bg-cover bg-center bg-fixed min-h-screen">
         <HomeButton />
         <div className="mx-auto p-6">
             <TreasureHeader subtitle="Guidelines - Study these rules"/>
