@@ -7,16 +7,20 @@ import {
     isSelectionCorrect,
     toggleRuleOptionsSelection,
 } from "@/app/treasure/lib/treasure-game-logic";
+import { saveTreasureResult } from "@/app/treasure/lib/treasure-progress";
 
-const STARTING_LEVEL = 0;
+
+const STARTING_LEVEL = 1;
 const STARTING_LIVES = 3;
 const CORRECT_SCORE = 50;
 const PARTIAL_SCORE = 25;
+const WINNING_SCORE = 500;
 
 // initialize object with state and correctrules
 type InternalTreasureState = {
     state: GameState;
     correctRules: RuleId[];
+    usedNumbers: Set<number>;
 };
 
 // creates react context object for game API
@@ -34,31 +38,49 @@ function createInitialGame(): InternalTreasureState {
             score: 0,
             lives: STARTING_LIVES, // start with 3 lives
             status: "playing", 
+            largestNumber: 0,
         },
         correctRules: [], // answer key (checks with selected rule options)
+        usedNumbers: new Set<number>(),
     };
 }
+
+type TreasureGameFeedback = {
+    show: boolean;
+    result: SubmitResult | null;
+    selectedRules: RuleId[];
+    scoreDelta: number;
+    previousScore: number;
+};
 
 // component function that accepts children (UI it wraps), owns shared game state, returns context
 export function TreasureGameProvider({ children }: { children: ReactNode }) {
 
     // initializes context with initialization and allows updates through setGame
     const [game, setGame] = useState<InternalTreasureState>(() => createInitialGame());
-
+    
+    const [feedback, setFeedback] = useState<TreasureGameFeedback>({ show: false, result: null, selectedRules: [], scoreDelta: 0, previousScore: 0 });
+    
     // runs once after components mount
     useEffect(() => {
         // generate random number, its correct rules, and multiple choices.
-        const round = generateRound();
-        setGame((prev) => ({
-            ...prev,
-            correctRules: round.correctRules,
-            state: {
-            ...prev.state,
-            currentNumber: round.currentNumber,
-            ruleOptions: round.ruleOptions,
-            selectedRules: [],
-            },
-        }));
+        const round = generateRound(STARTING_LEVEL);
+        setGame((prev) => {
+            const usedNumbers = new Set(prev.usedNumbers);
+            usedNumbers.add(round.currentNumber);
+            return {
+                ...prev,
+                correctRules: round.correctRules,
+                usedNumbers,
+                state: {
+                    ...prev.state,
+                    currentNumber: round.currentNumber,
+                    ruleOptions: round.ruleOptions,
+                    selectedRules: [],
+                    largestNumber: round.currentNumber,
+                },
+            };
+        });
     }, []);
 
     // Receives which rule box user clicked (2 to 9)
@@ -90,9 +112,23 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
     function submitAnswer(): SubmitResult {
         // updated based on what user selects
         const selectedRules = game.state.selectedRules;
-        const correctRules = game.correctRules;
+        const correctRules = game.correctRules.filter((r) => game.state.ruleOptions.includes(r));
         const isCorrect = isSelectionCorrect(selectedRules, correctRules);
         const incorrectRules = selectedRules.filter((rule) => !correctRules.includes(rule));
+        const selectedCorrectCount = selectedRules.filter((r) => correctRules.includes(r)).length;
+        const scoreDelta = isCorrect
+            ? CORRECT_SCORE
+            : selectedCorrectCount > 0
+                ? PARTIAL_SCORE
+                : 0;
+
+        setFeedback({ 
+            show: true, 
+            result: { isCorrect, correctRules, incorrectRules },
+            selectedRules: [...selectedRules],
+            scoreDelta,
+            previousScore: game.state.score,
+        });
 
         setGame((prev) => {
             // if game won or lost keep it as previous state
@@ -102,11 +138,12 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
             }
 
             // recomputes correctness from latest state
-            const wasCorrect = isSelectionCorrect(prev.state.selectedRules, prev.correctRules);
+            const visibleCorrectRules = prev.correctRules.filter((r) => prev.state.ruleOptions.includes(r));
+            const wasCorrect = isSelectionCorrect(prev.state.selectedRules, visibleCorrectRules);   
 
             // deduplicates selected rules
             const selectedCorrectCount = prev.state.selectedRules.filter((rule) =>
-                prev.correctRules.includes(rule)
+                visibleCorrectRules.includes(rule)
             ).length;
 
             // determines score change (partial points, full points, no points)
@@ -118,19 +155,38 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
 
             // lose a life if not fully correct. If correct keep at 0
             const livesDelta = wasCorrect ? 0 : -1;
-
+            // Updates the score with state
+            const newScore = prev.state.score + scoreDelta;
             // Updates the life with state
             const lives = Math.max(0, prev.state.lives + livesDelta);
 
+            // save the largest possible number
+            const largestNumber = Math.max(prev.state.largestNumber, prev.state.currentNumber)
+
             // if lives less than 0, then set game status as lost.
-            const status = lives <= 0 ? "lost" : prev.state.status;
+            const status = lives <= 0 
+                ? "lost" 
+                : newScore >= WINNING_SCORE
+                    ? "won"
+                    :prev.state.status;
+
+            // Save only when game reaches a terminal state.
+            if (status === "won" || status === "lost") {
+                saveTreasureResult({
+                    status,
+                    curr_score: newScore,
+                    total_lives: lives,
+                    largest_number: largestNumber,
+                    level:prev.state.level,
+                });
+            }
 
             // return new immutable state with updates score/lives/status
             return {
                 ...prev,
                 state: {
                     ...prev.state,
-                    score: prev.state.score + scoreDelta,
+                    score: newScore,
                     lives,
                     status,
                     selectedRules: [], // show empty selection again
@@ -148,6 +204,7 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
 
     // Moves game state forward based on current state
     function nextRound() {
+        setFeedback({ show: false, result: null, selectedRules: [], scoreDelta: 0, previousScore: 0 });
         setGame((prev) => {
             if (prev.state.status !== "playing") {
                 return prev;
@@ -165,17 +222,22 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
             }
 
             // create new random round with new number, options, answer key.
-            const round = generateRound();
+            const nextLevel = prev.state.level + 1;
+            const round = generateRound(nextLevel, prev.usedNumbers);
+            const usedNumbers = new Set(prev.usedNumbers);
+            usedNumbers.add(round.currentNumber);
 
             // update next game state in the next level.
             return {
                 correctRules: round.correctRules,
+                usedNumbers,
                 state: {
                     ...prev.state,
                     currentNumber: round.currentNumber,
                     ruleOptions: round.ruleOptions,
                     selectedRules: [],
-                    level: prev.state.level + 1,
+                    level: nextLevel,
+                    largestNumber: Math.max(prev.state.largestNumber, round.currentNumber),
                 },
             };
         });
@@ -187,6 +249,7 @@ export function TreasureGameProvider({ children }: { children: ReactNode }) {
         toggleRule,
         submitAnswer,
         nextRound,
+        feedback,
     };
 
     // return provider value
@@ -209,4 +272,3 @@ export function useTreasureGame() {
     }
     return context;
 }
-

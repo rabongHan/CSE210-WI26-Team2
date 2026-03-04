@@ -27,6 +27,9 @@ export type GameState = {
     // when lives = 0 redirect to final page.
     lives: number; // 
 
+    // save largest number for summary
+    largestNumber: number;
+
     // explicit game status so UI can render playing/win/lose states cleanly
     status: GameStatus;
 };
@@ -54,4 +57,12 @@ export type TreasureGameAPI = {
 
     // OPTIONAL: reset game to initial state
     resetGame?: () => void;
+
+    feedback: {
+        show: boolean;
+        result: SubmitResult | null;
+        selectedRules: RuleId[];
+        scoreDelta: number;
+        previousScore: number;
+    }
 };

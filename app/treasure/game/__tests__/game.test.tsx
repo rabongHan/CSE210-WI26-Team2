@@ -2,6 +2,19 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import TreasureGamePage from "@/app/treasure/game/page";
 
+// since page.tsx uses useRouter, we need to mock next/navigation 
+// to prevent test fail
+jest.mock("next/navigation", () => ({
+    useRouter: () => ({
+        push: jest.fn(),
+        replace: jest.fn(),
+        prefetch: jest.fn(),
+        back: jest.fn(),
+        forward: jest.fn(),
+        refresh: jest.fn(),
+    }),
+}));
+
 describe("TreasureGame page", () => {
     it("renders the header and game state (score, level)", () => {
         render(<TreasureGamePage />);
