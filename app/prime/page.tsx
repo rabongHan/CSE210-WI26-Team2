@@ -115,13 +115,13 @@ export default function Page() {
 
   const handlePlayerWin = useCallback(() => {
     setGameState('won');
-    saveGameState(gameState);
+    saveGameState('won');
     saveGameData(gameData);
   }, [gameData, gameState]);
 
   const handlePlayerLose = useCallback(() => {
     setGameState('lost');
-    saveGameState(gameState);
+    saveGameState('lost');
     saveGameData(gameData);
   }, [gameData, gameState]);
 
