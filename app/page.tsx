@@ -3,11 +3,21 @@
 import { Target } from "lucide-react";
 import { useEffect, useState } from "react";
 import {NavButton} from "@/app/bubble/components/bubble-buttons";
+// maybe replace this separate imports from each game's save library
+// actually, we aren't going to do this because we're going to have separate files for save functions in each game
+/* import { loadBubbleGameData, loadPrimeEndGame } from "./save"; */
 
 export default function Page() {
   const [now, setNow] = useState("");
 
   useEffect(() => setNow(new Date().toISOString()), []);
+
+  /*const bubbleCompleted = loadBubbleGameData().status === 'won';
+  const treasureCompleted = true; // replace with actual game data
+  const primeCompleted = loadPrimeEndGame();*/
+  const bubbleCompleted = false;
+  const treasureCompleted = false;
+  const primeCompleted = false; // replace with actual game data
 
   return (
     <main style={{ fontFamily: "system-ui", padding: 24 }}>
@@ -25,6 +35,14 @@ export default function Page() {
           </NavButton>
       </div>
       <p>Time: {now}</p>
+      {/* Tests: Various things the page could say if certain sets of games are completed */}
+      {bubbleCompleted && !treasureCompleted && !primeCompleted && (
+        <p>Bubble game completed! On to the treasure chest game!</p>
+      )}
+      {/* Need to make this part of the page only appear when all three games are done */}
+      {bubbleCompleted && treasureCompleted && primeCompleted && (
+        <p>All games completed!</p>
+      )}
     </main>
   );
 }

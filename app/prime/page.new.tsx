@@ -1,3 +1,5 @@
+// This file is not being used, apparently
+
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
@@ -6,19 +8,16 @@ import {
   checkAnswer, 
   generateFeedback, 
   getNextNumber,
-  createIncorrectGuess,
-  createCorrectGuess,
   INITIAL_TIME,
   MAX_BOSS_HEALTH,
   MAX_USER_HEALTH
 } from "./lib/gameLogic";
 import { isPrime } from "./lib/numberGenerator";
-import { GameState, GameData, Feedback, IncorrectGuess, CorrectGuess } from "./lib/types";
+import { GameState, GameData, Feedback } from "./lib/types";
 import WelcomeScreen from "./components/WelcomeScreen";
 import GameScreen from "./components/GameScreen";
 import EndGameScreen from "./components/EndGameScreen";
 import GameButton from "./components/GameButton";
-import { saveGameState, saveGameData } from "./lib/save";
 
 export default function Page() {
   // ===== React State Management =====
@@ -26,8 +25,6 @@ export default function Page() {
   const [gameData, setGameData] = useState<GameData>(() => initializeGame());
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [showContinue, setShowContinue] = useState(false);
-  const [incorrectGuesses, setIncorrectGuesses] = useState<IncorrectGuess[]>([]);
-  const [correctGuesses, setCorrectGuesses] = useState<CorrectGuess[]>([]);
 
   // ===== Timer Effect =====
   useEffect(() => {
@@ -61,8 +58,6 @@ export default function Page() {
     setGameData(newGame);
     setFeedback(null);
     setShowContinue(false);
-    setIncorrectGuesses([]);
-    setCorrectGuesses([]);
     setGameState('playing');
   }, []);
 
@@ -83,76 +78,67 @@ export default function Page() {
 
     const newFeedback = generateFeedback(num, isPrimeNum, true);
     setFeedback(newFeedback);
-    setCorrectGuesses(prev => [...prev, createCorrectGuess(num, isPrimeNum)]);
-
+    
+    const next = getNextNumber(gameData);
     setGameData(prev => ({
       ...prev,
       bossHealth: newBossHealth,
+      currNum: next.num,
+      currNumIndex: next.index,
       timeLeft: INITIAL_TIME,
-      buttonsDisabled: true,
     }));
-
-    // Correct answers also pause on feedback and require Continue
-    setShowContinue(true);
+    
+    // Clear feedback after a short delay
+    setTimeout(() => setFeedback(null), 2000);
   };
 
   const handlePlayerFails = (num: number, isPrimeNum: boolean) => {
     const newUserHealth = gameData.userHealth - 1;
     const newFeedback = generateFeedback(num, isPrimeNum, false);
     setFeedback(newFeedback);
-    setIncorrectGuesses(prev => [...prev, createIncorrectGuess(num, isPrimeNum)]);
-
+    
     setGameData(prev => ({ 
       ...prev, 
       userHealth: newUserHealth,
-      timeLeft: INITIAL_TIME,
       buttonsDisabled: true,
     }));
-
-    // Incorrect answers pause on feedback and require Continue
     setShowContinue(true);
   };
 
-  const handlePlayerWin = useCallback(() => {
-    setGameState('won');
-    saveGameState('won');
-    saveGameData(gameData);
-  }, [gameData, gameState]);
-
-  const handlePlayerLose = useCallback(() => {
-    setGameState('lost');
-    saveGameState('lost');
-    saveGameData(gameData);
-  }, [gameData, gameState]);
-
   const handleContinue = useCallback(() => {
-    setShowContinue(false);
-
-    // End-game happens after showing feedback page and clicking Continue
+    
     if (gameData.userHealth <= 0) {
-      handlePlayerLose();
-      return;
+      setGameState('lost');
     }
-
-    if (gameData.bossHealth <= 0) {
-      handlePlayerWin();
-      return;
+    else if (gameData.bossHealth <= 0) {
+      setGameState('won');
     }
-
-    setFeedback(null);
-    const next = getNextNumber(gameData);
-    setGameData(prev => ({
-      ...prev,
-      currNum: next.num,
-      currNumIndex: next.index,
-      timeLeft: INITIAL_TIME,
-      buttonsDisabled: false,
-    }));
+    else {
+      setShowContinue(false);
+      setFeedback(null);
+      const next = getNextNumber(gameData);
+      setGameData(prev => ({
+        ...prev,
+        currNum: next.num,
+        currNumIndex: next.index,
+        timeLeft: INITIAL_TIME,
+        buttonsDisabled: false,
+      }));
+    }
   }, [gameData]);
 
   // ===== Render =====
+  // ===== Render =====
   return (
-    <main className="min-h-screen h-screen overflow-auto bg-[url('/prime-background.png')] bg-cover bg-[center_70%] bg-no-repeat">
+    <main 
+      className="min-h-screen h-screen overflow-auto"
+      style={{
+        backgroundImage: "url('/prime-background.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center 70%",
+        backgroundRepeat: "no-repeat"
+      }}
+    >
       {/* Conditional rendering based on game state */}
       {gameState === 'welcome' && (
         <WelcomeScreen onStart={handleStart} />
@@ -173,8 +159,8 @@ export default function Page() {
           message="You win!" 
           color="green" 
           onPlayAgain={handleStart}
-          incorrectGuesses={incorrectGuesses}
-          correctGuesses={correctGuesses}
+          incorrectGuesses={[]}
+          correctGuesses={[]}
         />
       )}
 
@@ -183,8 +169,8 @@ export default function Page() {
           message="Game over!" 
           color="red" 
           onPlayAgain={handleStart}
-          incorrectGuesses={incorrectGuesses}
-          correctGuesses={correctGuesses}
+          incorrectGuesses={[]}
+          correctGuesses={[]}
         />
       )}
 

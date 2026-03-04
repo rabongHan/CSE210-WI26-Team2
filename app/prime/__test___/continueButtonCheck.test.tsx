@@ -1,8 +1,9 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import Page from './page';
-import { isPrime } from './lib/numberGenerator';
+import Page from '../page';
+import { isPrime } from '../lib/numberGenerator';
+import { userClickCorrectAnswer, userClickWrongAnswer } from './testUtils';
 
 describe('ContinueButtonCheck', () => {
   it("passes if Continue button is displayed after an incorrect guess", async () => {
@@ -13,15 +14,12 @@ describe('ContinueButtonCheck', () => {
     await user.click(screen.getByText('Start'));
     
     // Get the number and make an incorrect guess
-    const numSpan = document.getElementById('num');
-    const shown = parseInt(numSpan.textContent);
-    const wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
-    await user.click(screen.getByText(wrongAnswer));
+    await userClickWrongAnswer(user);
 
     // Verify Continue button is displayed
     const continueButton = document.getElementById('continueButton');
     await waitFor(() => {
-      expect(continueButton.style.display).toBe('block');
+      expect(continueButton).toBeVisible();
     });
   });
 
@@ -33,10 +31,7 @@ describe('ContinueButtonCheck', () => {
     await user.click(screen.getByText('Start'));
     
     // Get the number and make an incorrect guess
-    const numSpan = document.getElementById('num');
-    const shown = parseInt(numSpan.textContent);
-    const wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
-    await user.click(screen.getByText(wrongAnswer));
+    await userClickWrongAnswer(user);
 
     // Wait for Continue button to appear
     await screen.findByText('Continue');
@@ -44,9 +39,9 @@ describe('ContinueButtonCheck', () => {
     // Click Continue
     await user.click(screen.getByText('Continue'));
 
-    // Verify Continue button is hidden
+    // Verify Continue button is hidden (has 'hidden' class in Tailwind)
     const continueButton = document.getElementById('continueButton');
-    expect(continueButton.style.display).toBe('none');
+    expect(continueButton).toHaveClass('hidden');
   });
 
   it("passes if the game advances to the next number after clicking Continue", async () => {
@@ -57,10 +52,8 @@ describe('ContinueButtonCheck', () => {
     await user.click(screen.getByText('Start'));
     
     // Get the first number and make an incorrect guess
-    const numSpan = document.getElementById('num');
-    const firstNum = parseInt(numSpan.textContent);
-    const wrongAnswer = isPrime(firstNum) ? 'No' : 'Yes';
-    await user.click(screen.getByText(wrongAnswer));
+    const firstNum = parseInt(document.getElementById('num').textContent);
+    await userClickWrongAnswer(user);
 
     // Wait for Continue button and click it
     await screen.findByText('Continue');
@@ -81,20 +74,14 @@ describe('ContinueButtonCheck', () => {
     await user.click(screen.getByText('Start'));
     
     // First round - incorrect guess
-    let numSpan = document.getElementById('num');
-    let shown = parseInt(numSpan.textContent);
-    let wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
-    await user.click(screen.getByText(wrongAnswer));
+    await userClickWrongAnswer(user);
 
     // Click Continue
     await screen.findByText('Continue');
     await user.click(screen.getByText('Continue'));
 
     // Second round - make another guess
-    numSpan = document.getElementById('num');
-    shown = parseInt(numSpan.textContent);
-    const correctAnswer = isPrime(shown) ? 'Yes' : 'No';
-    await user.click(screen.getByText(correctAnswer));
+    await userClickCorrectAnswer(user);
 
     // Verify feedback appears for the second guess
     const feedback = await screen.findByText('Correct!');
@@ -109,18 +96,12 @@ describe('ContinueButtonCheck', () => {
     await user.click(screen.getByText('Start'));
     
     // First incorrect guess
-    let numSpan = document.getElementById('num');
-    let shown = parseInt(numSpan.textContent);
-    let wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
-    await user.click(screen.getByText(wrongAnswer));
+    await userClickWrongAnswer(user);
     await screen.findByText('Continue');
     await user.click(screen.getByText('Continue'));
 
     // Second incorrect guess
-    numSpan = document.getElementById('num');
-    shown = parseInt(numSpan.textContent);
-    wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
-    await user.click(screen.getByText(wrongAnswer));
+    await userClickWrongAnswer(user);
     await screen.findByText('Continue');
     await user.click(screen.getByText('Continue'));
 
@@ -129,7 +110,7 @@ describe('ContinueButtonCheck', () => {
     expect(userHealthText).toBeInTheDocument();
   });
 
-  it("passes if Continue button is not shown after a correct guess", async () => {
+  it("passes if Continue button is shown after a correct guess", async () => {
     render(<Page />);
     const user = userEvent.setup();
 
@@ -137,14 +118,13 @@ describe('ContinueButtonCheck', () => {
     await user.click(screen.getByText('Start'));
     
     // Get the number and make a correct guess
-    const numSpan = document.getElementById('num');
-    const shown = parseInt(numSpan.textContent);
-    const correctAnswer = isPrime(shown) ? 'Yes' : 'No';
-    await user.click(screen.getByText(correctAnswer));
+    await userClickCorrectAnswer(user);
 
-    // Verify Continue button is NOT displayed
+    // Verify Continue button IS displayed (since correct answer also shows Continue)
     const continueButton = document.getElementById('continueButton');
-    expect(continueButton.style.display).toBe('none');
+    await waitFor(() => {
+      expect(continueButton).toBeVisible();
+    });
   });
 
   it("passes if the timer resets to 10 seconds after clicking Continue", async () => {
@@ -155,10 +135,7 @@ describe('ContinueButtonCheck', () => {
     await user.click(screen.getByText('Start'));
     
     // Get the number and make an incorrect guess immediately
-    const numSpan = document.getElementById('num');
-    const shown = parseInt(numSpan.textContent);
-    const wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
-    await user.click(screen.getByText(wrongAnswer));
+    await userClickWrongAnswer(user);
 
     // Wait for Continue button and click it
     await screen.findByText('Continue');

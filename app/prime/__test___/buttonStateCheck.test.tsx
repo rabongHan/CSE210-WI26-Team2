@@ -1,8 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import Page from './page';
-import { isPrime } from './lib/numberGenerator';
+import Page from '../page';
+import { userClickCorrectAnswer, userClickWrongAnswer } from './testUtils';
 
 describe('ButtonStateCheck', () => {
   it("passes if Yes/No buttons are enabled after clicking Start", async () => {
@@ -30,10 +30,7 @@ describe('ButtonStateCheck', () => {
     await user.click(screen.getByText('Start'));
     
     // Get the number and make an incorrect guess
-    const numSpan = document.getElementById('num');
-    const shown = parseInt(numSpan.textContent);
-    const wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
-    await user.click(screen.getByText(wrongAnswer));
+    await userClickWrongAnswer(user);
 
     // Verify buttons are disabled during feedback period
     const yesBtn = document.getElementById('yesButton') as HTMLButtonElement;
@@ -45,7 +42,7 @@ describe('ButtonStateCheck', () => {
     });
   });
 
-  it("passes if Yes/No buttons are enabled after a correct guess", async () => {
+  it("passes if Yes/No buttons are disabled after a correct guess", async () => {
     render(<Page />);
     const user = userEvent.setup();
 
@@ -53,18 +50,15 @@ describe('ButtonStateCheck', () => {
     await user.click(screen.getByText('Start'));
     
     // Get the number and make a correct guess
-    const numSpan = document.getElementById('num');
-    const shown = parseInt(numSpan.textContent);
-    const correctAnswer = isPrime(shown) ? 'Yes' : 'No';
-    await user.click(screen.getByText(correctAnswer));
+    await userClickCorrectAnswer(user);
 
-    // Verify buttons remain enabled for the next number
+    // Verify buttons are disabled (also shows Continue button now)
     const yesBtn = document.getElementById('yesButton') as HTMLButtonElement;
     const noBtn = document.getElementById('noButton') as HTMLButtonElement;
     
     await waitFor(() => {
-      expect(yesBtn.disabled).toBe(false);
-      expect(noBtn.disabled).toBe(false);
+      expect(yesBtn.disabled).toBe(true);
+      expect(noBtn.disabled).toBe(true);
     });
   });
 
@@ -83,10 +77,7 @@ describe('ButtonStateCheck', () => {
     expect(yesBtn.disabled).toBe(false);
 
     // Make an incorrect guess
-    const numSpan = document.getElementById('num');
-    const shown = parseInt(numSpan.textContent);
-    const wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
-    await user.click(screen.getByText(wrongAnswer));
+    await userClickWrongAnswer(user);
 
     // After incorrect guess, both should be disabled
     await waitFor(() => {
@@ -104,27 +95,18 @@ describe('ButtonStateCheck', () => {
     
     // Make 5 incorrect guesses to lose the game
     for (let i = 0; i < 5; i++) {
-      const numSpan = document.getElementById('num');
-      const shown = parseInt(numSpan.textContent);
-      const wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
-      await user.click(screen.getByText(wrongAnswer));
-      
-      // Only click Continue if not the last round (to trigger game over)
-      const continueBtn = screen.queryByText('Continue');
-      if (continueBtn && i < 4) {
-        await user.click(continueBtn);
-      }
+      await userClickWrongAnswer(user);
+      // Click Continue after every guess; final click enters game-over screen
+      const continueBtn = await screen.findByText('Continue');
+      await user.click(continueBtn);
     }
 
     // Verify game over message is displayed
     await screen.findByText('Game over!');
 
-    // Verify buttons are disabled
-    const yesBtn = document.getElementById('yesButton') as HTMLButtonElement;
-    const noBtn = document.getElementById('noButton') as HTMLButtonElement;
-    
-    expect(yesBtn.disabled).toBe(true);
-    expect(noBtn.disabled).toBe(true);
+    // In end-game screen, answer buttons are not rendered
+    expect(document.getElementById('yesButton')).toBeNull();
+    expect(document.getElementById('noButton')).toBeNull();
   });
 
   it("passes if buttons are disabled when game ends after a win", async () => {
@@ -136,21 +118,18 @@ describe('ButtonStateCheck', () => {
     
     // Win the game by 20 correct guesses
     for (let i = 0; i < 20; i++) {
-      const numSpan = document.getElementById('num');
-      const shown = parseInt(numSpan.textContent);
-      const correctAnswer = isPrime(shown) ? 'Yes' : 'No';
-      await user.click(screen.getByText(correctAnswer));
+      await userClickCorrectAnswer(user);
+      // Click Continue after every guess; final click enters win screen
+      const continueBtn = await screen.findByText('Continue');
+      await user.click(continueBtn);
     }
 
     // Verify win message is displayed
     await screen.findByText('You win!');
 
-    // Verify buttons are disabled
-    const yesBtn = document.getElementById('yesButton') as HTMLButtonElement;
-    const noBtn = document.getElementById('noButton') as HTMLButtonElement;
-    
-    expect(yesBtn.disabled).toBe(true);
-    expect(noBtn.disabled).toBe(true);
+    // In end-game screen, answer buttons are not rendered
+    expect(document.getElementById('yesButton')).toBeNull();
+    expect(document.getElementById('noButton')).toBeNull();
   });
 
   it("passes if buttons are re-enabled after clicking Play Again", async () => {
@@ -160,25 +139,22 @@ describe('ButtonStateCheck', () => {
     // Start the game and lose
     await user.click(screen.getByText('Start'));
     for (let i = 0; i < 5; i++) {
-      const numSpan = document.getElementById('num');
-      const shown = parseInt(numSpan.textContent);
-      const wrongAnswer = isPrime(shown) ? 'No' : 'Yes';
-      await user.click(screen.getByText(wrongAnswer));
-      const continueBtn = screen.queryByText('Continue');
-      if (continueBtn && i < 4) {
-        await user.click(continueBtn);
-      }
+      await userClickWrongAnswer(user);
+      // Click Continue after every guess; final click enters game-over screen
+      const continueBtn = await screen.findByText('Continue');
+      await user.click(continueBtn);
     }
 
     // Click Play Again
     const playAgainButtons = screen.getAllByText('Play again');
     await user.click(playAgainButtons[0]);
 
-    // Verify buttons are re-enabled
-    const yesBtn = document.getElementById('yesButton') as HTMLButtonElement;
-    const noBtn = document.getElementById('noButton') as HTMLButtonElement;
-    
+    // Verify buttons are re-enabled after game restarts
     await waitFor(() => {
+      const yesBtn = document.getElementById('yesButton') as HTMLButtonElement;
+      const noBtn = document.getElementById('noButton') as HTMLButtonElement;
+      expect(yesBtn).toBeInTheDocument();
+      expect(noBtn).toBeInTheDocument();
       expect(yesBtn.disabled).toBe(false);
       expect(noBtn.disabled).toBe(false);
     });

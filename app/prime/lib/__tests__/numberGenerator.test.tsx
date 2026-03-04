@@ -127,7 +127,7 @@ describe('generateBalancedNumbers', () => {
     }
   });
 
-  test('[2.4.2] distribution follows target frequency ratios', () => {
+  test('[2.4.2] distribution of composite and prime numbers follows target frequency ratios', () => {
     const result = generateBalancedNumbers(2, 200, 60);
 
     const counts = Object.values(result.testCount);
@@ -187,5 +187,13 @@ describe('generateBalancedNumbers', () => {
 
     expect(result1.numbers).toEqual(result2.numbers);
     expect(result1.testCount).toEqual(result2.testCount);
+  });
+
+  test('[2.5.4] produces different sequences in two runs with same stage settings', () => {
+    const result1 = generateBalancedNumbers(2, 100, 40);
+    const result2 = generateBalancedNumbers(2, 100, 40);
+
+    // Two runs with same parameters should produce different sequences (due to randomness)
+    expect(result1.numbers).not.toEqual(result2.numbers);
   });
 });

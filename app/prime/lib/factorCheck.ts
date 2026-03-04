@@ -1,9 +1,9 @@
-import { isPrime } from "./numberGenerator";
+import { isPrime, defaultTestsFromMax } from "./numberGenerator";
 
 // compositeness check code
 
-var smallestPrimeFactor = function(n) {
-  for (var i = 2; i < n; i++) {
+let smallestPrimeFactor = function(n) {
+  for (let i = 2; i < n; i++) {
     if (n % i === 0) {
       return i;
     }
@@ -12,8 +12,8 @@ var smallestPrimeFactor = function(n) {
 }
 
 export function primeMnemonic(n: number) : string {
-    var primesLessThanSqrt = [];
-    for (var i = 2; i**2 <= n; i++) {
+    let primesLessThanSqrt = [];
+    for (let i = 2; i**2 <= n; i++) {
         if (isPrime(i))
             primesLessThanSqrt.push(i);
     }
@@ -21,7 +21,7 @@ export function primeMnemonic(n: number) : string {
 }
 
 export function compositeMnemonic(n: number) : string {
-    var factor = smallestPrimeFactor(n);
+    let factor = smallestPrimeFactor(n);
     switch (factor) {
         case 2:
             return n + " ends in " + n % 10 + "!";
@@ -32,9 +32,9 @@ export function compositeMnemonic(n: number) : string {
         case 7:
             return Math.floor(n / 10) + " - 2*" + (n % 10) + " = " + (Math.floor(n / 10) - 2*(n % 10)) + "!";
         case 11:
-            var digits = n.toString().split("");
-            var oddSum = digits.filter((_, i) => i % 2 === 0).reduce((a, b) => a + parseInt(b), 0);
-            var evenSum = digits.filter((_, i) => i % 2 === 1).reduce((a, b) => a + parseInt(b), 0);
+            let digits = n.toString().split("");
+            let oddSum = digits.filter((_, i) => i % 2 === 0).reduce((a, b) => a + parseInt(b), 0);
+            let evenSum = digits.filter((_, i) => i % 2 === 1).reduce((a, b) => a + parseInt(b), 0);
             return Math.abs(oddSum - evenSum) + ", the sum of odd digits minus the sum of even digits, is a multiple of 11!";
         default:
             // just move onto the next test
@@ -46,14 +46,14 @@ export function compositeMnemonic(n: number) : string {
     return n + " is divisible by " + factor + "!";
 }
 
-var isSquare = function(n) {
-    var root = Math.floor(Math.sqrt(n) + 1/2); // in case the square root is something like 4.99999999999999, we want to round it up to 5
+let isSquare = function(n) {
+    let root = Math.floor(Math.sqrt(n) + 1/2); // in case the square root is something like 4.99999999999999, we want to round it up to 5
     return root * root === n;
 }
 
-var factorize = function(n) {
-    var factors = [];
-    for (var i = 2; i <= n; i++) {
+let factorize = function(n) {
+    let factors = [];
+    for (let i = 2; i <= n; i++) {
         while (n % i === 0) { // the factor might be repeated
             factors.push(i);
             n = n / i;
@@ -64,9 +64,9 @@ var factorize = function(n) {
     return factors;
 }
 
-var factorizationString = function(n) {
-    var factors = factorize(n);
-    var factorStr = factors.reduce((a, b) => a + "*" + b);
+let factorizationString = function(n) {
+    let factors = factorize(n);
+    let factorStr = factors.reduce((a, b) => a + "*" + b);
     return factorStr;
 }
 
@@ -77,4 +77,27 @@ export function factorizationMessage(n: number) : string {
     else {
         return n + " = " + factorizationString(n);
     }
+}
+
+export function getCompositeRule(n: number, maxNumber: number = 300): number {
+    let factor = smallestPrimeFactor(n);
+    if (!factor) return 0;
+    
+    // Get the available tests up to the given max number
+    const knownTests = defaultTestsFromMax(maxNumber);
+    const knownFactors = knownTests
+        .filter(t => typeof t === "number") as number[];
+    
+    // If the smallest factor is in the known tests, return it
+    if (knownFactors.includes(factor)) {
+        return factor;
+    }
+    
+    // For factors outside the known tests, check for special cases
+    if (isSquare(n)) {
+        return -1; // special case for perfect squares
+    }
+    
+    // Return the factor itself for unknown divisors
+    return factor;
 }

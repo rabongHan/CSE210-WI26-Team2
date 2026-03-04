@@ -1,8 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import Page from './page';
-import { isPrime } from './lib/numberGenerator';
+import Page from '../page';
+import { isPrime } from '../lib/numberGenerator';
+import { userClickCorrectAnswer, userClickWrongAnswer } from './testUtils';
 
 describe('FeedbackCheck', () => {
   it ("passes if yes/no feedback is displayed", async () => {
@@ -16,6 +17,8 @@ describe('FeedbackCheck', () => {
     let feedback;
     if (isPrime(num1)) {
       feedback = await screen.findByText("Correct!");
+      // Now correct answer also shows Continue
+      await user.click(screen.getByText('Continue'));
     }
     else {
       feedback = await screen.findByText("Incorrect!");
@@ -33,6 +36,7 @@ describe('FeedbackCheck', () => {
     }
     else {
       feedback = await screen.findByText("Correct!");
+      await user.click(screen.getByText('Continue'));
     }
     expect(feedback).toBeInTheDocument();
   });
@@ -48,6 +52,8 @@ describe('FeedbackCheck', () => {
     let feedback;
     if (isPrime(num)) {
       feedback = await screen.getByText(num + " is prime");
+      // Now correct also needs Continue
+      await user.click(screen.getByText('Continue'));
     }
     else {
       // This has to be a partial match, because `${num} =` doesn't match everything in the text field.
@@ -62,15 +68,9 @@ describe('FeedbackCheck', () => {
     const user = userEvent.setup();
 
     await user.click(screen.getByText('Start'));
-    const num = parseInt(document.getElementById('num').textContent);
-    if (isPrime(num)) {
-      await user.click(screen.getByText('No'));
-    }
-    else {
-      await user.click(screen.getByText('Yes'));
-    }
+    await userClickWrongAnswer(user);
     // expect the divisibilityFeedback element to be visible
     const feedback = document.getElementById('divisibilityFeedback');
-    expect(feedback.style.display).toBe("block");
+    expect(feedback).toBeVisible();
   });
 });

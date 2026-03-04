@@ -1,17 +1,17 @@
 import { generateBalancedNumbers, isPrime } from "./numberGenerator";
 import { primeMnemonic, compositeMnemonic, factorizationMessage } from "./factorCheck";
 
-var maxGuesses = 25;
-var numList;
-var currNumInd;
-var timerInterval;
-var timeLeft;
+let maxGuesses = 25;
+let numList;
+let currNumInd;
+let timerInterval;
+let timeLeft;
 
-export var currNum;
-export var bossHealth;
-export var userHealth;
-export var maxUserHealth = 5;
-export var maxBossHealth = 20;
+export let currNum;
+export let bossHealth;
+export let userHealth;
+export let maxUserHealth = 5;
+export let maxBossHealth = 20;
 
 export function startGame() {
   numList = generateBalancedNumbers(100, 300, maxGuesses, {});
@@ -34,8 +34,8 @@ export function startGame() {
 }
 
 export function clickYes() {
-  var nIsPrime = isPrime(currNum);
-  var correct = nIsPrime;
+  let nIsPrime = isPrime(currNum);
+  let correct = nIsPrime;
   if (correct) {
     playerPasses(currNum, nIsPrime);
   }
@@ -44,8 +44,8 @@ export function clickYes() {
   }
 }
 export function clickNo() {
-  var nIsPrime = isPrime(currNum);
-  var correct = !nIsPrime;
+  let nIsPrime = isPrime(currNum);
+  let correct = !nIsPrime;
   if (correct) {
     playerPasses(currNum, nIsPrime);
   }
@@ -56,7 +56,7 @@ export function clickNo() {
 
 // Functions for when the player guesses correctly or incorrectly.
 // These include the code for moving to the next number or ending the game.
-var playerPasses = function(currNum, nIsPrime) {
+let playerPasses = function(currNum, nIsPrime) {
   bossHealth -= 1;
   updateHealthBar("bossHealthBar", "bossHealthText", bossHealth, maxBossHealth);
   if (bossHealth === 0) {
@@ -69,7 +69,7 @@ var playerPasses = function(currNum, nIsPrime) {
   }
 }
 
-var playerFails = function(currNum, nIsPrime) {
+let playerFails = function(currNum, nIsPrime) {
   userHealth -= 1;
   updateHealthBar("userHealthBar", "userHealthText", userHealth, maxUserHealth);
   if (userHealth === 0) {
@@ -83,7 +83,7 @@ var playerFails = function(currNum, nIsPrime) {
   }
 }
 
-var giveFeedback = function(n, nIsPrime, correct) {
+let giveFeedback = function(n, nIsPrime, correct) {
   document.getElementById("correct").textContent = correct ? "Correct!" : "Incorrect!";
   document.getElementById("correct").style.color = correct ? "green" : "red";
   document.getElementById("feedback").style.display = "block";
@@ -97,37 +97,37 @@ var giveFeedback = function(n, nIsPrime, correct) {
   }
 }
 
-var showGameContent = function() {
+let showGameContent = function() {
   document.getElementById("gameContent").style.display = "block";
 }
-var hideGameContent = function() {
+let hideGameContent = function() {
   document.getElementById("gameContent").style.display = "none";
 }
-var playerWin = function() {
+let playerWin = function() {
   stopTimer();
   disableAnswerButtons();
   showPlayerWin();
   hideGameContent();
 }
-var gameOver = function() {
+let gameOver = function() {
   stopTimer();
   disableAnswerButtons();
   showGameOver();
   hideGameContent();
 }
-var showPlayerWin = function() {
+let showPlayerWin = function() {
   document.getElementById("winMsg").style.display = "block";
 }
-var showGameOver = function() {
+let showGameOver = function() {
   document.getElementById("loseMsg").style.display = "block";
 }
-var hidePlayerWin = function() {
+let hidePlayerWin = function() {
   document.getElementById("winMsg").style.display = "none";
 }
-var hideGameOver = function() {
+let hideGameOver = function() {
   document.getElementById("loseMsg").style.display = "none";
 }
-var nextNumber = function() {
+let nextNumber = function() {
   if (currNumInd < maxGuesses - 1) {
     currNumInd += 1;
   }
@@ -136,7 +136,7 @@ var nextNumber = function() {
   startTimer();
 }
 
-var startTimer = function() {
+let startTimer = function() {
   // initialize and start a 10-second countdown; when it hits 0 advance the number
   if (typeof timerInterval !== 'undefined') clearInterval(timerInterval);
   timeLeft = 10;
@@ -155,19 +155,19 @@ var startTimer = function() {
   }, 1000);
 }
 
-var resetTimer = function() {
+let resetTimer = function() {
   timeLeft = 10;
   const el = document.getElementById('timer');
   if (el) el.textContent = String(timeLeft);
 }
 
-var stopTimer = function() {
+let stopTimer = function() {
   if (typeof timerInterval !== 'undefined') {
     clearInterval(timerInterval);
   }
 }
 
-var updateHealthBar = function(barId, textId, currentHealth, maxHealth) {
+let updateHealthBar = function(barId, textId, currentHealth, maxHealth) {
   const percentage = (currentHealth / maxHealth) * 100;
   const bar = document.getElementById(barId);
   if (bar) {
@@ -179,17 +179,17 @@ var updateHealthBar = function(barId, textId, currentHealth, maxHealth) {
   }
 }
 
-var showContinueButton = function() {
+let showContinueButton = function() {
   const btn = document.getElementById("continueButton");
   if (btn) btn.style.display = "block";
 }
 
-var hideContinueButton = function() {
+let hideContinueButton = function() {
   const btn = document.getElementById("continueButton");
   if (btn) btn.style.display = "none";
 }
 
-var clearFeedback = function() {
+let clearFeedback = function() {
   document.getElementById("correct").textContent = "";
   document.getElementById("feedback").textContent = "";
   document.getElementById("feedback").style.display = "none";
@@ -197,14 +197,14 @@ var clearFeedback = function() {
   document.getElementById("divisibilityFeedback").style.display = "none";
 }
 
-var disableAnswerButtons = function() {
+let disableAnswerButtons = function() {
   const yesBtn = document.getElementById("yesButton") as HTMLButtonElement;
   const noBtn = document.getElementById("noButton") as HTMLButtonElement;
   if (yesBtn) yesBtn.disabled = true;
   if (noBtn) noBtn.disabled = true;
 }
 
-var enableAnswerButtons = function() {
+let enableAnswerButtons = function() {
   const yesBtn = document.getElementById("yesButton") as HTMLButtonElement;
   const noBtn = document.getElementById("noButton") as HTMLButtonElement;
   if (yesBtn) yesBtn.disabled = false;

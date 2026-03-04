@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import Page from './page';
+import Page from '../page';
 
 jest.setTimeout(20000); // test takes 11 seconds to run, so set timeout to 20 seconds to be safe
 
@@ -18,12 +18,16 @@ describe('TimeoutCheck', () => {
     const initialHealth = parseInt(initialHealthText.split('/')[0]); // Extract first number from "5/5"
     // wait for 11 seconds
     await new Promise((r) => setTimeout(r, 11000));
+    // Timeout now shows Continue button too
+    const continueBtn = await screen.findByText('Continue');
+    expect(continueBtn).toBeInTheDocument();
+    // Health should decrease
     const newHealthText = document.getElementById('userHealthText').textContent;
     const newHealth = parseInt(newHealthText.split('/')[0]); // Extract first number from "4/5"
     expect(newHealth === initialHealth - 1).toBeTruthy();
     
     // Click Continue to advance to next number
-    await user.click(screen.getByText('Continue'));
+    await user.click(continueBtn);
     
     const newNum = document.getElementById('num').textContent;
     expect(newNum).not.toBe(initialNum);

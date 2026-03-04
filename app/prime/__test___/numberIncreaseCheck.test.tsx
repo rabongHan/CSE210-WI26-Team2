@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import Page from './page';
-import { isPrime } from './lib/numberGenerator';
+import Page from '../page';
+import { userClickCorrectAnswer, userClickWrongAnswer } from './testUtils';
 
 describe('NumberIncreaseCheck', () => {
     it ("passes if the number increases monotonically throughout the game", async () => {
@@ -16,17 +16,13 @@ describe('NumberIncreaseCheck', () => {
         let prevNum;
 
         for (let i = 0; i < 19; i++) {
-            if (isPrime(currentNum)) {
-                await user.click(screen.getByText('Yes'));
-            }
-            else {
-                await user.click(screen.getByText('No'));
-            }
+            await userClickCorrectAnswer(user);
+            // Click Continue to advance to next number
+            const continueBtn = await screen.findByText('Continue');
+            await user.click(continueBtn);
             prevNum = currentNum;
             currentNum = parseInt(document.getElementById('num').textContent!);
-            if (currentNum <= prevNum) {
-                throw new Error("Number did not increase monotonically");
-            }
+            expect(currentNum).toBeGreaterThan(prevNum);
         }
     });
 });

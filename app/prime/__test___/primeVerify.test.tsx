@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import Page from './page';
-import { isPrime } from './lib/numberGenerator';
+import Page from '../page';
+import { userClickCorrectAnswer, userClickWrongAnswer } from './testUtils';
 
 describe('PrimeVerification', () => {
   it("passes if user correctly guesses if the number is prime or composite", async () => {
@@ -14,11 +14,13 @@ describe('PrimeVerification', () => {
 
     const numSpan = document.getElementById('num');
     expect(numSpan).toBeInTheDocument();
-    const shown = parseInt(numSpan.textContent);
 
-    await user.click(screen.getByText(isPrime(shown) ? 'Yes' : 'No'));
+    await userClickCorrectAnswer(user);
     const feedback = await screen.findByText("Correct!");
+    // Correct answer also shows Continue button now
+    const continueButton = await screen.findByText('Continue');
     expect(feedback).toBeInTheDocument();
+    expect(continueButton).toBeInTheDocument();
   });
 
   it("passes if user incorrectly guesses if the number is prime or composite", async () => {
@@ -30,9 +32,8 @@ describe('PrimeVerification', () => {
 
     const numSpan = document.getElementById('num');
     expect(numSpan).toBeInTheDocument();
-    const shown = parseInt(numSpan.textContent);
 
-    await user.click(screen.getByText(isPrime(shown) ? 'No' : 'Yes'));
+    await userClickWrongAnswer(user);
     const feedback = await screen.findByText("Incorrect!");
     await user.click(screen.getByText('Continue'));
     expect(feedback).toBeInTheDocument();
