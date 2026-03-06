@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "World of Atlantis",
+  title: "Prime Factory",
 };
 
 export default function RootLayout({
