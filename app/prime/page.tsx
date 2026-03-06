@@ -107,6 +107,7 @@ export default function Page() {
       userHealth: newUserHealth,
       timeLeft: INITIAL_TIME,
       buttonsDisabled: true,
+      incorrectGuessCount: prev.incorrectGuessCount + 1,  // Increment incorrect guess count
     }));
 
     // Incorrect answers pause on feedback and require Continue
@@ -147,6 +148,7 @@ export default function Page() {
       currNumIndex: next.index,
       timeLeft: INITIAL_TIME,
       buttonsDisabled: false,
+      maxNumberGuessed: Math.max(prev.maxNumberGuessed, next.num),  // Update max number guessed
     }));
   }, [gameData]);
 

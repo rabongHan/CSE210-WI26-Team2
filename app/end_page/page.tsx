@@ -78,8 +78,14 @@ export default function Page() {
             {!treasureData && <p>Not played yet.</p>}
         <h2 style={{ fontSize: 24 }}>Prime game</h2>
             <p>Status: {primeCompleted ? "Completed" : "Not completed"}</p>
-            {/* None of the other game data is really relevant to show here */}
-            {/* to do: modify game data structure to have information like the number of incorrect guesses, the maximum number guessed, etc. */}
+            {primeData && (
+                <div>
+                  <p>Incorrect guesses: {primeData.incorrectGuessCount}</p>
+                  <p>Maximum number guessed: {primeData.maxNumberGuessed}</p>
+                  <p>Final user health: {primeData.userHealth}</p>
+                  <p>Final boss health: {primeData.bossHealth}</p>
+                </div>
+            )}
             {!primeData && <p>Not played yet.</p>}
       </div>
       <div className="flex justify-center mt-[2vh]">
