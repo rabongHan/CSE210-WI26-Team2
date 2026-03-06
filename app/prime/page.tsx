@@ -175,6 +175,8 @@ export default function Page() {
           onPlayAgain={handleStart}
           incorrectGuesses={incorrectGuesses}
           correctGuesses={correctGuesses}
+          continueBtn={true} /* Continue to the end screen only if player wins */
+          onContinue={() => window.location.href = "/end_page"}
         />
       )}
 
@@ -185,6 +187,7 @@ export default function Page() {
           onPlayAgain={handleStart}
           incorrectGuesses={incorrectGuesses}
           correctGuesses={correctGuesses}
+          continueBtn={false}
         />
       )}
 
