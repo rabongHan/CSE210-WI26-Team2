@@ -24,7 +24,7 @@ export default function Page() {
   const primeCompleted = loadGameState() === 'won';
 
   return (
-    <main style={{ fontFamily: "system-ui", padding: 24, textAlign: "center" }}>
+    <main style={{ fontFamily: "system-ui", padding: 24, textAlign: "center" }} className="min-h-screen h-screen overflow-auto bg-[url('app/end_page/background.png')] bg-cover bg-[center_70%] bg-no-repeat">
       <p style={{ fontFamily: "impact", fontSize: 48 }}>Congratulations!</p>
       {/* Tests: Various things the page could say if certain sets of games are completed */}
       {!bubbleCompleted && !treasureCompleted && !primeCompleted && (
