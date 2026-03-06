@@ -53,7 +53,6 @@ export default function Page() {
         )}
         <h1 style={{ fontSize: 36 }}>Statistics:</h1>
         <h2 style={{ fontSize: 24 }}>Treasure game</h2>
-            <p>Status: {treasureCompleted ? "Completed" : "Not completed"}</p>
             {treasureData && (
                 <div>
                 <p>Current or latest score: {treasureData.curr_score}</p>
@@ -64,11 +63,9 @@ export default function Page() {
             )}
             {!treasureData && <p>Not played yet.</p>}
         <h2 style={{ fontSize: 24 }}>Bubble game</h2>
-            <p>Status: {bubbleCompleted ? "Completed" : "Not completed"}</p>
             {bubbleData && <p>Unlocked stages: {bubbleData.unlocked_stages.join(", ")}</p>}
             {!bubbleData && <p>Not played yet.</p>}
         <h2 style={{ fontSize: 24 }}>Prime game</h2>
-            <p>Status: {primeCompleted ? "Completed" : "Not completed"}</p>
             {primeData && (
                 <div>
                   <p>Incorrect guesses: {primeData.incorrectGuessCount}</p>
