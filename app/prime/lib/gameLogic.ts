@@ -25,6 +25,8 @@ export function initializeGame(): GameData {
     bossHealth: MAX_BOSS_HEALTH,
     timeLeft: INITIAL_TIME,
     buttonsDisabled: false,
+    incorrectGuessCount: 0,
+    maxNumberGuessed: generated.numbers[0],
   };
 }
 

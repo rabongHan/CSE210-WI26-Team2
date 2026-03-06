@@ -44,6 +44,8 @@ describe("prime game localStorage integration", () => {
         bossHealth: 10,
         timeLeft: 8,
         buttonsDisabled: false,
+        incorrectGuessCount: 0,
+        maxNumberGuessed: 123,
       };
 
       saveGameData(gameData);
@@ -62,6 +64,8 @@ describe("prime game localStorage integration", () => {
         bossHealth: 15,
         timeLeft: 5,
         buttonsDisabled: true,
+        incorrectGuessCount: 2,
+        maxNumberGuessed: 257,
       };
 
       saveGameData(gameData);
@@ -104,6 +108,8 @@ describe("prime game localStorage integration", () => {
         bossHealth: 12,
         timeLeft: 7,
         buttonsDisabled: false,
+        incorrectGuessCount: 1,
+        maxNumberGuessed: 181,
       };
 
       localStorage.setItem("primeGameData", JSON.stringify(gameData));
@@ -139,6 +145,8 @@ describe("prime game localStorage integration", () => {
         bossHealth: 20,
         timeLeft: 10,
         buttonsDisabled: false,
+        incorrectGuessCount: 0,
+        maxNumberGuessed: 123,
       }));
 
       clearGameData();
@@ -167,6 +175,8 @@ describe("prime game localStorage integration", () => {
         bossHealth: 8,
         timeLeft: 6,
         buttonsDisabled: true,
+        incorrectGuessCount: 1,
+        maxNumberGuessed: 211,
       };
 
       saveGameState("playing");
@@ -185,6 +195,8 @@ describe("prime game localStorage integration", () => {
         bossHealth: 20,
         timeLeft: 10,
         buttonsDisabled: false,
+        incorrectGuessCount: 0,
+        maxNumberGuessed: 101,
       };
 
       const updatedData: GameData = {
@@ -213,6 +225,8 @@ describe("prime game localStorage integration", () => {
         bossHealth: 15,
         timeLeft: 0,
         buttonsDisabled: true,
+        incorrectGuessCount: 5,
+        maxNumberGuessed: 123,
       });
 
       clearGameData();
