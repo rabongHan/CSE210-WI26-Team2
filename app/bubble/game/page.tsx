@@ -10,7 +10,7 @@ import {NUM_ROUNDS} from "@/app/bubble/lib/bubble-game-logic";
 import TargetCursor from "@/app/bubble/components/TargetCursor";
 
 export default function Page() {
-  const { factor, bubbles, lives, status, round, stage, wrongBubble, handleBubbleClick, resetGame } =
+  const { factor, bubbles, lives, status, round, stage, wrongBubble, handleBubbleClick, handleSkip, resetGame } =
     useBubbleGame();
   const router = useRouter();
   const gameStarted = useRef(false);
@@ -46,7 +46,7 @@ export default function Page() {
         <h1 className="text-white text-8xl font-black m-0">{factor}</h1>
       </div>
 
-      <div className="flex flex-wrap justify-center gap-5 max-w-[600px] mt-auto mb-12">
+      <div className="grid grid-rows-2 grid-flow-col justify-center gap-5  mt-auto mb-12">
         {bubbles.map((num, i) => (
           <BubbleCircle
             key={i}
@@ -59,6 +59,7 @@ export default function Page() {
 
       <div className="flex items-center gap-3">
         <NavButton href={"/bubble/menu"}>BACK</NavButton>
+        <button className="cursor-target btn-pink text-3xl py-3 px-12 tracking-wide" onClick={handleSkip}>SKIP</button>
       </div>
     </main>
   );
