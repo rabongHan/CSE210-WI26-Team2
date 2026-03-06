@@ -188,13 +188,13 @@ export default function Page() {
         />
       )}
 
-      {/* Back button - always visible */}
+      {/* Home button - always visible */}
       <div className="flex justify-center mt-[2vh]">
         <GameButton 
           onClick={() => window.location.href = "/"} 
           variant="primary"
         >
-          Back
+          Home
         </GameButton>
       </div>
     </main>
