@@ -46,25 +46,12 @@ export default function Page() {
     <main style={{ fontFamily: "system-ui", padding: 24, textAlign: "center" }} className="min-h-screen h-screen overflow-auto bg-[url('app/end_page/background.png')] bg-cover bg-[center_70%] bg-no-repeat">
       <div className="max-w-[40%] mt-[5vh] mx-auto mb-[1vh] py-[1.5vh] px-[3vw] bg-gray-100/70 border-[5px] border-black rounded-xl text-center">
         <p style={{ fontFamily: "impact", fontSize: 48 }}>Congratulations!</p>
-        {/* Tests: Various things the page could say if certain sets of games are completed */}
-        {!bubbleCompleted && !treasureCompleted && !primeCompleted && (
-            <p>No games completed! Better luck next time!</p>
-        )}
-        {bubbleCompleted && !treasureCompleted && !primeCompleted && (
-            <p>Bubble game completed! On to the treasure chest game!</p>
-        )}
-        {bubbleCompleted && treasureCompleted && !primeCompleted && (
-            <p>Bubble and treasure games completed! On to the prime game!</p>
-        )}
         {/* Need to make this part of the page only appear when all three games are done */}
+        {/* Why isn't this showing up? */}
         {bubbleCompleted && treasureCompleted && primeCompleted && (
             <p>All games completed! You win!</p>
         )}
         <h1 style={{ fontSize: 36 }}>Statistics:</h1>
-        <h2 style={{ fontSize: 24 }}>Bubble game</h2>
-            <p>Status: {bubbleCompleted ? "Completed" : "Not completed"}</p>
-            {bubbleData && <p>Unlocked stages: {bubbleData.unlocked_stages.join(", ")}</p>}
-            {!bubbleData && <p>Not played yet.</p>}
         <h2 style={{ fontSize: 24 }}>Treasure game</h2>
             <p>Status: {treasureCompleted ? "Completed" : "Not completed"}</p>
             {treasureData && (
@@ -76,6 +63,10 @@ export default function Page() {
                 </div>
             )}
             {!treasureData && <p>Not played yet.</p>}
+        <h2 style={{ fontSize: 24 }}>Bubble game</h2>
+            <p>Status: {bubbleCompleted ? "Completed" : "Not completed"}</p>
+            {bubbleData && <p>Unlocked stages: {bubbleData.unlocked_stages.join(", ")}</p>}
+            {!bubbleData && <p>Not played yet.</p>}
         <h2 style={{ fontSize: 24 }}>Prime game</h2>
             <p>Status: {primeCompleted ? "Completed" : "Not completed"}</p>
             {primeData && (
