@@ -15,4 +15,49 @@
     font-family: 'Comic Sans MS', 'Baloo 2', cursive, system-ui;
     background-image: url('/Underwater_background.png');
   }
+
+  /* ====================== MAIN PAGE ====================== */
+  .page-main {
+    @apply relative min-h-screen w-full overflow-hidden flex flex-col items-center
+      bg-cover bg-center bg-fixed;
+    background-image: url('app/assets/main-page-bg2.png'); /* bg: main-page-bg2.png in assets */
+  }
+
+  /* Main Gradient overlay 
+    - absolute inset-0: positions div absolutely (top, right, bottom, left all 0)
+    - bg-gradient-to-b: gradient from black/50 to black/10 to black/30
+  */
+  .page-main-overlay { 
+    @apply absolute inset-0 bg-gradient-to-b from-black/50 via-black/10 to-black/30;
+  }
+
+  /* Main Content */
+  .page-main-content {
+    @apply relative z-10 flex flex-col items-center gap-8 sm:gap-12
+      px-4 pt-12 sm:pt-20 pb-8 w-full max-w-5xl;
+  }
+
+  /* Main Title 
+    - tracking-tight: tight tracking (spacing between characters)
+  */
+  .main-title {
+    @apply text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight;
+    text-shadow: 0 4px 24px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.4);
+  }
+
+  .main-subtitle {
+    @apply text-white/60 text-sm sm:text-base font-semibold tracking-[0.2em] uppercase text-center;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4); /* tracking: letter spacing*/
+  }
+
+  /* Main Divider Label */
+  .main-divider-label {
+    @apply text-white/50 text-xs sm:text-sm font-bold tracking-[0.15em] uppercase;
+  }
+
+  /* Main Divider Line */
+  .main-divider-line {
+    @apply h-px w-10 sm:w-20; 
+    
+  }
 }
