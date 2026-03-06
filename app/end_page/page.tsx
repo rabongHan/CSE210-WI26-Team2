@@ -25,7 +25,7 @@ export default function Page() {
 
   return (
     <main style={{ fontFamily: "system-ui", padding: 24, textAlign: "center" }} className="min-h-screen h-screen overflow-auto bg-[url('app/end_page/background.png')] bg-cover bg-[center_70%] bg-no-repeat">
-      <div className="max-w-[40%] mt-[5vh] mx-auto mb-[1vh] py-[1.5vh] px-[3vw] bg-gray-500/30 border-[5px] border-black rounded-xl text-center">
+      <div className="max-w-[40%] mt-[5vh] mx-auto mb-[1vh] py-[1.5vh] px-[3vw] bg-gray-100/70 border-[5px] border-black rounded-xl text-center">
         <p style={{ fontFamily: "impact", fontSize: 48 }}>Congratulations!</p>
         {/* Tests: Various things the page could say if certain sets of games are completed */}
         {!bubbleCompleted && !treasureCompleted && !primeCompleted && (
