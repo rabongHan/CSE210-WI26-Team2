@@ -2,6 +2,7 @@
 
 "use client";
 
+import { useState, useEffect } from "react";
 import { Target } from "lucide-react";
 import {NavButton} from "@/app/bubble/components/bubble-buttons";
 import { loadStorage } from "@/app/bubble/lib/bubble-context";
@@ -13,15 +14,33 @@ import { loadGameState, loadGameData } from "@/app/prime/lib/save";
 /* import { loadBubbleGameData, loadPrimeEndGame } from "./save"; */
 
 export default function Page() {
-  /*const bubbleCompleted = loadBubbleGameData().status === 'won';
-  const treasureCompleted = true; // replace with actual game data
-  const primeCompleted = loadPrimeEndGame();*/
-  const bubbleData = loadStorage();
-  const treasureData = getTreasureResult();
-  const primeData = loadGameData();
+  const [bubbleData, setBubbleData] = useState<any>(null);
+  const [treasureData, setTreasureData] = useState<any>(null);
+  const [primeData, setPrimeData] = useState<any>(null);
+  const [primeGameState, setPrimeGameState] = useState<string | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    // Load data from localStorage only on client side
+    setBubbleData(loadStorage());
+    setTreasureData(getTreasureResult());
+    setPrimeData(loadGameData());
+    setPrimeGameState(loadGameState());
+    setIsLoaded(true);
+  }, []);
+
   const bubbleCompleted = bubbleData && (bubbleData.status === 'won');
   const treasureCompleted = treasureData && (treasureData.status === 'won');
-  const primeCompleted = loadGameState() === 'won';
+  const primeCompleted = primeGameState === 'won';
+
+  // Prevent hydration mismatch by not rendering game status until client-side data is loaded
+  if (!isLoaded) {
+    return (
+      <main style={{ fontFamily: "system-ui", padding: 24, textAlign: "center" }} className="min-h-screen h-screen overflow-auto bg-[url('app/end_page/background.png')] bg-cover bg-[center_70%] bg-no-repeat">
+        <p style={{ fontFamily: "impact", fontSize: 48 }}>Congratulations!</p>
+      </main>
+    );
+  }
 
   return (
     <main style={{ fontFamily: "system-ui", padding: 24, textAlign: "center" }} className="min-h-screen h-screen overflow-auto bg-[url('app/end_page/background.png')] bg-cover bg-[center_70%] bg-no-repeat">
