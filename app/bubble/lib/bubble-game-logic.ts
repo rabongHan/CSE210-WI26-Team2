@@ -6,8 +6,8 @@ export type StageKey = 1 | 2 | 3;
 export const STAGE_CONFIG: Record<StageKey, { label: string; range: [number, number]; numBubbles: number }> =
     {
   1: { label: "Stage 1", range: [10,  50],  numBubbles: 8  },
-  2: { label: "Stage 2", range: [51,  200], numBubbles: 10 },
-  3: { label: "Stage 3", range: [201, 500], numBubbles: 12 },
+  2: { label: "Stage 2", range: [51,  100], numBubbles: 10 },
+  3: { label: "Stage 3", range: [101, 200], numBubbles: 10 },
 };
 
 
