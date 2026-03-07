@@ -14,6 +14,8 @@ export interface GameData {
   bossHealth: number;
   timeLeft: number;
   buttonsDisabled: boolean;
+  incorrectGuessCount: number;  // Track number of incorrect guesses
+  maxNumberGuessed: number;      // Track the maximum number guessed
 }
 
 // Feedback shown to user after answering

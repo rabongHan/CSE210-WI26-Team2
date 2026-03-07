@@ -19,6 +19,7 @@ import GameScreen from "./components/GameScreen";
 import EndGameScreen from "./components/EndGameScreen";
 import GameButton from "./components/GameButton";
 import { saveGameState, saveGameData } from "./lib/save";
+import { HomeButton } from "@/app/shared_components/home-button";
 
 export default function Page() {
   // ===== React State Management =====
@@ -107,6 +108,7 @@ export default function Page() {
       userHealth: newUserHealth,
       timeLeft: INITIAL_TIME,
       buttonsDisabled: true,
+      incorrectGuessCount: prev.incorrectGuessCount + 1,  // Increment incorrect guess count
     }));
 
     // Incorrect answers pause on feedback and require Continue
@@ -147,6 +149,7 @@ export default function Page() {
       currNumIndex: next.index,
       timeLeft: INITIAL_TIME,
       buttonsDisabled: false,
+      maxNumberGuessed: Math.max(prev.maxNumberGuessed, next.num),  // Update max number guessed
     }));
   }, [gameData]);
 
@@ -175,6 +178,8 @@ export default function Page() {
           onPlayAgain={handleStart}
           incorrectGuesses={incorrectGuesses}
           correctGuesses={correctGuesses}
+          continueBtn={true} /* Continue to the end screen only if player wins */
+          onContinue={() => window.location.href = "/end_page"}
         />
       )}
 
@@ -185,10 +190,10 @@ export default function Page() {
           onPlayAgain={handleStart}
           incorrectGuesses={incorrectGuesses}
           correctGuesses={correctGuesses}
+          continueBtn={false}
         />
       )}
 
-      {/* Back button - always visible */}
       <div className="flex justify-center mt-[2vh]">
         <GameButton 
           onClick={() => window.location.href = "/"} 
@@ -197,6 +202,8 @@ export default function Page() {
           Back
         </GameButton>
       </div>
+
+      <HomeButton />
     </main>
   );
 }
