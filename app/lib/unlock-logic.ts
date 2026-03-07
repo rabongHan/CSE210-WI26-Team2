@@ -15,7 +15,7 @@ export function getUnlockState() {
     // Return statuses for each game. Treasure starts unlocked.
     return {
         treasureUnlocked: true,
-        bubbleUnlocked: true,
+        bubbleUnlocked: treasureWon,
         primeUnlocked: bubbleWon, // TODO: replace with bubble won status
     }
 }
