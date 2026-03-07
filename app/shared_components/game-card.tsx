@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Lock } from "lucide-react"; {/* Lock: lock icon */ }
 import { GameInfo } from "@/app/lib/types";
+import ElectricBorder from "@/app/shared_components/ElectricBorder";
 
 {/* 
 export type GameInfo = {
@@ -15,8 +16,17 @@ export type GameInfo = {
     step: number;
 };
 */}
-export function GameCard({ game }: { game: GameInfo }) {
+
+// electric border colors matched to each game's theme
+const ELECTRIC_COLORS: Record<string, string> = {
+    "Treasure Chest": "#f59e0b",
+    "Bubble Atlantis": "#2fd3f4",
+    "Prime Dragon":   "#f97316",
+};
+
+export function GameCard({ game, electric = false }: { game: GameInfo; electric?: boolean }) {
     const Icon = game.icon;
+    const electricColor = ELECTRIC_COLORS[game.name] ?? "#2fd3f4";
 
     const inner = (
         <div className={[
@@ -73,12 +83,26 @@ export function GameCard({ game }: { game: GameInfo }) {
     );
 
     if (game.unlocked) {
-        return (
+        const linked = (
             <Link href={game.href} className="group no-underline">
                 {inner}
             </Link>
         );
+        if (electric) {
+            return (
+                <ElectricBorder
+                    color={electricColor}
+                    speed={1}
+                    chaos={0.12}
+                    thickness={2}
+                    style={{ borderRadius: 16 }}
+                >
+                    {linked}
+                </ElectricBorder>
+            );
+        }
+        return linked;
     }
-    {/* OTHERWISE:return the inner div when game is locked; no linked */}
-    return inner; 
+    {/* OTHERWISE: return the inner div when game is locked; no link */}
+    return inner;
 }

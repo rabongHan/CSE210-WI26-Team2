@@ -74,6 +74,19 @@ export default function MainPage() {
         },
     ];
 
+    /*
+    Determine which cards get the electric border:
+    - All 3 unlocked → all 3 get it (celebration mode)
+    - Only Treasure + Bubble unlocked → Bubble gets it (newest unlock = "play me next")
+    - Only Treasure unlocked → Treasure gets it (first game, play me)
+    */
+    const allUnlocked = unlockState.treasureUnlocked && unlockState.bubbleUnlocked && unlockState.primeUnlocked;
+    const getElectric = (name: string): boolean => {
+        if (allUnlocked) return true;
+        if (unlockState.bubbleUnlocked) return name === "Bubble Atlantis";
+        return name === "Treasure Chest";
+    };
+
     return (
         <main className="page-main">
             {/* Gradient overlay */}
@@ -117,7 +130,7 @@ export default function MainPage() {
                     {games.map((game, i) => (
                         <div key={game.name} className="flex flex-col md:flex-row items-center gap-5 md:gap-6">
                             {/* key needed for React to identify each game card */}
-                            <GameCard game={game} />
+                            <GameCard game={game} electric={getElectric(game.name)} />
                             {/* connector between games; renders for index 0 and 1 (not after the last card) */}
                             {i < games.length - 1 && <Connector />}
                         </div>
