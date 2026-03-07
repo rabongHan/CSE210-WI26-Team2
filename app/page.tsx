@@ -28,6 +28,16 @@ export default function MainPage() {
         setUnlockState(getUnlockState());
     }, []); // to unlock everything, make this line27-29 as comment out (and set all unlocked to true above)
 
+    const handleReset = () => {
+        if (!confirm("Are you sure you want to reset all game progress? This cannot be undone.")) return;
+        localStorage.clear();
+        setUnlockState({
+            treasureUnlocked: true,
+            bubbleUnlocked: false,
+            primeUnlocked: false,
+        });
+    };
+
     const games: GameInfo[] = [
         {
             name: "Treasure Chest",
@@ -113,6 +123,14 @@ export default function MainPage() {
                         </div>
                     ))}
                 </div>
+
+                {/* --- Reset button --- */}
+                <button onClick={handleReset}
+                    className="text-white/50 text-sm font-semibold px-4 py-2 mt-4 rounded-lg border border-white/20 bg-white/5 
+                    hover:bg-white/15 hover:text-white hover:border-white/40 transition-all duration-200 "
+                >
+                    Reset Game Progress
+                </button>
             </div>
         </main>
     );
