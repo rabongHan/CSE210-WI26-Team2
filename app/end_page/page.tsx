@@ -33,6 +33,17 @@ export default function Page() {
   const treasureCompleted = treasureData && (treasureData.status === 'won');
   const primeCompleted = primeGameState === 'won';
 
+  const handleReset = () => {
+    if (!confirm("Are you sure you want to reset all game progress? This cannot be undone.")) return;
+
+    localStorage.clear();
+
+    setBubbleData(null);
+    setTreasureData(null);
+    setPrimeData(null);
+    setPrimeGameState(null);
+  };
+
   // Prevent hydration mismatch by not rendering game status until client-side data is loaded
   if (!isLoaded) {
     return (
@@ -76,7 +87,13 @@ export default function Page() {
             )}
             {!primeData && <p>Not played yet.</p>}
       </div>
-      <div className="flex justify-center mt-[2vh]">
+      <div className="flex justify-center gap-4 mt-[2vh]">
+        <button
+          onClick={handleReset}
+          className="cursor-target btn-pink text-3xl py-3 px-12 tracking-wide"
+        >
+          Reset
+        </button>
         <NavButton href={'/'}>
           Home
         </NavButton>
