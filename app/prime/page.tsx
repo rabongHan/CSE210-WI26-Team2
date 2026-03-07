@@ -19,6 +19,7 @@ import GameScreen from "./components/GameScreen";
 import EndGameScreen from "./components/EndGameScreen";
 import GameButton from "./components/GameButton";
 import { saveGameState, saveGameData } from "./lib/save";
+import { HomeButton } from "@/app/shared_components/home-button";
 
 export default function Page() {
   // ===== React State Management =====
@@ -193,15 +194,16 @@ export default function Page() {
         />
       )}
 
-      {/* Home button - always visible */}
       <div className="flex justify-center mt-[2vh]">
         <GameButton 
           onClick={() => window.location.href = "/"} 
           variant="primary"
         >
-          Home
+          Back
         </GameButton>
       </div>
+
+      <HomeButton />
     </main>
   );
 }
